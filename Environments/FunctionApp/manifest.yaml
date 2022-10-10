@@ -1,0 +1,6 @@
+name: FunctionApp
+version: 1.0.0
+summary: Azure Function App Environment
+description: Deploys an Azure Function App, Storage Account, and Application Insights
+runner: ARM
+templatePath: azuredeploy.json
