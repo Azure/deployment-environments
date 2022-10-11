@@ -4,6 +4,10 @@ The goal of this repository is to provide sample infrastructure-as-code template
 
 Azure Deployment Environments empowers development teams to quickly and easily spin-up app infrastructure with project-based templates that establish consistency and best practices while maximizing security, compliance, and cost efficiency. This on-demand access to secure environments accelerates the different stages of the software development lifecycle in a compliant and cost-efficient manner.
 
+An Environment is a collection of Azure resources on which your application is deployed. For example, to deploy a web application, you might create an environment consisting of an App Service, Key Vault, Cosmos DB and a Storage account. An environment could consist of both Azure PaaS and IaaS resources such as AKS Cluster, App Service, VMs, databases, etc.
+
+[Environments](https://github.com/Azure/deployment-environments/tree/main/Environments) folder consists of sample templates that you can use to quickly get started with the service.
+
 ## Contributing
 
 This project welcomes contributions and suggestions.  Most contributions require you to agree to a
