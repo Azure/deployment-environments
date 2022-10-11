@@ -1,6 +1,6 @@
 # Azure Deployment Environments Community
 
-The goal of this repository is to provide sample infrastructure-as-code(IaC) templates that could be used to get started with the [Azure Deployment Environments](https://aka.ms/deploymentenvironments) service. 
+The goal of this repository is to provide sample infrastructure-as-code(IaC) templates that could be used to get started with the [Azure Deployment Environments](https://aka.ms/deploymentenvironments) service.
 
 Azure Deployment Environments(ADE) empowers development teams to quickly and easily spin-up app infrastructure with project-based templates that establish consistency and best practices while maximizing security, compliance, and cost efficiency. This on-demand access to secure environments accelerates the different stages of the software development lifecycle in a compliant and cost-efficient manner.
 
@@ -26,8 +26,8 @@ contact [opencode@microsoft.com](mailto:opencode@microsoft.com) with any additio
 
 ## Trademarks
 
-This project may contain trademarks or logos for projects, products, or services. Authorized use of Microsoft 
-trademarks or logos is subject to and must follow 
+This project may contain trademarks or logos for projects, products, or services. Authorized use of Microsoft
+trademarks or logos is subject to and must follow
 [Microsoft's Trademark & Brand Guidelines](https://www.microsoft.com/en-us/legal/intellectualproperty/trademarks/usage/general).
 Use of Microsoft trademarks or logos in modified versions of this project must not cause confusion or imply Microsoft sponsorship.
 Any use of third-party trademarks or logos are subject to those third-party's policies.
