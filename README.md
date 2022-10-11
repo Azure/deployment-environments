@@ -8,7 +8,7 @@ An Environment is a collection of Azure resources on which your application is d
 
 [Environments](https://github.com/Azure/deployment-environments/tree/main/Environments) folder consists of sample templates that you can use to quickly get started with the service.
 
-> Note - ADE currently supports ARM templates and will support other IaC tools such as Terraform, Bicep, etc. in the near future
+> Note - ADE currently supports [ARM templates](https://learn.microsoft.com/en-us/azure/azure-resource-manager/templates/overview) and in the near future, will support other IaC tools such as Terraform, Bicep, etc.
 
 ## Contributing
 
