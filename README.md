@@ -1,6 +1,6 @@
 # Azure Deployment Environments Community
 
-The goal of this repository is to provide sample infrastructure-as-code templates that could be used to get started with the [Azure Deployment Environments](https://aka.ms/deploymentenvironments) service. 
+The goal of this repository is to provide sample infrastructure-as-code(IaC) templates that could be used to get started with the [Azure Deployment Environments](https://aka.ms/deploymentenvironments) service. 
 
 Azure Deployment Environments(ADE) empowers development teams to quickly and easily spin-up app infrastructure with project-based templates that establish consistency and best practices while maximizing security, compliance, and cost efficiency. This on-demand access to secure environments accelerates the different stages of the software development lifecycle in a compliant and cost-efficient manner.
 
