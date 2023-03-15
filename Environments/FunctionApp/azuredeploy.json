@@ -4,8 +4,8 @@
   "metadata": {
     "_generator": {
       "name": "bicep",
-      "version": "0.11.1.770",
-      "templateHash": "4920818387183325017"
+      "version": "0.14.85.62628",
+      "templateHash": "11382639500301275536"
     }
   },
   "parameters": {
@@ -118,7 +118,7 @@
             },
             {
               "name": "APPINSIGHTS_INSTRUMENTATIONKEY",
-              "value": "[reference(resourceId('Microsoft.Insights/components', parameters('resourceName'))).InstrumentationKey]"
+              "value": "[reference(resourceId('Microsoft.Insights/components', parameters('resourceName')), '2020-02-02').InstrumentationKey]"
             },
             {
               "name": "AZURE_FUNCTIONS_ENVIRONMENT",
