@@ -1,5 +1,5 @@
 // Copyright (c) Microsoft Corporation.
-// Licensed under the MIT License. 
+// Licensed under the MIT License.
 
 @description('Location to deploy the environment resources')
 param location string = resourceGroup().location

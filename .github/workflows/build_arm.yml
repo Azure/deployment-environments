@@ -17,9 +17,6 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: Install Bicep
-        run: az bicep install && az bicep upgrade
-
       - name: Build Bicep -> ARM
         run: python ./tools/build-arm.py
 
