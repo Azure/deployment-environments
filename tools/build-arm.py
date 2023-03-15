@@ -6,6 +6,7 @@
 import os
 import shutil
 import subprocess
+
 from pathlib import Path
 
 repository_root = Path(__file__).resolve().parent.parent
@@ -20,6 +21,17 @@ for dirpath, dirnames, files in os.walk(environments_path):
     if not environments_path.samefile(dirpath) and Path(dirpath).parent.samefile(environments_path):
         environments.append(Path(dirpath))
         # image_names.append(Path(dirpath).name)
+
+# get the full path to the git executable
+git = shutil.which('git')
+
+for environment in environments:
+    print(f'  Ensuring: {environment}/azuredeploy.json')
+    if not (environment / 'azuredeploy.json').exists():
+        # if the azuredeploy.json file doesn't exist, create it
+        (environment / 'azuredeploy.json').touch()
+        # run the git command to add the azuredeploy.json file
+        subprocess.run([git, 'add', environment / 'azuredeploy.json'])
 
 # get the full path to the azure cli executable
 az = shutil.which('az')

@@ -1,0 +1,31 @@
+name: Bicep -> ARM
+
+on:
+  push:
+    branches: [main]
+    paths:
+      # only run if bicep files changed
+      - 'Environments/**/*.bicep'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Install Bicep
+        run: az bicep install && az bicep upgrade
+
+      - name: Build Bicep -> ARM
+        run: python ./tools/build-arm.py
+
+      - name: Commit changes
+        run: |
+          git config --global user.name "${{ github.actor }}"
+          git config --global user.email "${{ github.actor }}@users.noreply.github.com"
+          git commit -am "Rebuild ARM templates"
+          git push

@@ -127,3 +127,14 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+.DS_Store
+
+[lL]ocal
+.[lL]ocal
+
+.venv
+.env
+
+local.settings.json
+local.parameters.json
