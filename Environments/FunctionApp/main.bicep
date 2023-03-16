@@ -21,7 +21,7 @@ param runtime string = 'dotnet'
 @description('Tags to apply to environment resources')
 param tags object = {}
 
-param resourceName string = !empty(name) ? replace(name, ' ', '-') : 'a${uniqueString(resourceGroup().id)}'
+var resourceName = !empty(name) ? replace(name, ' ', '-') : 'a${uniqueString(resourceGroup().id)}'
 
 var storageAcctName = toLower(replace(resourceName, '-', ''))
 

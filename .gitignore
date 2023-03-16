@@ -138,3 +138,5 @@ dmypy.json
 
 local.settings.json
 local.parameters.json
+
+schemas
