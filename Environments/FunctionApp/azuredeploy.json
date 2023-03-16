@@ -4,8 +4,8 @@
   "metadata": {
     "_generator": {
       "name": "bicep",
-      "version": "0.14.85.62628",
-      "templateHash": "11382639500301275536"
+      "version": "0.15.31.15270",
+      "templateHash": "9692921175054051853"
     }
   },
   "parameters": {
@@ -48,20 +48,17 @@
       "metadata": {
         "description": "Tags to apply to environment resources"
       }
-    },
-    "resourceName": {
-      "type": "string",
-      "defaultValue": "[if(not(empty(parameters('name'))), replace(parameters('name'), ' ', '-'), format('a{0}', uniqueString(resourceGroup().id)))]"
     }
   },
   "variables": {
-    "storageAcctName": "[toLower(replace(parameters('resourceName'), '-', ''))]"
+    "resourceName": "[if(not(empty(parameters('name'))), replace(parameters('name'), ' ', '-'), format('a{0}', uniqueString(resourceGroup().id)))]",
+    "storageAcctName": "[toLower(replace(variables('resourceName'), '-', ''))]"
   },
   "resources": [
     {
       "type": "Microsoft.Insights/components",
       "apiVersion": "2020-02-02",
-      "name": "[parameters('resourceName')]",
+      "name": "[variables('resourceName')]",
       "kind": "web",
       "location": "[parameters('location')]",
       "properties": {
@@ -72,7 +69,7 @@
     {
       "type": "Microsoft.Web/serverfarms",
       "apiVersion": "2022-03-01",
-      "name": "[parameters('resourceName')]",
+      "name": "[variables('resourceName')]",
       "location": "[parameters('location')]",
       "sku": {
         "tier": "Dynamic",
@@ -97,14 +94,14 @@
     {
       "type": "Microsoft.Web/sites",
       "apiVersion": "2022-03-01",
-      "name": "[parameters('resourceName')]",
+      "name": "[variables('resourceName')]",
       "kind": "functionapp",
       "location": "[parameters('location')]",
       "identity": {
         "type": "SystemAssigned"
       },
       "properties": {
-        "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', parameters('resourceName'))]",
+        "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', variables('resourceName'))]",
         "httpsOnly": "[parameters('supportsHttpsTrafficOnly')]",
         "siteConfig": {
           "appSettings": [
@@ -118,7 +115,7 @@
             },
             {
               "name": "APPINSIGHTS_INSTRUMENTATIONKEY",
-              "value": "[reference(resourceId('Microsoft.Insights/components', parameters('resourceName')), '2020-02-02').InstrumentationKey]"
+              "value": "[reference(resourceId('Microsoft.Insights/components', variables('resourceName')), '2020-02-02').InstrumentationKey]"
             },
             {
               "name": "AZURE_FUNCTIONS_ENVIRONMENT",
@@ -137,8 +134,8 @@
       },
       "tags": "[parameters('tags')]",
       "dependsOn": [
-        "[resourceId('Microsoft.Insights/components', parameters('resourceName'))]",
-        "[resourceId('Microsoft.Web/serverfarms', parameters('resourceName'))]",
+        "[resourceId('Microsoft.Insights/components', variables('resourceName'))]",
+        "[resourceId('Microsoft.Web/serverfarms', variables('resourceName'))]",
         "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAcctName'))]"
       ]
     }

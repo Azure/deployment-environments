@@ -4,21 +4,24 @@
   "metadata": {
     "_generator": {
       "name": "bicep",
-      "version": "0.14.85.62628",
-      "templateHash": "1747693694965566716"
+      "version": "0.15.31.15270",
+      "templateHash": "6640258515963112941"
     }
   },
   "parameters": {
+    "name": {
+      "type": "string",
+      "defaultValue": "",
+      "metadata": {
+        "description": "Name of the Function App"
+      }
+    },
     "location": {
       "type": "string",
       "defaultValue": "[resourceGroup().location]",
       "metadata": {
         "description": "Location to deploy the environment resources"
       }
-    },
-    "resourcePrefix": {
-      "type": "string",
-      "defaultValue": "[format('a{0}', uniqueString(resourceGroup().id))]"
     },
     "tags": {
       "type": "object",
@@ -29,8 +32,9 @@
     }
   },
   "variables": {
-    "hostingPlanName": "[format('{0}-hp', parameters('resourcePrefix'))]",
-    "webAppName": "[format('{0}-hp', parameters('resourcePrefix'))]"
+    "resourceName": "[if(not(empty(parameters('name'))), replace(parameters('name'), ' ', '-'), format('a{0}', uniqueString(resourceGroup().id)))]",
+    "hostingPlanName": "[format('{0}-hp', variables('resourceName'))]",
+    "webAppName": "[format('{0}-web', variables('resourceName'))]"
   },
   "resources": [
     {
