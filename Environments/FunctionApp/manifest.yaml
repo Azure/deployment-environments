@@ -23,7 +23,10 @@ parameters:
     description: 'The language worker runtime to load in the function app.'
     type: string
     allowed:
-      - node
-      - dotnet
-      - java
-    default: dotnet
+      - 'dotnet'
+      - 'dotnet-isolated'
+      - 'java'
+      - 'node'
+      - 'powershell'
+      - 'python'
+    default: 'dotnet-isolated'

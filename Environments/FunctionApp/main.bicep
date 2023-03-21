@@ -12,18 +12,31 @@ param supportsHttpsTrafficOnly bool = true
 
 @description('The language worker runtime to load in the function app')
 @allowed([
-  'node'
   'dotnet'
+  'dotnet-isolated'
   'java'
+  'node'
+  'powershell'
+  'python'
 ])
-param runtime string = 'dotnet'
+param runtime string = 'dotnet-isolated'
 
 @description('Tags to apply to environment resources')
 param tags object = {}
 
+var linexFxVersions = {
+  dotnet: 'DOTNET|6.0'
+  'dotnet-isolated': 'DOTNET-ISOLATED|7.0'
+  java: 'JAVA|17'
+  node: 'NODE|18'
+  powershell: 'POWERSHELL|7.2'
+  python: 'PYTHON|3.10'
+}
+
 var resourceName = !empty(name) ? replace(name, ' ', '-') : 'a${uniqueString(resourceGroup().id)}'
 
-var storageAcctName = toLower(replace(resourceName, '-', ''))
+// storage account names can be no longer than 24 chars
+var storageAcctName = take(toLower(replace(replace(resourceName, '-', ''), '_', '')), 24)
 
 resource appInsights 'Microsoft.Insights/components@2020-02-02' = {
   kind: 'web'
@@ -38,9 +51,13 @@ resource appInsights 'Microsoft.Insights/components@2020-02-02' = {
 resource hostingPlan 'Microsoft.Web/serverfarms@2022-03-01' = {
   name: resourceName
   location: location
+  kind: 'functionapp,linux'
   sku: {
     tier: 'Dynamic'
     name: 'Y1'
+  }
+  properties: {
+    reserved: true
   }
   tags: tags
 }
@@ -59,7 +76,7 @@ resource storageAccount 'Microsoft.Storage/storageAccounts@2022-05-01' = {
 }
 
 resource functionApp 'Microsoft.Web/sites@2022-03-01' = {
-  kind: 'functionapp'
+  kind: 'functionapp,linux'
   name: resourceName
   location: location
   identity: {
@@ -69,11 +86,8 @@ resource functionApp 'Microsoft.Web/sites@2022-03-01' = {
     serverFarmId: hostingPlan.id
     httpsOnly: supportsHttpsTrafficOnly
     siteConfig: {
+      linuxFxVersion: linexFxVersions[runtime]
       appSettings: [
-        // {
-        //   name: 'AzureWebJobsDashboard'
-        //   value: 'DefaultEndpointsProtocol=https;AccountName=${storageAccount.name};AccountKey=${listKeys(storageAccount.id, storageAccount.apiVersion).keys[0].value}'
-        // }
         {
           name: 'AzureWebJobsStorage'
           value: 'DefaultEndpointsProtocol=https;AccountName=${storageAccount.name};AccountKey=${storageAccount.listKeys().keys[0].value}'
