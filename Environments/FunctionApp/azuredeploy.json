@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.15.31.15270",
-      "templateHash": "9692921175054051853"
+      "templateHash": "135257884104161714"
     }
   },
   "parameters": {
@@ -32,11 +32,14 @@
     },
     "runtime": {
       "type": "string",
-      "defaultValue": "dotnet",
+      "defaultValue": "dotnet-isolated",
       "allowedValues": [
-        "node",
         "dotnet",
-        "java"
+        "dotnet-isolated",
+        "java",
+        "node",
+        "powershell",
+        "python"
       ],
       "metadata": {
         "description": "The language worker runtime to load in the function app"
@@ -51,8 +54,16 @@
     }
   },
   "variables": {
+    "linexFxVersions": {
+      "dotnet": "DOTNET|6.0",
+      "dotnet-isolated": "DOTNET-ISOLATED|7.0",
+      "java": "JAVA|17",
+      "node": "NODE|18",
+      "powershell": "POWERSHELL|7.2",
+      "python": "PYTHON|3.10"
+    },
     "resourceName": "[if(not(empty(parameters('name'))), replace(parameters('name'), ' ', '-'), format('a{0}', uniqueString(resourceGroup().id)))]",
-    "storageAcctName": "[toLower(replace(variables('resourceName'), '-', ''))]"
+    "storageAcctName": "[take(toLower(replace(replace(variables('resourceName'), '-', ''), '_', '')), 24)]"
   },
   "resources": [
     {
@@ -71,9 +82,13 @@
       "apiVersion": "2022-03-01",
       "name": "[variables('resourceName')]",
       "location": "[parameters('location')]",
+      "kind": "functionapp,linux",
       "sku": {
         "tier": "Dynamic",
         "name": "Y1"
+      },
+      "properties": {
+        "reserved": true
       },
       "tags": "[parameters('tags')]"
     },
@@ -95,7 +110,7 @@
       "type": "Microsoft.Web/sites",
       "apiVersion": "2022-03-01",
       "name": "[variables('resourceName')]",
-      "kind": "functionapp",
+      "kind": "functionapp,linux",
       "location": "[parameters('location')]",
       "identity": {
         "type": "SystemAssigned"
@@ -104,6 +119,7 @@
         "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', variables('resourceName'))]",
         "httpsOnly": "[parameters('supportsHttpsTrafficOnly')]",
         "siteConfig": {
+          "linuxFxVersion": "[variables('linexFxVersions')[parameters('runtime')]]",
           "appSettings": [
             {
               "name": "AzureWebJobsStorage",
