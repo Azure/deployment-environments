@@ -1,0 +1,25 @@
+name: azure-search-openai-demo
+version: 1.0.0
+summary: OpenAI search app environment
+description: Deploys an OpenAI search demo application
+runner: ARM
+templatePath: azuredeploy.json
+
+parameters:
+  - id: environmentName
+    name: environmentName
+    description: 'Name of the Environment'
+    type: string
+    required: true
+
+  - id: location
+    name: location
+    description: 'Location of the resources'
+    type: string
+    required: true
+
+  - id: principalId
+    name: principalId
+    description: 'Id of the user or app to assign application roles'
+    type: string
+    required: true
