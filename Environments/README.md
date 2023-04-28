@@ -7,6 +7,7 @@ The sample Catalog consists of a few catalog items (ARM Template + associated ma
 - [Function App](FunctionApp): Deploys an Azure Function App, Storage Account, and Application Insights
 - [Sandbox](Sandbox): Deploys an empty "sandbox" environment
 - [Web App](WebApp): Deploys an Azure Web App without a data store
+- [OpenAI Search](OpenAISearch): Deploys Azure Web App, OpenAI service and Cogonitive search 
 
 ## ARM and Bicep
 

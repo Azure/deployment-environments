@@ -3,13 +3,11 @@
 @description('Name of the the environment which is used to generate a short unique hash used in all resources.')
 param environmentName string
 
-@minLength(1)
 @description('Primary location for all resources')
-param location string
+param location string = resourceGroup().location
 
 param appServicePlanName string = ''
 param backendServiceName string = ''
-param resourceGroupName string = resourceGroup().name
 
 param searchServiceName string = ''
 param searchServiceResourceGroupLocation string = location
@@ -257,7 +255,6 @@ module searchRoleBackend 'core/security/role.bicep' = {
 
 output AZURE_LOCATION string = location
 output AZURE_TENANT_ID string = tenant().tenantId
-output AZURE_RESOURCE_GROUP string = resourceGroupName
 
 output AZURE_OPENAI_SERVICE string = openAi.outputs.name
 output AZURE_OPENAI_GPT_DEPLOYMENT string = gptDeploymentName

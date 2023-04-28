@@ -12,14 +12,36 @@ parameters:
     type: string
     required: true
 
-  - id: location
-    name: location
-    description: 'Location of the resources'
-    type: string
-    required: true
-
   - id: principalId
     name: principalId
     description: 'Id of the user or app to assign application roles'
     type: string
     required: true
+
+  - id: backendServiceName
+    name: backendServiceName
+    description: 'Name of app service'
+    type: string
+    required: false
+    default: ""
+
+  - id: storageAccountName
+    name: storageAccountName
+    description: 'Name of storage account'
+    type: string
+    required: false
+    default: ""
+
+  - id: searchServiceName
+    name: searchServiceName
+    description: 'Name of search service'
+    type: string    
+    required: false
+    default: ""
+
+  - id: formRecognizerServiceName
+    name: formRecognizerServiceName
+    description: 'Name of form recognizer service'
+    type: string
+    required: false
+    default: ""
