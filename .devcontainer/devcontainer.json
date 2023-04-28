@@ -1,0 +1,16 @@
+{
+	"image": "mcr.microsoft.com/devcontainers/universal:2",
+	"features": {
+		"ghcr.io/devcontainers/features/azure-cli:1": {},
+		"ghcr.io/rchaganti/vsc-devcontainer-features/azurebicep:1": {}
+	},
+	"customizations": {
+		"vscode": {
+			"extensions": [
+				"ms-azuretools.vscode-bicep",
+				"ms-python.python",
+				"ms-python.pylint"
+			]
+		}
+	}
+}
