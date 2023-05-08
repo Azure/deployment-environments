@@ -31,7 +31,7 @@ Typically, there are two ways to quickly setup your own OpenAI and Cognitive sea
 ```
 .\deploy.ps1 <environment name> <project name> <dev center name> <environment type> <catalog name> <catalog item name> <principal id>
 ```
->NOTE: <principal id> is the user id that you use in step 1. If you do not know the user id, you can go to "Azure Active Directory" -> "Users" to search your user and will find the "Object ID"
+>NOTE: "principal id" is the user id that you use in step 1. If you do not know the user id, you can go to "Azure Active Directory" -> "Users" to search your user and will find the "Object ID"
 
 ### Manually deploy the infra, application and data
 1. Use [Dev Portal](https://devportal.microsoft.com/) to deploy the infra 
