@@ -1,0 +1,14 @@
+name: simple-flask-api-container
+version: 1.0.0
+summary: simple flask app with Container Apps
+description: Deploy flask app to Container Apps
+runner: ARM
+templatePath: azuredeploy.json
+
+parameters:
+  - id: environmentName
+    name: environmentName
+    description: 'Name of the Environment'
+    type: string
+    required: false
+    default: 'test'
