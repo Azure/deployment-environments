@@ -1,7 +1,7 @@
 @minLength(1)
 @maxLength(64)
 @description('Name of the the environment which is used to generate a short unique hash used in all resources.')
-param environmentName string
+param environmentName string = 'test'
 
 @minLength(1)
 @description('Primary location for all resources')
