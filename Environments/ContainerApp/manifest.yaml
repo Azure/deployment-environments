@@ -12,3 +12,10 @@ parameters:
     type: string
     required: false
     default: 'test'
+
+  - id: principalId
+    name: principalId
+    description: 'Id of the user or app to assign application roles'
+    type: string
+    required: false
+    default: ""

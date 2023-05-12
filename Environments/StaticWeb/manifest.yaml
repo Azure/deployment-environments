@@ -12,3 +12,73 @@ parameters:
     type: string
     required: false
     default: 'test'
+
+  - id: apiServiceName
+    name: apiServiceName
+    description: 'Name of API service'
+    type: string
+    required: false
+    default: ''
+
+  - id: applicationInsightsName
+    name: applicationInsightsName
+    description: 'Name of Application Insights'
+    type: string
+    required: false
+    default: ''
+
+  - id: appServicePlanName
+    name: appServicePlanName
+    description: 'Name of App service plan'
+    type: string
+    required: false
+    default: ''
+
+  - id: cosmosAccountName
+    name: cosmosAccountName
+    description: 'Name of CosmosDB account'
+    type: string
+    required: false
+    default: ''
+
+  - id: cosmosDatabaseName
+    name: cosmosDatabaseName
+    description: 'Name of CosmosDB database'
+    type: string
+    required: false
+    default: ''
+
+  - id: keyVaultName
+    name: keyVaultName
+    description: 'Name of Azure Keyvault'
+    type: string
+    required: false
+    default: ''
+
+  - id: logAnalyticsName
+    name: logAnalyticsName
+    description: 'Name of Azure Log Analytics'
+    type: string
+    required: false
+    default: ''
+
+  - id: storageAccountName
+    name: storageAccountName
+    description: 'Name of Azure Storage Account'
+    type: string
+    required: false
+    default: ''
+
+  - id: webServiceName
+    name: webServiceName
+    description: 'Name of App service'
+    type: string
+    required: false
+    default: ''
+
+  - id: apimServiceName
+    name: apimServiceName
+    description: 'Name of API Management'
+    type: string
+    required: false
+    default: ''
