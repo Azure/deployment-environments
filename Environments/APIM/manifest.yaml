@@ -1,0 +1,26 @@
+name: fastapi-azure-function-apim
+version: 1.0.0
+summary: API Management 
+description: Deploy a secured Azure Function with an API Management service in front
+runner: ARM
+templatePath: azuredeploy.json
+
+parameters:
+  - id: environmentName
+    name: environmentName
+    description: 'Name of the Environment'
+    type: string
+    required: false
+    default: 'test'
+
+  - id: publisherEmail
+    name: publisherEmail
+    description: 'Eamil of the publisher'
+    type: string
+    required: true
+    
+  - id: publisherName
+    name: publisherName
+    description: 'Name of the publisher'
+    type: string
+    required: true
