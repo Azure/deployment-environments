@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.17.1.54307",
-      "templateHash": "8522222895600300721"
+      "templateHash": "2428452766374925564"
     }
   },
   "parameters": {
@@ -245,7 +245,7 @@
       "webStaticSites": "stapp-"
     },
     "abbrs": "[variables('$fxv#0')]",
-    "resourceToken": "[toLower(uniqueString(subscription().id, parameters('environmentName'), parameters('location')))]",
+    "resourceToken": "[toLower(uniqueString(resourceGroup().id, parameters('location')))]",
     "tags": {
       "azd-env-name": "[parameters('environmentName')]"
     }
