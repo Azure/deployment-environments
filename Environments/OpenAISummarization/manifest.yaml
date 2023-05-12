@@ -1,0 +1,41 @@
+name: summarization-python-openai
+version: 1.0.0
+summary: OpenAI summarization demo
+description: Deploy OpenAI summarization application
+runner: ARM
+templatePath: azuredeploy.json
+
+parameters:
+  - id: environmentName
+    name: environmentName
+    description: 'Name of the Environment'
+    type: string
+    required: false
+    default: 'test'
+
+  - id: principalId
+    name: principalId
+    description: 'Id of the user or app to assign application roles'
+    type: string
+    required: true
+
+  - id: openAiAccountName
+    name: openAiAccountName
+    description: 'Name of Open AI account'
+    type: string
+    required: false
+    default: ""
+
+  - id: storageAccountName
+    name: storageAccountName
+    description: 'Name of storage account'
+    type: string
+    required: false
+    default: ""
+
+  - id: searchServicesName
+    name: searchServicesName
+    description: 'Name of search service'
+    type: string    
+    required: false
+    default: ""
