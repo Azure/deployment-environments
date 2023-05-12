@@ -5,7 +5,7 @@ param environmentName string
 
 @minLength(1)
 @description('Primary location for all resources')
-param location string = resourceGroup().id
+param location string = resourceGroup().location
 
 @description('The resource name of the AKS cluster')
 param clusterName string = ''
