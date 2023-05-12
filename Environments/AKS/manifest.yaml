@@ -6,58 +6,9 @@ runner: ARM
 templatePath: azuredeploy.json
 
 parameters:
-- id: "environmentName"
-  name: "Environment Name"
-  description: "Name of the Environment"
-  type: "string"
-  required: false
-  default: "test"
-
-- id: clusterName
-  name: clusterName
-  description: 'The resource name of the AKS cluster'
+- id: environmentName
+  name: environmentName
+  description: 'Name of the Environment'
   type: string
   required: false
-  default: ""
-
-- id: containerRegistryName
-  name: containerRegistryName
-  description: 'Name of Azure Container Registry'
-  type: string
-  required: false
-  default: ""
-
-- id: applicationInsightsName
-  name: applicationInsightsName
-  description: 'Name of Application Insights'
-  type: string
-  required: false
-  default: ""
-
-- id: cosmosAccountName
-  name: cosmosAccountName
-  description: 'Name of Azure CosmosDB account'
-  type: string
-  required: false
-  default: ""
-  
-- id: cosmosDatabaseName
-  name: cosmosDatabaseName
-  description: 'Name of Azure CosmosDB database'
-  type: string
-  required: false
-  default: ""
-  
-- id: keyVaultName
-  name: keyVaultName
-  description: 'Name of Azure Keyvault'
-  type: string
-  required: false
-  default: ""
-  
-- id: logAnalyticsName
-  name: logAnalyticsName
-  description: 'Name of Log Analytics'
-  type: string
-  required: false
-  default: ""
+  default: 'test'
