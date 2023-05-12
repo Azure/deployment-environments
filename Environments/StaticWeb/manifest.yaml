@@ -1,0 +1,14 @@
+name: todo-nodejs-mongo-swa-func
+version: 1.0.0
+summary: Static Web
+description: Deploy static web application
+runner: ARM
+templatePath: azuredeploy.json
+
+parameters:
+  - id: environmentName
+    name: environmentName
+    description: 'Name of the Environment'
+    type: string
+    required: false
+    default: 'test'
