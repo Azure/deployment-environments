@@ -13,6 +13,13 @@ parameters:
   required: false
   default: "test"
 
+- id: "location"
+  name: "location"
+  description: "location or region"
+  type: "string"
+  required: false
+  default: "westeurope"
+
 - id: "principalId"
   name: "principalId"
   description: "Id of the user or app to assign application roles"

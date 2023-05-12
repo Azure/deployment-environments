@@ -13,6 +13,13 @@ parameters:
   required: false
   default: "test"
 
+- id: "location"
+  name: "location"
+  description: "location or region"
+  type: "string"
+  required: false
+  default: "eastus2"
+
 - id: "apiServiceName"
   name: "apiServiceName"
   description: "Name of API service"
