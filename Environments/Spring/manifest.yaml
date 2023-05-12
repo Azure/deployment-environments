@@ -1,4 +1,4 @@
-name: spring-petclinic-java-mysql
+name: Spring
 version: 1.0.0
 summary: Spring Petclinic
 description: Deploy Spring Petlinic Java app with MySQL
@@ -6,16 +6,15 @@ runner: ARM
 templatePath: azuredeploy.json
 
 parameters:
-  - id: environmentName
-    name: environmentName
-    description: 'Name of the Environment'
-    type: string
-    required: false
-    default: 'test'
+- id: "environmentName"
+  name: "environmentName"
+  description: "Name of the Environment"
+  type: "string"
+  required: false
+  default: "test"
 
-  - id: mySqlServerAdminPassword
-    name: mySqlServerAdminPassword
-    description: 'MySQL Admin Password'
-    type: string
-    required: true
-
+- id: "mySqlServerAdminPassword"
+  name: "mySqlServerAdminPassword"
+  description: "MySQL Admin Password"
+  type: "string"
+  required: true
