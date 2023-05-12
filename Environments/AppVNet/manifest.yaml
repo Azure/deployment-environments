@@ -1,4 +1,4 @@
-name: msdocs-django-postgresql-sample-app
+name: APPVNet
 version: 1.0.0
 summary: App Service + VNet
 description: Deploy App service in VNet

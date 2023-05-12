@@ -1,4 +1,4 @@
-name: fastapi-azure-function-apim
+name: APIM
 version: 1.0.0
 summary: API Management 
 description: Deploy a secured Azure Function with an API Management service in front

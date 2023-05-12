@@ -1,4 +1,4 @@
-name: todo-nodejs-mongo-aks
+name: AKS
 version: 1.0.0
 summary: ToDo application on AKS
 description: ToDo Application with a Node.js API and Azure Cosmos DB API for MongoDB on Azure Kubernetes Service (AKS)

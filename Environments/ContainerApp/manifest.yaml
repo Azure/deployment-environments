@@ -1,4 +1,4 @@
-name: simple-flask-api-container
+name: ContainerApp
 version: 1.0.0
 summary: simple flask app with Container Apps
 description: Deploy flask app to Container Apps

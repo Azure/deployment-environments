@@ -1,4 +1,4 @@
-name: summarization-python-openai
+name: OpenAISummarization
 version: 1.0.0
 summary: OpenAI summarization demo
 description: Deploy OpenAI summarization application

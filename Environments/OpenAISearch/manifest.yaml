@@ -1,4 +1,4 @@
-name: azure-search-openai-demo
+name: OpenAISearch
 version: 1.0.0
 summary: OpenAI search app environment
 description: Deploys an OpenAI search demo application
