@@ -6,21 +6,21 @@ runner: ARM
 templatePath: azuredeploy.json
 
 parameters:
-  - id: environmentName
-    name: environmentName
-    description: 'Name of the Environment'
-    type: string
-    required: false
-    default: 'test'
+- id: "environmentName"
+  name: "environmentName"
+  description: "Name of the Environment"
+  type: "string"
+  required: false
+  default: "test"
 
-  - id: databasePassword
-    name: databasePassword
-    description: 'Password of PostgreSQL'
-    type: string
-    required: true
+- id: "databasePassword"
+  name: "databasePassword"
+  description: "Password of PostgreSQL"
+  type: "string"
+  required: true
 
-  - id: secretKey
-    name: secretKey
-    description: 'Django SECRET_KEY for securing signed data'
-    type: string
-    required: true
+- id: "secretKey"
+  name: "secretKey"
+  description: "Django SECRET_KEY for securing signed data"
+  type: "string"
+  required: true
