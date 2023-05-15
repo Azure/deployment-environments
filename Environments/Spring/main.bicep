@@ -1,118 +1,72 @@
 @minLength(1)
 @maxLength(64)
-@description('Name of the the environment which is used to generate a short unique hash used in all resources.')
+@description('Name which is used to generate a short unique hash for each resource')
 param environmentName string = 'test'
 
-@minLength(1)
-@description('Primary location for all resources')
+@description('The instance name of the Azure Spring Cloud resource')
+param springCloudInstanceName string = ''
+
+@description('The name of the Application Insights instance for Azure Spring Cloud')
+param appInsightsName string = ''
+
+param logAnalyticsWorkspaceName string = ''
+
+@description('The resourceID of the Azure Spring Cloud App Subnet')
+param springCloudAppSubnetID string = ''
+
+@description('The resourceID of the Azure Spring Cloud Runtime Subnet')
+param springCloudRuntimeSubnetID string = ''
+
+param springCloudServiceCidrs string = '10.20.0.0/16,10.21.0.0/16,10.22.0.1/16'
+
+var resourceToken = toLower(uniqueString(resourceGroup().id, location))
+
+@description('The name of the Virtual Network')
+param vnetName string = ''
+
+@description('the app subnet name of the Azure Spring Cloud')
+param ascAppSubnetName string = ''
+
+@description('the runtime subnet name of the Azure Spring Cloud')
+param ascRuntimeSubnetName string = ''
+
+@description('The address prefixes of the vnet')
+param vnetAddressPrefixes string = '10.4.0.0/16'
+
+@description('The Azure Spring Cloud App subnet address prefixes in the vnet')
+param ascAppSubnetAddressPrefixes string = '10.4.0.0/24'
+
+@description('The Azure Spring Cloud Runtime subnet address prefixes in the vnet')
+param ascRuntimeSubnetAddressPrefixes string = '10.4.1.0/24'
+
 param location string = resourceGroup().location
 
-param appName string = ''
-param applicationInsightsDashboardName string = ''
-param applicationInsightsName string = ''
-param appServicePlanName string = ''
-param mySqlServerName string = ''
-param mySqlServerAdminName string = 'petclinic'
-@secure()
-param mySqlServerAdminPassword string
-param mySqlDatabaseName string = 'petclinic'
-param keyVaultName string = ''
-param logAnalyticsName string = ''
+var tags = { 'env-name': environmentName }
 
-@description('Id of the user or app to assign application roles')
-param principalId string = ''
-
-var abbrs = loadJsonContent('./abbreviations.json')
-var resourceToken = toLower(uniqueString(resourceGroup().id, location))
-var tags = { 'azd-env-name': environmentName }
-
-// Create an App Service Plan to group applications under the same payment plan and SKU
-module appServicePlan './core/host/appserviceplan.bicep' = {
-  name: 'appserviceplan'
-  params: {
-    name: !empty(appServicePlanName) ? appServicePlanName : '${abbrs.webServerFarms}${resourceToken}'
+module vnet 'core/network/vnet.bicep' = {
+  name: 'vnet'
+  params:{
+    vnetName: !empty(vnetName) ? vnetName : 'vnet-${resourceToken}'
     location: location
+    ascAppSubnetName: !empty(ascAppSubnetName) ? ascAppSubnetName : 'app-sub-${resourceToken}'
+    ascRuntimeSubnetName: !empty(ascRuntimeSubnetName) ? ascRuntimeSubnetName : 'runtime-sub-${resourceToken}'
+    vnetAddressPrefixes: vnetAddressPrefixes
+    ascAppSubnetAddressPrefixes: ascAppSubnetAddressPrefixes
+    ascRuntimeSubnetAddressPrefixes: ascRuntimeSubnetAddressPrefixes
     tags: tags
-    sku: {
-      name: 'B1'
-    }
   }
 }
 
-// Monitor application with Azure Monitor
-module monitoring './core/monitor/monitoring.bicep' = {
-  name: 'monitoring'
+module springcloud 'core/host/springapps.bicep' = {
+  name: 'springcloud'
   params: {
+    springCloudInstanceName: !empty(springCloudInstanceName) ? springCloudInstanceName : 'asa-${resourceToken}'
     location: location
+    appInsightsName: !empty(appInsightsName) ? appInsightsName : 'appi-${resourceToken}'
+    logAnalyticsWorkspaceName: !empty(logAnalyticsWorkspaceName) ? logAnalyticsWorkspaceName : 'log-${resourceToken}'
+    springCloudAppSubnetID: !empty(springCloudAppSubnetID) ? springCloudAppSubnetID : vnet.outputs.ascAppSubnetId
+    springCloudRuntimeSubnetID: !empty(springCloudRuntimeSubnetID) ? springCloudRuntimeSubnetID : vnet.outputs.ascRuntimeSubetId
+    springCloudServiceCidrs: springCloudServiceCidrs
     tags: tags
-    logAnalyticsName: !empty(logAnalyticsName) ? logAnalyticsName : '${abbrs.operationalInsightsWorkspaces}${resourceToken}'
-    applicationInsightsName: !empty(applicationInsightsName) ? applicationInsightsName : '${abbrs.insightsComponents}${resourceToken}'
-    applicationInsightsDashboardName: !empty(applicationInsightsDashboardName) ? applicationInsightsDashboardName : '${abbrs.portalDashboards}${resourceToken}'
   }
 }
-
-// Store secrets in a keyvault
-module keyVault './core/security/keyvault.bicep' = {
-  name: 'keyvault'
-  params: {
-    name: !empty(keyVaultName) ? keyVaultName : '${abbrs.keyVaultVaults}${resourceToken}'
-    location: location
-    tags: tags
-    principalId: principalId
-  }
-}
-
-// The application database
-module mySql './core/database/mysql/mysql-db.bicep' = {
-  name: 'mysql-db'
-  params: {
-    location: location
-    tags: tags
-    serverName: !empty(mySqlServerName) ? mySqlServerName : '${abbrs.dBforMySQLServers}${resourceToken}'
-    serverAdminName: mySqlServerAdminName
-    serverAdminPassword: mySqlServerAdminPassword
-    databaseName: !empty(mySqlDatabaseName) ? mySqlDatabaseName : 'petclinic'
-    keyVaultName: keyVault.outputs.name
-  }
-}
-
-// The application backend
-module app './app/app.bicep' = {
-  name: 'app'
-  params: {
-    name: !empty(appName) ? appName : '${abbrs.webSitesAppService}petclinic-${resourceToken}'
-    location: location
-    tags: tags
-    applicationInsightsName: monitoring.outputs.applicationInsightsName
-    appServicePlanId: appServicePlan.outputs.id
-    keyVaultName: keyVault.outputs.name
-    appSettings: {
-      APPLICATIONINSIGHTS_CONNECTION_STRING: monitoring.outputs.applicationInsightsConnectionString
-      AZURE_KEY_VAULT_ENDPOINT: keyVault.outputs.endpoint
-      SPRING_PROFILES_ACTIVE: 'azure,mysql'
-      MYSQL_URL: mySql.outputs.endpoint
-      MYSQL_USER: mySqlServerAdminName
-    }
-  }
-}
-
-// Give the API access to KeyVault
-module appKeyVaultAccess './core/security/keyvault-access.bicep' = {
-  name: 'app-keyvault-access'
-  params: {
-    keyVaultName: keyVault.outputs.name
-    principalId: app.outputs.APP_IDENTITY_PRINCIPAL_ID
-  }
-}
-
-// Data outputs
-output MYSQL_URL string = mySql.outputs.endpoint
-output MYSQL_USER string = mySqlServerAdminName
-
-// App outputs
-output APPLICATIONINSIGHTS_CONNECTION_STRING string = monitoring.outputs.applicationInsightsConnectionString
-output AZURE_KEY_VAULT_ENDPOINT string = keyVault.outputs.endpoint
-output AZURE_KEY_VAULT_NAME string = keyVault.outputs.name
-output AZURE_LOCATION string = location
-output AZURE_TENANT_ID string = tenant().tenantId
-output SPRING_PROFILES_ACTIVE string = 'azure,mysql'

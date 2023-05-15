@@ -1,7 +1,7 @@
 name: Spring
 version: 1.0.0
-summary: Spring Petclinic
-description: Deploy Spring Petlinic Java app with MySQL
+summary: Spring Apps
+description: Deploy Spring Apps Java app
 runner: ARM
 templatePath: azuredeploy.json
 
@@ -13,8 +13,58 @@ parameters:
   required: false
   default: "test"
 
-- id: "mySqlServerAdminPassword"
-  name: "mySqlServerAdminPassword"
-  description: "MySQL Admin Password"
+- id: "springCloudInstanceName"
+  name: "springCloudInstanceName"
+  description: "Name of Spring Apps instance"
+  type: "string"
+  required: false
+  default: ""
+
+- id: "vnetName"
+  name: "vnetName"
+  description: "Name of Spring Apps VNet"
+  type: "string"
+  required: false
+  default: ""
+
+- id: "vnetAddressPrefixes"
+  name: "vnetAddressPrefixes"
+  description: "VNet address Prefixes for Spring Apps"
   type: "string"
   required: true
+  default: "10.4.0.0/16"
+
+- id: "ascAppSubnetName"
+  name: "ascAppSubnetName"
+  description: "Name of Spring Apps application subnet"
+  type: "string"
+  required: false
+  default: ""
+
+- id: "ascAppSubnetAddressPrefixes"
+  name: "ascAppSubnetAddressPrefixes"
+  description: "Address prefixes of Spring Apps application subnet"
+  type: "string"
+  required: true
+  default: "10.4.0.0/24"
+
+- id: "ascRuntimeSubnetName"
+  name: "ascRuntimeSubnetName"
+  description: "Name of Spring Apps runtime subnet"
+  type: "string"
+  required: false
+  default: ""
+
+- id: "ascRuntimeSubnetAddressPrefixes"
+  name: "ascRuntimeSubnetAddressPrefixes"
+  description: "Address prefixes of Spring Apps runtime subnet"
+  type: "string"
+  required: true
+  default: "10.4.1.0/24"
+
+- id: "springCloudServiceCidrs"
+  name: "springCloudServiceCidrs"
+  description: "CIDR of Spring Apps"
+  type: "string"
+  required: true
+  default: "10.20.0.0/16,10.21.0.0/16,10.22.0.1/16"
