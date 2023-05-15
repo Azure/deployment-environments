@@ -31,7 +31,7 @@ parameters:
   name: "vnetAddressPrefixes"
   description: "VNet address Prefixes for Spring Apps"
   type: "string"
-  required: true
+  required: false
   default: "10.4.0.0/16"
 
 - id: "ascAppSubnetName"
@@ -45,7 +45,7 @@ parameters:
   name: "ascAppSubnetAddressPrefixes"
   description: "Address prefixes of Spring Apps application subnet"
   type: "string"
-  required: true
+  required: false
   default: "10.4.0.0/24"
 
 - id: "ascRuntimeSubnetName"
@@ -59,12 +59,12 @@ parameters:
   name: "ascRuntimeSubnetAddressPrefixes"
   description: "Address prefixes of Spring Apps runtime subnet"
   type: "string"
-  required: true
+  required: false
   default: "10.4.1.0/24"
 
 - id: "springCloudServiceCidrs"
   name: "springCloudServiceCidrs"
   description: "CIDR of Spring Apps"
   type: "string"
-  required: true
+  required: false
   default: "10.20.0.0/16,10.21.0.0/16,10.22.0.1/16"
