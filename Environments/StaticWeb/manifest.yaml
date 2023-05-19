@@ -7,14 +7,14 @@ templatePath: azuredeploy.json
 
 parameters:
 - id: "environmentName"
-  name: "environmentName"
+  name: "Environment Name (e.g. test)"
   description: "Name of the Environment"
   type: "string"
   required: false
   default: "test"
 
 - id: "location"
-  name: "location"
+  name: "Location (e.g. westus2, centralus, eastus2, westeurope, eastasia or eastasiastage)"
   description: "location or region"
   type: "string"
   required: false

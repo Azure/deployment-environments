@@ -7,63 +7,63 @@ templatePath: azuredeploy.json
 
 parameters:
 - id: "environmentName"
-  name: "environmentName"
+  name: "Environment Name (e.g. test)"
   description: "Name of the Environment"
   type: "string"
   required: false
   default: "test"
 
 - id: "springCloudInstanceName"
-  name: "springCloudInstanceName"
+  name: "Spring Apps Instance Name (e.g. asa-petlicnic)"
   description: "Name of Spring Apps instance"
   type: "string"
   required: false
   default: ""
 
 - id: "vnetName"
-  name: "vnetName"
+  name: "Visual Network Name (e.g. vnet-petlicnic)"
   description: "Name of Spring Apps VNet"
   type: "string"
   required: false
   default: ""
 
 - id: "vnetAddressPrefixes"
-  name: "vnetAddressPrefixes"
+  name: "Virtual Network Address Prefixes"
   description: "VNet address Prefixes for Spring Apps"
   type: "string"
   required: false
   default: "10.4.0.0/16"
 
 - id: "ascAppSubnetName"
-  name: "ascAppSubnetName"
+  name: "Spring Apps Application Subnet Name (e.g. app-subnet)"
   description: "Name of Spring Apps application subnet"
   type: "string"
   required: false
   default: ""
 
 - id: "ascAppSubnetAddressPrefixes"
-  name: "ascAppSubnetAddressPrefixes"
+  name: "Spring Apps Application Subnet Address Prefixes"
   description: "Address prefixes of Spring Apps application subnet"
   type: "string"
   required: false
   default: "10.4.0.0/24"
 
 - id: "ascRuntimeSubnetName"
-  name: "ascRuntimeSubnetName"
+  name: "Spring Apps Runtime Subnet Name (e.g. runtime-subnet)"
   description: "Name of Spring Apps runtime subnet"
   type: "string"
   required: false
   default: ""
 
 - id: "ascRuntimeSubnetAddressPrefixes"
-  name: "ascRuntimeSubnetAddressPrefixes"
+  name: "Spring Apps Runtime Subnet Address Prefixes"
   description: "Address prefixes of Spring Apps runtime subnet"
   type: "string"
   required: false
   default: "10.4.1.0/24"
 
 - id: "springCloudServiceCidrs"
-  name: "springCloudServiceCidrs"
+  name: "Spring Apps Service CIDRs"
   description: "CIDR of Spring Apps"
   type: "string"
   required: false

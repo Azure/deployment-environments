@@ -7,20 +7,20 @@ templatePath: azuredeploy.json
 
 parameters:
 - id: "environmentName"
-  name: "environmentName"
+  name: "Environment Name (e.g. test)"
   description: "Name of the Environment"
   type: "string"
   required: false
   default: "test"
 
 - id: "publisherEmail"
-  name: "publisherEmail"
+  name: "Publisher Email"
   description: "Eamil of the publisher"
   type: "string"
   required: true
   
 - id: "publisherName"
-  name: "publisherName"
+  name: "Publisher Name"
   description: "Name of the publisher"
   type: "string"
   required: true

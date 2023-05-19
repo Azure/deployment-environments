@@ -7,41 +7,41 @@ templatePath: azuredeploy.json
 
 parameters:
 - id: "environmentName"
-  name: "environmentName"
+  name: "Environment Name (e.g. test)"
   description: "Name of the Environment"
   type: "string"
   required: false
   default: "test"
 
 - id: "location"
-  name: "location"
+  name: "Location (e.g. southcentralus or westeurope)"
   description: "location or region"
   type: "string"
   required: false
   default: "westeurope"
 
 - id: "principalId"
-  name: "principalId"
+  name: "Principal Id (e.g. <user id>)"
   description: "Id of the user or app to assign application roles"
   type: "string"
   required: true
 
 - id: "openAiAccountName"
-  name: "openAiAccountName"
+  name: "OpenAI Account Name (e.g. cog-summarization)"
   description: "Name of Open AI account"
   type: "string"
   required: false
   default: ""
 
 - id: "storageAccountName"
-  name: "storageAccountName"
+  name: "Storage Account Name (e.g. stsummarization)"
   description: "Name of storage account"
   type: "string"
   required: false
   default: ""
 
 - id: "searchServicesName"
-  name: "searchServicesName"
+  name: "Search Services Name (e.g. srch-summarization)"
   description: "Name of search service"
   type: "string"
   required: false
