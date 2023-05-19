@@ -14,14 +14,14 @@ parameters:
   default: "test"
 
 - id: "springCloudInstanceName"
-  name: "Spring Apps Instance Name (e.g. asa-petlicnic)"
+  name: "Spring Apps Instance Name (e.g. asa-petclinic001)"
   description: "Name of Spring Apps instance"
   type: "string"
   required: false
   default: ""
 
 - id: "vnetName"
-  name: "Visual Network Name (e.g. vnet-petlicnic)"
+  name: "Visual Network Name (e.g. vnet-petclinic001)"
   description: "Name of Spring Apps VNet"
   type: "string"
   required: false
