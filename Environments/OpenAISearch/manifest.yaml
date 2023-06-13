@@ -19,6 +19,13 @@ parameters:
   type: "string"
   required: true
 
+- id: "appServicePlanName"
+  name: "App service plan Name (e.g. plan-aisearch)"
+  description: "Name of App service plan"
+  type: "string"
+  required: false
+  default: ""
+
 - id: "backendServiceName"
   name: "Backend Service Name (e.g. app-aisearch)"
   description: "Name of app service"
@@ -43,6 +50,13 @@ parameters:
 - id: "formRecognizerServiceName"
   name: "Form Recognizer Service Name (e.g. cog-fr-aisearch)"
   description: "Name of form recognizer service"
+  type: "string"
+  required: false
+  default: ""
+
+- id: "openAiServiceName"
+  name: "OpenAI Service Name (e.g. cog-aisearch)"
+  description: "Name of OpenAI service"
   type: "string"
   required: false
   default: ""
