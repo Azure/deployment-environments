@@ -60,3 +60,10 @@ parameters:
   type: "string"
   required: false
   default: ""
+
+- id: "region"
+  name: "Region (e.g. eastus)"
+  description: "Region"
+  type: "string"
+  required: false
+  default: "eastus"
