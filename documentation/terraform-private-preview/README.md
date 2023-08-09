@@ -1,3 +1,12 @@
+# Onboarding
+
+To join the Terraform private preview, please submit a support request in the Azure portal on "Azure Deployment Environments". Be sure to include these in the support request:
+ - the Dev Center name
+ - the subscription the Dev Center is in
+ - the region the dev center is in
+
+We will whitelist Terraform environments in your subscription.
+
 # How to Configure Terraform Environment Definitions
 
 Creating environment definitions for Terraform is similar to our current ARM definitions. There are a few Terraform-specific things to worry about though.
@@ -34,3 +43,6 @@ az devcenter dev environment create --dev-center my-devcenter --project my-proje
 ``` bash
 az devcenter dev environment update --dev-center my-devcenter --project my-project --name environment-001 --parameters "{ 'restrictedNetwork': 'false' }" --user-id me
 ```
+# Issues
+
+In general, our team uses either Azure support or the [Developer Community]([url](https://developercommunity.visualstudio.com/deploymentenvironments)https://developercommunity.visualstudio.com/deploymentenvironments). Please submit issues to the developer community.
