@@ -1,4 +1,4 @@
-# lab-data-analytics-synapse
+# Azure Data Labs - Azure Synapse Analytics
 
 This template repository contains all templates to deploy a (secure) **Azure Synapse Analytics environment**. This template offers some optional modules which can be enabled/disabled to support some of architectures below. This template was developed by Azure Data Labs and utilized its' modules, and was tweaked to provide support for ADE.
 
@@ -30,4 +30,3 @@ By navigating through the deployment steps, you will deploy the following resour
 
 - 📘 [Enterprise business intelligence](https://learn.microsoft.com/en-us/azure/architecture/example-scenario/analytics/enterprise-bi-synapse)
 - 📘 [Near real-time lakehouse data processing](https://learn.microsoft.com/en-us/azure/architecture/example-scenario/data/real-time-lakehouse-data-processing)
-- 📘 TBD

@@ -1,4 +1,4 @@
-# lab-data-science-azureml
+# Azure Data Labs - Azure Machine Learning
 
 This template repository contains all templates to deploy a (secure) Azure Machine Learning environment. This template offers some optional modules which can be enabled/disabled to support some of architectures below. This template was provided by Azure Data Labs and utilized their modules, and was tweaked to provide ADE support.
 
@@ -29,4 +29,3 @@ By navigating through the deployment steps, you will deploy the following resour
 - 📘 [Secure Azure Machine Learning Service (AzureML) Environment](https://techcommunity.microsoft.com/t5/fasttrack-for-azure/secure-azure-machine-learning-service-azureml-environment/ba-p/3162297)
 - 📘 [Azure Machine Learning Architecture](https://docs.microsoft.com/en-us/azure/architecture/solution-ideas/articles/azure-machine-learning-solution-architecture)
 - 📘 [Enterprise Security and Compliance for Azure Machine Learning](https://techcommunity.microsoft.com/t5/ai-machine-learning-blog/enterprise-security-and-compliance-for-azure-machine-learning/ba-p/3484858)
-- 📘 TBD
