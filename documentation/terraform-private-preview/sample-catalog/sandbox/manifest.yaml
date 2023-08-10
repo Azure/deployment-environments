@@ -3,4 +3,4 @@ version: 1.0.0
 summary: Empty sandbox environment
 description: Deploys an empty sandbox environment
 runner: Terraform
-templatePath: empty.tf
+templatePath: infra/empty.tf

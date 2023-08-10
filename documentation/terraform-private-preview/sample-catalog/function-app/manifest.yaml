@@ -2,7 +2,7 @@ name: FunctionAppName
 summary: Creates a function app
 description: Deploys an environment using Terraform containing a Function App
 runner: Terraform
-templatePath: function_app.tf
+templatePath: infra/function_app.tf
 parameters: 
 - id: "resource_name"
   name: "Resource Name"

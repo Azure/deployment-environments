@@ -21,10 +21,10 @@ We are also providing a [sample catalog](https://github.com/Azure/deployment-env
 
 ## How to Configure Terraform Environment Definitions
 
-Official documentation details out the step by step process that needs to be followed when [configuring an environment definition using ARM](https://learn.microsoft.com/en-us/azure/deployment-environments/configure-environment-definition) and below are a few instructions that needs to be followed when configuring an environment defintion using Terraform IaC.
+Official documentation details out the step by step process that needs to be followed when [configuring an environment definition using ARM](https://learn.microsoft.com/en-us/azure/deployment-environments/configure-environment-definition) and below are a few instructions that needs to be followed when configuring an environment definition using Terraform IaC.
 
 * Create a Terraform Environment Definition
-  * Similar to ARM files, you need to point to an entrypoint file with the "templatePath" property. In [this](https://github.com/Azure/deployment-environments/blob/main/documentation/terraform-private-preview/WebApp/manifest.yaml#L5) example, we use web_app.tf.
+  * Similar to ARM files, you need to point to an entrypoint file with the "templatePath" property. In [this](https://github.com/Azure/deployment-environments/blob/main/documentation/terraform-private-preview/sample-catalog/web-app/manifest.yaml#L5) example, we use web_app.tf.
 
   * Ensure the "runner" property is set to "Terraform".
   
@@ -38,7 +38,7 @@ provider "azurerm" {
 }
 ```
 
-* If you are adding Terraform based environment definitons to an existing Catalog, sync the Catalog before attempting to create an environment using the specific environment definition. You will now be able to create an environment directly in the [developer portal](https://learn.microsoft.com/en-us/azure/deployment-environments/quickstart-create-access-environments#create-an-environment) or [through CLI](https://learn.microsoft.com/en-us/azure/deployment-environments/how-to-create-access-environments#create-an-environment) using the Terraform based environment defintions
+* If you are adding Terraform based environment definitons to an existing Catalog, sync the Catalog before attempting to create an environment using the specific environment definition. You will now be able to create an environment directly in the [developer portal](https://learn.microsoft.com/en-us/azure/deployment-environments/quickstart-create-access-environments#create-an-environment) or [through CLI](https://learn.microsoft.com/en-us/azure/deployment-environments/how-to-create-access-environments#create-an-environment) using the Terraform based environment definitions
 
 # Getting help or providing feedback
 

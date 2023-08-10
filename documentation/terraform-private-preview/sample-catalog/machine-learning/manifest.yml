@@ -2,7 +2,7 @@ name: AzureMachineLearning
 summary: Terraform example for Azure Data Labs - Data Science with Azure Machine Learning
 description: Deploys an environment using Terraform containing Azure ML resources.
 runner: Terraform
-templatePath: main.tf
+templatePath: infra/main.tf
 parameters: 
 - id: "prefix"
   name: "Prefix"
