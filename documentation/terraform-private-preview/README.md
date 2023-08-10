@@ -11,6 +11,8 @@ We will whitelist Terraform environments in your subscription.
 
 Creating environment definitions for Terraform is similar to our current ARM definitions. There are a few Terraform-specific things to worry about though.
 
+This folder contains 5 functioning environment definitions of varying complexity. Feel free to add this folder as a catalog to your dev center.
+
 ## Guide
 
 * Create a Terraform Environment Definition
