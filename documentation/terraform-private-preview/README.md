@@ -12,7 +12,7 @@ Once we receive the information, we will onboard your subscriptions and will dir
 
 Creating environment definitions for Terraform is similar to our current ARM definitions. See [here]([url](https://learn.microsoft.com/en-us/azure/deployment-environments/configure-environment-definition)) for our current documentation on ARM environment definitions. There are a few Terraform-specific things to worry about though.
 
-This folder contains 5 functioning environment definitions of varying complexity. Feel free to add this folder as a catalog to your dev center.
+[This folder](./SampleCatalog) contains 5 functioning environment definitions of varying complexity. Feel free to add this folder as a catalog to your dev center.
 
 ## Guide
 

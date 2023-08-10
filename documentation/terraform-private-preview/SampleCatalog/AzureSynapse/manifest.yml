@@ -1,6 +1,6 @@
-name: AzureDataLabs_AzureSynapse
-summary: Terraform example for Lab 1 - Data Analytics with Azure Synapse
-description: Deploys an environment using Terraform containing a resource group
+name: AzureSynapse
+summary: Terraform example for Azure Synapse.
+description: Deploys an environment using Terraform containing Azure Synapse.
 runner: Terraform
 templatePath: main.tf
 parameters: 
