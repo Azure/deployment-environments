@@ -8,7 +8,7 @@ We will need following information to onboard you onto the private preview of th
 
 Once we receive the information, we will onboard your subscriptions and will directly share instructions on how you can try out the private preview. 
 
-# Instructions on trying out Terraform templates in Azure Deployment Environments(ADE)
+# Instructions to leverage Terraform support in Azure Deployment Environments(ADE)
 
 ADE's support for Terraform templates enables enterprises to configure the app infrastructure using Terraform IaC, securely provide them to dev teams through Catalog and empower dev teams to leverage those Terraform templates when spinning up deployment environments.
 
