@@ -1,11 +1,12 @@
 # Onboarding
 
-To join the Terraform private preview, please submit a support request in the Azure portal on "Azure Deployment Environments". Be sure to include these in the support request:
- - the Dev Center name
- - the subscription the Dev Center is in
- - the region the dev center is in
+If you haven't already signed-up and would like to sign-up for early access to Terraform support, please [sign-up by filling out the form](https://aka.ms/ade-terraform-signup) or email us[mailto:adesupport@microsoft.com]
 
-We will whitelist Terraform environments in your subscription.
+We will need following information to onboard you onto the private preview of the Terraform support:
+ - Subscription(s) in which Dev Center(s) are or would be created
+ - Region(s) in which the Dev Center(s) are created
+
+Once we receive the information, we will onboard your subscriptions and will directly share instructions on how you can try out the private preview. 
 
 # How to Configure Terraform Environment Definitions
 
