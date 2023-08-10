@@ -16,11 +16,11 @@ This folder contains 5 functioning environment definitions of varying complexity
 ## Guide
 
 * Create a Terraform Environment Definition
-  * Much like with our ARM files, we need to point to an entrypoint file with the "templatePath" property. In [this](https://github.com/j-rewerts/Project-Fidalgo-PrivatePreview/tree/main/TerraformCatalog/VNET) example, we use main.tf.
+  * Much like with our ARM files, we need to point to an entrypoint file with the "templatePath" property. In [this](https://github.com/Azure/deployment-environments/blob/main/documentation/terraform-private-preview/WebApp/manifest.yaml#L5) example, we use web_app.tf.
 
   * Ensure the "runner" property is set to "Terraform".
   
-  * Optionally, your Terraform variables file ([example](https://github.com/j-rewerts/Project-Fidalgo-PrivatePreview/blob/main/TerraformCatalog/VNET/variables.tf)) can contain the variable "resource_group_name". This will be provided by the system, so you don't need this as a parameter in the manifest.yml file.
+  * Optionally, your Terraform variables file ([example](https://github.com/Azure/deployment-environments/blob/main/documentation/terraform-private-preview/WebApp/web_app.tf#L18C1-L18C34)) can contain the variable "resource_group_name". This will be provided by the system, so you don't need this as a parameter in the manifest.yml file.
   
   * When configuring your azurerm Terraform provider block, ensure you set the "skip_provider_registration" to true. If you don't do this, Terraform will attempt to register tons of providers, which our PET identity usually doesn't have permissions to do.
 
@@ -47,4 +47,4 @@ az devcenter dev environment update --dev-center my-devcenter --project my-proje
 ```
 # Issues
 
-In general, our team uses either Azure support or the [Developer Community]([url](https://developercommunity.visualstudio.com/deploymentenvironments)https://developercommunity.visualstudio.com/deploymentenvironments). Please submit issues to the developer community.
+In general, our team uses either Azure support or the [Developer Community](https://developercommunity.visualstudio.com/deploymentenvironments). Please submit issues to the developer community.
