@@ -10,7 +10,7 @@ Once we receive the information, we will onboard your subscriptions and will dir
 
 # Instructions on trying out Terraform templates in Azure Deployment Environments(ADE)
 
-ADE's support for Terraform templates enables enterprises to configure the app infrastructure using Terraform IaC, securely provide them to dev teams through Catalog and empower dev teams to use those Terraform templates to spin up deployment environments.
+ADE's support for Terraform templates enables enterprises to configure the app infrastructure using Terraform IaC, securely provide them to dev teams through Catalog and empower dev teams to leverage those Terraform templates when spinning up deployment environments.
 
 The end-to-end workflows largely remain the same and are detailed out in [official ADE documentation](https://learn.microsoft.com/en-us/azure/deployment-environments/). Official documentation details out the step-by-step process to [attach a repo as a catalog](https://learn.microsoft.com/en-us/azure/deployment-environments/how-to-configure-catalog).
 
