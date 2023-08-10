@@ -37,12 +37,10 @@ provider "azurerm" {
 }
 ```
 
-* If you are adding Terraform based environment definitons to an existing Catalog, sync the Catalog before attempting to create an environment using the specific environment definition.
-
-* Create your environment
-
-You will now be able to create an environment directly in the [developer portal](https://learn.microsoft.com/en-us/azure/deployment-environments/quickstart-create-access-environments#create-an-environment) or [through CLI](https://learn.microsoft.com/en-us/azure/deployment-environments/how-to-create-access-environments#create-an-environment) using the Terraform based environment defintions
+* If you are adding Terraform based environment definitons to an existing Catalog, sync the Catalog before attempting to create an environment using the specific environment definition. You will now be able to create an environment directly in the [developer portal](https://learn.microsoft.com/en-us/azure/deployment-environments/quickstart-create-access-environments#create-an-environment) or [through CLI](https://learn.microsoft.com/en-us/azure/deployment-environments/how-to-create-access-environments#create-an-environment) using the Terraform based environment defintions
 
 # Getting help or providing feedback
 
-If you are facing any issues or have feedback to share on Terraform support, In general, our team uses either Azure support or the [Developer Community](https://developercommunity.visualstudio.com/deploymentenvironments). Please submit issues to the developer community.
+If you are facing any issues or have feedback to share on Terraform support, please create a new issues in [GitHub Issues](https://github.com/Azure/deployment-environments/issues). 
+
+If you have general feedback about the product, please submit the feedback on the [Developer Community](https://developercommunity.visualstudio.com/deploymentenvironments) or by [emailing us directly](mailto:adesupport@microsoft.com).
