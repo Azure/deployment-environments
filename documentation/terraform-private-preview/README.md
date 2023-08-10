@@ -8,13 +8,19 @@ We will need following information to onboard you onto the private preview of th
 
 Once we receive the information, we will onboard your subscriptions and will directly share instructions on how you can try out the private preview. 
 
-# How to Configure Terraform Environment Definitions
+# Instructions on trying out Terraform templates in Azure Deployment Environments(ADE)
 
-Creating environment definitions for Terraform is similar to our current ARM definitions. See [here]([url](https://learn.microsoft.com/en-us/azure/deployment-environments/configure-environment-definition)) for our current documentation on ARM environment definitions. There are a few Terraform-specific things to worry about though.
+ADE's support for Terraform templates enables enterprise customers to configure the app infrastructure using Terraform IaC, securely provide them to dev teams through Catalog and empower dev teams to use those Terraform templates to spin up deployment environments.
 
-[This folder](./SampleCatalog) contains 5 functioning environment definitions of varying complexity. Feel free to add this folder as a catalog to your dev center.
+The end-to-end workflows largely remain the same and are detailed out in (official ADE documentation)[https://learn.microsoft.com/en-us/azure/deployment-environments/].
 
-## Guide
+The only difference is how an Environment Defintion needs to be configured when using Terraform IaC and is detailed out in the below section
+
+## How to Configure Terraform Environment Definitions
+
+Official documentation details out the step by step process that needs to be followed when [configuring an environment definition using ARM](https://learn.microsoft.com/en-us/azure/deployment-environments/configure-environment-definition) and below are a few instructions that needs to be followed when configuring an environment defintion using Terraform IaC.
+
+We are also providing a [sample catalog](./SampleCatalog) that contains 5 sample environment definitions that were built using Terraform IaC. You may directly leverage these templates to quickly experiment with the end to end workflows.
 
 * Create a Terraform Environment Definition
   * Much like with our ARM files, we need to point to an entrypoint file with the "templatePath" property. In [this](https://github.com/Azure/deployment-environments/blob/main/documentation/terraform-private-preview/WebApp/manifest.yaml#L5) example, we use web_app.tf.
