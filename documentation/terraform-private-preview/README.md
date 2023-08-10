@@ -12,7 +12,7 @@ Once we receive the information, we will onboard your subscriptions and will dir
 
 ADE's support for Terraform templates enables enterprise customers to configure the app infrastructure using Terraform IaC, securely provide them to dev teams through Catalog and empower dev teams to use those Terraform templates to spin up deployment environments.
 
-The end-to-end workflows largely remain the same and are detailed out in (official ADE documentation)[https://learn.microsoft.com/en-us/azure/deployment-environments/].
+The end-to-end workflows largely remain the same and are detailed out in [official ADE documentation](https://learn.microsoft.com/en-us/azure/deployment-environments/). Official documentation details out the step-by-step process to [attach a repo as a catalog](https://learn.microsoft.com/en-us/azure/deployment-environments/how-to-configure-catalog).
 
 The only difference is how an Environment Defintion needs to be configured when using Terraform IaC and is detailed out in the below section
 
@@ -23,7 +23,7 @@ Official documentation details out the step by step process that needs to be fol
 We are also providing a [sample catalog](./SampleCatalog) that contains 5 sample environment definitions that were built using Terraform IaC. You may directly leverage these templates to quickly experiment with the end to end workflows.
 
 * Create a Terraform Environment Definition
-  * Much like with our ARM files, we need to point to an entrypoint file with the "templatePath" property. In [this](https://github.com/Azure/deployment-environments/blob/main/documentation/terraform-private-preview/WebApp/manifest.yaml#L5) example, we use web_app.tf.
+  * Similar to ARM files, you need to point to an entrypoint file with the "templatePath" property. In [this](https://github.com/Azure/deployment-environments/blob/main/documentation/terraform-private-preview/WebApp/manifest.yaml#L5) example, we use web_app.tf.
 
   * Ensure the "runner" property is set to "Terraform".
   
@@ -37,19 +37,12 @@ provider "azurerm" {
 }
 ```
 
-* Sync the Catalog
+* If you are adding Terraform based environment definitons to an existing Catalog, sync the Catalog before attempting to create an environment using the specific environment definition.
 
 * Create your environment
 
-``` bash
-az devcenter dev environment create --dev-center my-devcenter --project my-project --name environment-001 --environment-type Prod --environment-definition-name VNET --catalog-name terraform-catalog --parameters "{ 'restrictedNetwork': 'true' }" --user-id me
-```
+You will now be able to create an environment directly in the [developer portal](https://learn.microsoft.com/en-us/azure/deployment-environments/quickstart-create-access-environments#create-an-environment) or [through CLI](https://learn.microsoft.com/en-us/azure/deployment-environments/how-to-create-access-environments#create-an-environment) using the Terraform based environment defintions
 
-* Try re-deploying
+# Getting help or providing feedback
 
-``` bash
-az devcenter dev environment update --dev-center my-devcenter --project my-project --name environment-001 --parameters "{ 'restrictedNetwork': 'false' }" --user-id me
-```
-# Issues
-
-In general, our team uses either Azure support or the [Developer Community](https://developercommunity.visualstudio.com/deploymentenvironments). Please submit issues to the developer community.
+If you are facing any issues or have feedback to share on Terraform support, In general, our team uses either Azure support or the [Developer Community](https://developercommunity.visualstudio.com/deploymentenvironments). Please submit issues to the developer community.
