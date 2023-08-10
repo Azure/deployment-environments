@@ -1,6 +1,6 @@
 # Onboarding
 
-If you haven't already signed-up and would like to sign-up for early access to Terraform support, please [sign-up by filling out the form](https://aka.ms/ade-terraform-signup) or [email us](mailto:adesupport@microsoft.com).
+If you haven't already signed-up for Terraform early access and want to sign-up now, please [sign-up by filling out the form](https://aka.ms/ade-terraform-signup) or [email us](mailto:adesupport@microsoft.com).
 
 We will need following information to onboard you onto the private preview of the Terraform support:
  - Subscription(s) in which Dev Center(s) are or would be created
