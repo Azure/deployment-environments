@@ -1,0 +1,4 @@
+# Simple Sandbox Environment using Terraform
+This blank Terraform template and manifest file will allow a user to deploy an empty resource group managed under ADE. A note to be made about this template, is that any resources created within an environment created under this template will get deleted if the environment is deleted, but their state would not be tracked in a Terraform state file, since they are not configured at time of deployment.
+
+For insight on how to utilize this template and deploy an environment, please see [Create an Environment](https://learn.microsoft.com/en-us/azure/deployment-environments/quickstart-create-access-environments)

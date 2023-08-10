@@ -1,0 +1,25 @@
+# Copyright (c) Microsoft Corporation. All rights reserved.
+# Licensed under the MIT License.
+
+variables:
+  #global - make null to use vars
+  prefix: null
+  postfix: null
+  location: null
+  # Feature flags
+  enable_private_endpoints: "false"
+  enable_jumphost: "false" 
+  enable_synapse_workspace: "false" 
+  enable_machine_learning_compute_cluster: "false" 
+  enable_machine_learning_synapse_spark: "false"
+
+  # Enable ADE based deployment
+  enable_ade_deployment: "true"
+
+  # Terraform remote storage
+  terraform_st_resource_group: rg-adl-terraform-state
+  terraform_st_storage_account: stadlterraformstate
+
+  # Internals - do not touch
+  az_cli_version: 2.45.0
+  terraform_st_container_name: default

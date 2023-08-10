@@ -1,0 +1,38 @@
+name: AzureDataLabs_AzureML
+summary: Terraform example for Azure Data Labs - Data Science with Azure Machine Learning
+description: Deploys an environment using Terraform containing a resource group
+runner: Terraform
+templatePath: main.tf
+parameters: 
+- id: "prefix"
+  name: "Prefix"
+  type: "string"
+  required: true
+- id: "postfix"
+  name: "Postfix"
+  type: "string"
+  required: true
+- id: "location"
+  name: "Location"
+  default: "centralus"
+  type: "string"
+- id: "enable_private_endpoints"
+  name: "enable_private_endpoints"
+  default: "false"
+  type: "string"
+- id: "enable_jumphost"
+  name: "enable_jumphost"
+  default: "false"
+  type: "string"
+- id: "enable_synapse_workspace"
+  name: "enable_synapse_workspace"
+  default: "false"
+  type: "string"
+- id: "enable_machine_learning_compute_cluster"
+  name: "enable_machine_learning_compute_cluster"
+  default: "false"
+  type: "string"
+- id: "enable_machine_learning_synapse_spark"
+  name: "enable_machine_learning_synapse_spark"
+  default: "false"
+  type: "string"

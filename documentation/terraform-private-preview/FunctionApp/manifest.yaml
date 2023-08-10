@@ -1,0 +1,22 @@
+name: FunctionAppName
+summary: Creates a function app
+description: Deploys an environment using Terraform containing a Function App
+runner: mcr.microsoft.com/deployment-environments/runners/terraform:latest
+templatePath: function_app.tf
+parameters: 
+- id: "resource_name"
+  name: "Resource Name"
+  required: true
+  type: "string"
+- id: "location"
+  name: "Location"
+  required: true
+  type: "string"
+- id: "os_type"
+  name: "Operating System"
+  default: "linux"
+  type: "string"
+- id: "runtime"
+  name: "Function Runtime"
+  default: "python"
+  type: "string"
