@@ -14,7 +14,7 @@ ADE's support for Terraform templates enables enterprises to configure the app i
 
 The end-to-end workflows largely remain the same and are detailed out in [official ADE documentation](https://learn.microsoft.com/en-us/azure/deployment-environments/).
 
-The only difference is how an Environment Defintion needs to be configured when using Terraform IaC and is detailed out in the below section
+The only difference is how an Environment Definition needs to be configured when using Terraform IaC and is detailed out in the below section - 
 
 We are also providing a [sample catalog](./SampleCatalog) that contains 5 sample environment definitions that were built using Terraform IaC. You may directly leverage these templates to quickly experiment with the end to end workflows. Official documentation details out the step-by-step process to [attach a repo as a catalog](https://learn.microsoft.com/en-us/azure/deployment-environments/how-to-configure-catalog).
 
