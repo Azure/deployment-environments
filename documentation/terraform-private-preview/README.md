@@ -1,4 +1,4 @@
-# Onboarding
+# Onboarding Process
 
 If you haven't already signed-up for Terraform early access and want to sign-up now, please [sign-up by filling out the form](https://aka.ms/ade-terraform-signup) or [email us](mailto:adesupport@microsoft.com).
 
