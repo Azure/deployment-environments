@@ -1,6 +1,6 @@
 # Documentation on features in Private Preview
 
-This folder would be used to provide documentation on features/capabilities that are currently in private preview(gated) for [Azure Deployment Environments](https://aka.ms/deploymentenvironments) service.
+Documentation folder is used to provide documentation on features/capabilities that are currently in private preview(gated) for [Azure Deployment Environments](https://aka.ms/deploymentenvironments) service.
 
 Below is the current list of capabilities that are in private preview -
 
