@@ -8,7 +8,7 @@ An Environment is a collection of Azure resources on which your application is d
 
 [Environments](https://github.com/Azure/deployment-environments/tree/main/Environments) folder consists of sample templates that you can use to quickly get started with the service.
 
-[Documentation](https://github.com/Azure/deployment-environments/tree/main/documentation) folder consists of details and documentation related to capabilities that are currently in private preview and instructions on how to try them out.
+[Documentation](https://github.com/Azure/deployment-environments/tree/main/documentation) folder details out capabilities that are currently in private preview and instructions on how to try them out.
 
 > Note - ADE currently supports [ARM templates](https://learn.microsoft.com/en-us/azure/azure-resource-manager/templates/overview) publicly and Terraform support is in private preview. In the near future, will support other IaC tools such as Bicep, Pulumi, etc.
 
