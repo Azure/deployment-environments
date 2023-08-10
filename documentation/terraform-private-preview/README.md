@@ -21,7 +21,7 @@ This folder contains 5 functioning environment definitions of varying complexity
 
   * Ensure the "runner" property is set to "Terraform".
   
-  * When configuring your azurerm Terraform provider block, ensure you set the "skip_provider_registration" to true. If you don't do this, Terraform will attempt to register tons of providers, which our PET identity usually doesn't have permissions to do.
+  * When configuring your "AzureRM" Terraform provider block, ensure you set the "skip_provider_registration" to true. If you don't do this, Terraform will attempt to register tons of providers, which our PET identity usually doesn't have permissions to do.
 
 ```
 provider "azurerm" {
