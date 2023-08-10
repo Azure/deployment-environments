@@ -21,8 +21,6 @@ This folder contains 5 functioning environment definitions of varying complexity
 
   * Ensure the "runner" property is set to "Terraform".
   
-  * Optionally, your Terraform variables file ([example](https://github.com/Azure/deployment-environments/blob/main/documentation/terraform-private-preview/WebApp/web_app.tf#L18C1-L18C34)) can contain the variable "resource_group_name". This will be provided by the system, so you don't need this as a parameter in the manifest.yml file.
-  
   * When configuring your azurerm Terraform provider block, ensure you set the "skip_provider_registration" to true. If you don't do this, Terraform will attempt to register tons of providers, which our PET identity usually doesn't have permissions to do.
 
 ```
