@@ -2,7 +2,7 @@ name: AzureSynapse
 summary: Terraform example for Azure Synapse.
 description: Deploys an environment using Terraform containing Azure Synapse.
 runner: Terraform
-templatePath: infra/main.tf
+templatePath: main.tf
 parameters: 
 - id: "prefix"
   name: "Prefix"

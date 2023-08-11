@@ -2,7 +2,7 @@ name: WebApp
 summary: Creates a web app
 description: Deploys an environment using Terraform containing a Web App
 runner: Terraform
-templatePath: infra/web_app.tf
+templatePath: web_app.tf
 parameters:
   - id: "resource_name"
     name: "Resource Name"
