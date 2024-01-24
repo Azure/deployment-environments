@@ -9,4 +9,4 @@ jobs:
         azureSubscription: <AzureServiceConnectionName>
         scriptType: 'pscore'
         scriptLocation: 'inlineScript'
-        inlineScript: 'az devcenter dev environment create --dev-center-name <DevCenterName> --project-name <DevCenterProjectName> --catalog-name <DevCenterCatalogName> --environment-definition-name <EnvironmentDefinitionName> --environment-type <DevCenterProjectEnvironmentTypeName> --name <DeploymentEnvironmentInstanceToCreateName> --parameters Environments/${{ variables.environmentName }}/ade.parameters.json '
+        inlineScript: 'az devcenter dev environment create --dev-center-name <DevCenterName> --project-name <DevCenterProjectName> --catalog-name <DevCenterCatalogName> --environment-definition-name ${{ variables.environmentName }} --environment-type <DevCenterProjectEnvironmentTypeName> --name <DeploymentEnvironmentInstanceToCreateName> --parameters Environments/${{ variables.environmentName }}/ade.parameters.json '
