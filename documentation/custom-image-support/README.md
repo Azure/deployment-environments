@@ -31,13 +31,13 @@ RUN az bicep install
 
 Within the ADE-authored images, operations are determined and executed based off of the operation name. Currently, the two operation names supported are 'deploy' and 'delete', with plans to expand this moving forward.
 
-To set up your custom image to utilize this structure, specify a folder at the level of your Dockerfile named 'actions.d', and specify two files, 'deploy.sh', and 'delete.sh'. The 'deploy' shell script will run when your environment is created or redeployed, and the 'delete' shell script will run when your environment is deleted. You can see examples of this within this repository under the Runner-Images folder for the ARM-Bicep image.
+To set up your custom image to utilize this structure, specify a folder at the level of your Dockerfile named 'scripts', and specify two files, 'deploy.sh', and 'delete.sh'. The 'deploy' shell script will run when your environment is created or redeployed, and the 'delete' shell script will run when your environment is deleted. You can see examples of this within this repository under the Runner-Images folder for the ARM-Bicep image.
 
 To ensure these shell scripts are executable, add the following lines to your Dockerfile:
 ```docker
-COPY actions.d/* /actions.d/
-RUN find /actions.d/ -type f -iname "*.sh" -exec dos2unix '{}' '+'
-RUN find /actions.d/ -type f -iname "*.sh" -exec chmod +x {} \;
+COPY scripts/* /scripts/
+RUN find /scripts/ -type f -iname "*.sh" -exec dos2unix '{}' '+'
+RUN find /scripts/ -type f -iname "*.sh" -exec chmod +x {} \;
 ```
 ### Building the Image
 
@@ -52,7 +52,7 @@ For example, if you wanted to save your image under a repository within your rep
 docker build . -t {YOUR_REGISTRY}.azurecr.io/customImage:1.0.0
 ```
 ## Pushing the Docker Image to a Registry
-In order to currently use custom images, you will need to set up a publicly-accessible image registry with anonymous image pull enabled. This way, Azure Deployment Environments can access your custom image to execute in our container.
+In order to use custom images, you will need to set up a publicly-accessible image registry with anonymous image pull enabled. This way, Azure Deployment Environments can access your custom image to execute in our container.
 
 Azure Container Registry is an offering by Azure that provides storing of container images and similar artifacts.
 
