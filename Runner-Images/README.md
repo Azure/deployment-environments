@@ -20,7 +20,7 @@ In addtion, by using the provided runner images, you can invoke the ADE CLI with
 You can find more information about Custom Image Support [here](../documentation/custom-image-support/README.md).
 
 ## Available Versions
-Core: 2.3.0-preview(latest)
+Core: 2.1.0-preview, 2.2.0-preivew, 2.3.0-preview(latest)
 ARM/Bicep: 2.1.0-preview, 2.2.0-preview, 2.3.0-preview, 2.3.1-preview(latest)
 
 ## Support
