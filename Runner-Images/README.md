@@ -2,7 +2,8 @@
 
 ## Featured Repos
 + Core: Core ADE Image
-+ ARM-Bicep: ADE Image for ARM/Bicep Deployments/Deletions 
++ ARM-Bicep: ADE Image for ARM/Bicep Deployments/Deletions
++ Terraform: ADE Image for Terraform Deployments/Deletions
 
 ## About Azure Deployment Environments
 Azure Deployment Environments empowers development teams to quickly and easily spin up app infrastructure with project-based templates that establish consistency and best practices while maximizing security. This on-demand access to secure environments accelerates the stages of the software development lifecycle in a compliant and cost-efficient way.
@@ -10,7 +11,7 @@ Azure Deployment Environments empowers development teams to quickly and easily s
 The provided images for ADE allow customers to create custom images for their deployments to be executed with, utilizing additional custom scripts or steps that fit their deployment workflow.
 
 ## How to Use the Images
-In order to utilize these images as a base for your custom images, add the following line of code to your Dockerfile:\
+In order to use these images as a base for your custom images, add the following line of code to your Dockerfile:
 ``` 
 FROM mcr.microsoft.com/deployment-environments/runners/{REPO_NAME}:{IMAGE_VERSION}
 ```
@@ -19,9 +20,10 @@ In addtion, by using the provided runner images, you can invoke the ADE CLI with
 
 You can find more information about Custom Image Support [here](../documentation/custom-image-support/README.md).
 
-## Available Versions
-Core: 2.1.0-preview, 2.2.0-preivew, 2.3.0-preview(latest)
-ARM/Bicep: 2.1.0-preview, 2.2.0-preview, 2.3.0-preview, 2.3.1-preview(latest)
+## Available Image Repositories and Versions
+Core: 2.3.3-preview(latest), latest
+ARM/Bicep: 2.3.3-preview(latest), latest
+Terraform: 2.3.3-preview(latest), latest
 
 ## Support
 

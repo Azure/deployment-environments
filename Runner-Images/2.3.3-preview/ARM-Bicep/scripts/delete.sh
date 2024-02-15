@@ -24,6 +24,7 @@ done
 log $(az deployment group create --resource-group "$ADE_RESOURCE_GROUP_NAME" \
                                               --name "$deploymentName" \
                                               --no-prompt true --no-wait --mode Complete \
+                                              --only-show-errors \
                                               --template-file "$DIR/empty.json" 2>$ADE_ERROR_LOG) ">>> Beginning Deletion ..."
 
 if [ $? -eq 0 ]; then # deployment successfully created

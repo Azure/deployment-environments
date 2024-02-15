@@ -40,5 +40,12 @@ outputDeploymentErrors() {
     for item in "${errors[@]}"; do
         error "Target Resource ID: $( echo $item | jq '. | .targetResource.id' )\nError Code: $( echo $item | jq '.statusMessage.error.code' )\nError Message: $( echo $item | jq '.statusMessage.error.message' )\n"
         echo "Target Resource ID: $( echo $item | jq '. | .targetResource.id' )\nError Code: $( echo $item | jq '.statusMessage.error.code' )\nError Message: $( echo $item | jq '.statusMessage.error.message' )\n" >> $ADE_ERROR_LOG
+        readarray errorDetails -t <<< $(echo $item | jq -c '.statusMessage.error.details')
+        if [ "${errorDetails[0]}" != null ]; then
+            for detail in "${errorDetails[@]}"; do
+                error "Error Detail Code: $( echo $detail | jq '.[] | .code')\nError Detail Message: $(echo $detail | jq '.[] | .message')\n"
+                echo "Error Detail Code: $( echo $detail | jq '.[] | .code')\nError Detail Message: $(echo $detail | jq '.[] | .message')\n" >> $ADE_ERROR_LOG
+            done
+        fi
     done
 }

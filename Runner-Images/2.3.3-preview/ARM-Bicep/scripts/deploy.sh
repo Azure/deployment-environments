@@ -31,6 +31,7 @@ log $(az deployment group create --subscription $ADE_SUBSCRIPTION_ID \
                                                     --no-prompt true --no-wait \
                                                     --template-file "$ADE_TEMPLATE_FILE" \
                                                     --parameters "$deploymentParameters" \
+                                                    --only-show-errors \
                                                     2>$ADE_ERROR_LOG) ">>> Beginning Deployment ...\n"
 
 if [ $? -eq 0 ]; then # deployment successfully created

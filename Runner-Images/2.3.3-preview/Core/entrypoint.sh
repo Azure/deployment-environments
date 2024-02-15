@@ -30,7 +30,12 @@ catch() {
         exitCode=$( echo "${exitCodeMap[$1]}")
         additionalErrorDetails=$(cat $ADE_ERROR_LOG)
         > $ADE_ERROR_LOG
-        error "Operation failed with exit code $exitCode !!!"
+        if [ -z "$exitCode" ]; then
+            exitCode="UnknownError"
+            error "Operation failed with exit code $exitCode, code value $1 !!!"
+        else
+            error "Operation failed with exit code $exitCode !!!"
+        fi
         ade operation-result --code $exitCode --message "Operation failed with exit code $exitCode ! Additional Error Details: $additionalErrorDetails"
     else
         log "Operation completed successfully!"
@@ -44,7 +49,6 @@ export ADE_OPERATION_LOG=$ADE_TEMP/operation.log
 export ADE_ERROR_LOG=$ADE_TEMP/error.log
 export ADE_OUTPUTS=$ADE_TEMP/output.json
 export ADE_STORAGE=/ade/storage
-export ARM_USE_MSI=true
 
 mkdir -p $ADE_TEMP
 touch $ADE_OPERATION_LOG
@@ -59,8 +63,8 @@ echo "Fetching definition"
 definition=$(ade definitions list)
 
 echo "Identifying managed identity"
-export ARM_CLIENT_ID=$(ade info client-id)
-export ARM_TENANT_ID=$(ade info tenant-id)
+export ADE_CLIENT_ID=$(ade info client-id)
+export ADE_TENANT_ID=$(ade info tenant-id)
 
 echo "Setting up catalog folder structure"
 contentSourcePath=$(echo $definition | jq -r ".ContentSourcePath")
@@ -72,15 +76,14 @@ mkdir -p $ADE_MANIFEST_FOLDER
 
 echo "Fetching environment"
 environment=$(ade environment)
-export ACTION_PARAMETERS=$(echo $environment | jq ".Parameters")
+export ADE_OPERATION_PARAMETERS=$(echo $environment | jq ".Parameters")
 export ADE_ENVIRONMENT_TYPE=$(echo $environment | jq -r ".EnvironmentType")
 export ADE_ENVIRONMENT_NAME=$(echo $environment | jq -r ".Name")
 export ADE_ENVIRONMENT_LOCATION=$(echo $environment | jq -r ".Location")
 environmentRgId=$(echo $environment | jq -r ".ResourceGroupId")
 
-export ENVIRONMENT_RESOURCE_GROUP_NAME=$(echo $environmentRgId | cut -d"/" -f5)
-export ENVIRONMENT_SUBSCRIPTION_ID=$(echo $environmentRgId | cut -d"/" -f3)
-export ARM_SUBSCRIPTION_ID=$ENVIRONMENT_SUBSCRIPTION_ID
+export ADE_RESOURCE_GROUP_NAME=$(echo $environmentRgId | cut -d"/" -f5)
+export ADE_SUBSCRIPTION_ID=$(echo $environmentRgId | cut -d"/" -f3)
 
 echo "Downloading environment definition to $ADE_MANIFEST_FOLDER"
 ade definitions download --folder-path $ADE_MANIFEST_FOLDER
@@ -96,27 +99,20 @@ cd $(dirname $ADE_TEMPLATE_FILE)
 # the script to execute is defined by the following options
 # (the first option matching an executable script file wins)
 #
-# Option 1: a script path is provided as docker CMD command
-#
-# Option 2: a script file following the pattern [ACTION_NAME].sh exists in the
+# Option 1: a script file following the pattern [ADE_OPERATION_NAME].sh exists in the
 #           current working directory (catalog item directory)
 #
-# Option 3: a script file following the pattern [ACTION_NAME].sh exists in the
-#           /actions.d directory (actions script directory)
-
-script="$@"
-
+# Option 2: a script file following the pattern [ADE_OPERATION_NAME].sh exists in the
+#           /scripts directory (operation script directory)
+if [[ $ADE_ENABLE_CUSTOM_DEPLOY = true ]]; then
+    verbose "Using custom built-in operation"
+    script="$(find $PWD -maxdepth 1 -iname "$ADE_OPERATION_NAME.sh")"
+fi
 if [[ -z "$script" ]]; then
-    if [[ $ADE_ENABLE_CUSTOM_DEPLOY = true ]]; then
-        verbose "Using custom built-in operation"
-        script="$(find $PWD -maxdepth 1 -iname "$ACTION_NAME.sh")"
-    fi
-    if [[ -z "$script" ]]; then
-        script="$(find /actions.d -maxdepth 1 -iname "$ACTION_NAME.sh")"
-    fi
-    if [[ -z "$script" ]]; then
-        error "Operation $ACTION_NAME is not supported." && exit 1
-    fi
+    script="$(find /scripts -maxdepth 1 -iname "$ADE_OPERATION_NAME.sh")"
+fi
+if [[ -z "$script" ]]; then
+    error "Operation $ADE_OPERATION_NAME is not supported." && exit 1
 fi
 
 if [[ -f "$script" && -x "$script" ]]; then
