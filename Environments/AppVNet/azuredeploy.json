@@ -4,27 +4,27 @@
   "metadata": {
     "_generator": {
       "name": "bicep",
-      "version": "0.17.1.54307",
-      "templateHash": "17914070543937939267"
+      "version": "0.25.53.49325",
+      "templateHash": "1536878747358182609"
     }
   },
   "parameters": {
     "environmentName": {
       "type": "string",
       "defaultValue": "test",
+      "minLength": 1,
+      "maxLength": 64,
       "metadata": {
         "description": "Name which is used to generate a short unique hash for each resource"
-      },
-      "maxLength": 64,
-      "minLength": 1
+      }
     },
     "location": {
       "type": "string",
       "defaultValue": "[resourceGroup().location]",
+      "minLength": 1,
       "metadata": {
         "description": "Primary location for all resources"
-      },
-      "minLength": 1
+      }
     },
     "databasePassword": {
       "type": "securestring",
@@ -81,8 +81,8 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.17.1.54307",
-              "templateHash": "17810419246017990523"
+              "version": "0.25.53.49325",
+              "templateHash": "847261945363262167"
             }
           },
           "parameters": {
@@ -369,8 +369,8 @@
                   "metadata": {
                     "_generator": {
                       "name": "bicep",
-                      "version": "0.17.1.54307",
-                      "templateHash": "17765872346499755481"
+                      "version": "0.25.53.49325",
+                      "templateHash": "8155104801331874358"
                     }
                   },
                   "parameters": {
