@@ -23,32 +23,32 @@ parameters:
   description: "Id of the user or app to assign application roles"
   type: "string"
   required: false
-  default: "${AZURE_PRINCIPAL_ID}"
+  default: ""
 
 - id: "apiAppExists"
   name: "Api App Exists"
   description: "Api App Exists or not"
   type: "string"
   required: false
-  default: "${SERVICE_API_RESOURCE_EXISTS=false}"
+  default: false
 
 - id: "webAppExists"
   name: "Web App Exists"
   description: "Web App Exists or not"
   type: "string"
   required: false
-  default: "${SERVICE_WEB_RESOURCE_EXISTS=false}"
+  default: false
 
 - id: "webApiBaseUrl"
   name: "Web Api Base Url"
   description: "Base Url of Web Api"
   type: "string"
   required: false
-  default: "${REACT_APP_API_BASE_URL}"
+  default: ""
 
 - id: "useAPIM"
   name: "Use APIM"
   description: "Use APIM or not"
   type: "string"
   required: false
-  default: "${USE_APIM=false}"
+  default: false
