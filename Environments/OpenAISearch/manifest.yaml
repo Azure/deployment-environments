@@ -61,7 +61,7 @@ parameters:
   required: false
   default: ""
 
-- id: "region"
+- id: "location"
   name: "Region (e.g. eastus)"
   description: "Region"
   type: "string"
