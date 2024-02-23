@@ -4,19 +4,19 @@
   "metadata": {
     "_generator": {
       "name": "bicep",
-      "version": "0.17.1.54307",
-      "templateHash": "7083236466102790225"
+      "version": "0.25.53.49325",
+      "templateHash": "16870146603885581990"
     }
   },
   "parameters": {
     "environmentName": {
       "type": "string",
       "defaultValue": "test",
+      "minLength": 1,
+      "maxLength": 64,
       "metadata": {
         "description": "Name which is used to generate a short unique hash for each resource"
-      },
-      "maxLength": 64,
-      "minLength": 1
+      }
     },
     "springCloudInstanceName": {
       "type": "string",
@@ -143,8 +143,8 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.17.1.54307",
-              "templateHash": "6689023659879453668"
+              "version": "0.25.53.49325",
+              "templateHash": "12452574487687496324"
             }
           },
           "parameters": {
@@ -284,8 +284,8 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.17.1.54307",
-              "templateHash": "5594778554212141711"
+              "version": "0.25.53.49325",
+              "templateHash": "1175982527140700654"
             }
           },
           "parameters": {
