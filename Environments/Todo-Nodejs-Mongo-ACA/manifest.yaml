@@ -17,38 +17,3 @@ parameters:
   description: "Location of the resources"
   type: string
   required: true
-
-- id: "principalId"
-  name: "Principal Id (e.g. <user id>)"
-  description: "Id of the user or app to assign application roles"
-  type: string
-  required: false
-  default: ""
-
-- id: "apiAppExists"
-  name: "Api App Exists"
-  description: "Api App Exists or not"
-  type: boolean
-  required: false
-  default: false
-
-- id: "webAppExists"
-  name: "Web App Exists"
-  description: "Web App Exists or not"
-  type: boolean
-  required: false
-  default: false
-
-- id: "webApiBaseUrl"
-  name: "Web Api Base Url"
-  description: "Base Url of Web Api"
-  type: string
-  required: false
-  default: ""
-
-- id: "useAPIM"
-  name: "Use APIM"
-  description: "Use APIM or not"
-  type: boolean
-  required: false
-  default: false
