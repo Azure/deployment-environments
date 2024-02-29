@@ -5,6 +5,7 @@ param tags object = {}
 
 param connectionStringKey string = 'AZURE-COSMOS-CONNECTION-STRING'
 param keyVaultName string
+param keyVaultResourceGroupName string
 
 @allowed([ 'GlobalDocumentDB', 'MongoDB', 'Parse' ])
 param kind string
@@ -31,16 +32,14 @@ resource cosmos 'Microsoft.DocumentDB/databaseAccounts@2022-08-15' = {
   }
 }
 
-resource cosmosConnectionString 'Microsoft.KeyVault/vaults/secrets@2022-07-01' = {
-  parent: keyVault
-  name: connectionStringKey
-  properties: {
-    value: cosmos.listConnectionStrings().connectionStrings[0].connectionString
+module cosmosConnectionStringModule './cosmos-connection-string.bicep' = {
+  name: 'cosmosConnectionStringModule'
+  scope: resourceGroup(keyVaultResourceGroupName)
+  params: {
+    keyVaultName: keyVaultName
+    connectionStringKey: connectionStringKey
+    connectionString: cosmos.listConnectionStrings().connectionStrings[0].connectionString
   }
-}
-
-resource keyVault 'Microsoft.KeyVault/vaults@2022-07-01' existing = {
-  name: keyVaultName
 }
 
 output connectionStringKey string = connectionStringKey
