@@ -1,4 +1,4 @@
-name: Todo-Nodejs-Mongo-AKS
+name: Todo-Shared-AKS
 version: 1.0.0
 summary: Todo Nodejs Mongo AKS
 description: Deploys a todo app with Nodejs and Mongo
