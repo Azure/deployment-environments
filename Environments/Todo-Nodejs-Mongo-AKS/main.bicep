@@ -10,6 +10,7 @@ param location string = resourceGroup().location
 param cosmosAccountName string = ''
 param cosmosDatabaseName string = ''
 param keyvaultName string = ''
+param keyVaultResourceGroupName string = resourceGroup().name
 
 var abbrs = loadJsonContent('./abbreviations.json')
 var resourceToken = toLower(uniqueString(subscription().id, environmentName, location))
@@ -24,6 +25,7 @@ module cosmos './app/db.bicep' = {
     location: location
     tags: tags
     keyVaultName: keyvaultName
+    keyVaultResourceGroupName: keyVaultResourceGroupName
   }
 }
 

@@ -23,3 +23,9 @@ parameters:
   description: "keyvault name that store the secret for mongo connection string"
   type: string
   required: true
+
+- id: "keyvaultResourceGroupName"
+  name: "keyvaultResourceGroupName (e.g. rg-abc123)"
+  description: "keyvault group name contains the key vault above"
+  type: string
+  required: true 
