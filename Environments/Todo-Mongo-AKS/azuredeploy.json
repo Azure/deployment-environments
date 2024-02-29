@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.25.53.49325",
-      "templateHash": "14091873261497882625"
+      "templateHash": "11686091938214168014"
     }
   },
   "parameters": {
@@ -36,6 +36,10 @@
     "keyvaultName": {
       "type": "string",
       "defaultValue": ""
+    },
+    "keyVaultResourceGroupName": {
+      "type": "string",
+      "defaultValue": "[resourceGroup().name]"
     }
   },
   "variables": {
@@ -204,6 +208,9 @@
           },
           "keyVaultName": {
             "value": "[parameters('keyvaultName')]"
+          },
+          "keyVaultResourceGroupName": {
+            "value": "[parameters('keyVaultResourceGroupName')]"
           }
         },
         "template": {
@@ -213,7 +220,7 @@
             "_generator": {
               "name": "bicep",
               "version": "0.25.53.49325",
-              "templateHash": "5730728686647632614"
+              "templateHash": "850519296196313996"
             }
           },
           "parameters": {
@@ -251,6 +258,9 @@
             },
             "keyVaultName": {
               "type": "string"
+            },
+            "keyVaultResourceGroupName": {
+              "type": "string"
             }
           },
           "variables": {
@@ -283,6 +293,9 @@
                   "keyVaultName": {
                     "value": "[parameters('keyVaultName')]"
                   },
+                  "keyVaultResourceGroupName": {
+                    "value": "[parameters('keyVaultResourceGroupName')]"
+                  },
                   "tags": {
                     "value": "[parameters('tags')]"
                   }
@@ -294,7 +307,7 @@
                     "_generator": {
                       "name": "bicep",
                       "version": "0.25.53.49325",
-                      "templateHash": "14549161001187918251"
+                      "templateHash": "13509848683723089892"
                     },
                     "description": "Creates an Azure Cosmos DB for MongoDB account with a database."
                   },
@@ -322,6 +335,9 @@
                       "defaultValue": "AZURE-COSMOS-CONNECTION-STRING"
                     },
                     "keyVaultName": {
+                      "type": "string"
+                    },
+                    "keyVaultResourceGroupName": {
                       "type": "string"
                     }
                   },
@@ -388,6 +404,9 @@
                           "keyVaultName": {
                             "value": "[parameters('keyVaultName')]"
                           },
+                          "keyVaultResourceGroupName": {
+                            "value": "[parameters('keyVaultResourceGroupName')]"
+                          },
                           "tags": {
                             "value": "[parameters('tags')]"
                           },
@@ -402,7 +421,7 @@
                             "_generator": {
                               "name": "bicep",
                               "version": "0.25.53.49325",
-                              "templateHash": "8317058180807592714"
+                              "templateHash": "6834223066721695440"
                             },
                             "description": "Creates an Azure Cosmos DB for MongoDB account."
                           },
@@ -419,6 +438,9 @@
                               "defaultValue": {}
                             },
                             "keyVaultName": {
+                              "type": "string"
+                            },
+                            "keyVaultResourceGroupName": {
                               "type": "string"
                             },
                             "connectionStringKey": {
@@ -449,6 +471,9 @@
                                   "keyVaultName": {
                                     "value": "[parameters('keyVaultName')]"
                                   },
+                                  "keyVaultResourceGroupName": {
+                                    "value": "[parameters('keyVaultResourceGroupName')]"
+                                  },
                                   "kind": {
                                     "value": "MongoDB"
                                   },
@@ -463,7 +488,7 @@
                                     "_generator": {
                                       "name": "bicep",
                                       "version": "0.25.53.49325",
-                                      "templateHash": "13614361263700788271"
+                                      "templateHash": "263326484500044406"
                                     },
                                     "description": "Creates an Azure Cosmos DB account."
                                   },
@@ -484,6 +509,9 @@
                                       "defaultValue": "AZURE-COSMOS-CONNECTION-STRING"
                                     },
                                     "keyVaultName": {
+                                      "type": "string"
+                                    },
+                                    "keyVaultResourceGroupName": {
                                       "type": "string"
                                     },
                                     "kind": {
@@ -526,11 +554,58 @@
                                       }
                                     },
                                     {
-                                      "type": "Microsoft.KeyVault/vaults/secrets",
-                                      "apiVersion": "2022-07-01",
-                                      "name": "[format('{0}/{1}', parameters('keyVaultName'), parameters('connectionStringKey'))]",
+                                      "type": "Microsoft.Resources/deployments",
+                                      "apiVersion": "2022-09-01",
+                                      "name": "cosmosConnectionStringModule",
+                                      "resourceGroup": "[parameters('keyVaultResourceGroupName')]",
                                       "properties": {
-                                        "value": "[listConnectionStrings(resourceId('Microsoft.DocumentDB/databaseAccounts', parameters('name')), '2022-08-15').connectionStrings[0].connectionString]"
+                                        "expressionEvaluationOptions": {
+                                          "scope": "inner"
+                                        },
+                                        "mode": "Incremental",
+                                        "parameters": {
+                                          "keyVaultName": {
+                                            "value": "[parameters('keyVaultName')]"
+                                          },
+                                          "connectionStringKey": {
+                                            "value": "[parameters('connectionStringKey')]"
+                                          },
+                                          "connectionString": {
+                                            "value": "[listConnectionStrings(resourceId('Microsoft.DocumentDB/databaseAccounts', parameters('name')), '2022-08-15').connectionStrings[0].connectionString]"
+                                          }
+                                        },
+                                        "template": {
+                                          "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+                                          "contentVersion": "1.0.0.0",
+                                          "metadata": {
+                                            "_generator": {
+                                              "name": "bicep",
+                                              "version": "0.25.53.49325",
+                                              "templateHash": "16039028337730776547"
+                                            }
+                                          },
+                                          "parameters": {
+                                            "keyVaultName": {
+                                              "type": "string"
+                                            },
+                                            "connectionStringKey": {
+                                              "type": "string"
+                                            },
+                                            "connectionString": {
+                                              "type": "string"
+                                            }
+                                          },
+                                          "resources": [
+                                            {
+                                              "type": "Microsoft.KeyVault/vaults/secrets",
+                                              "apiVersion": "2022-07-01",
+                                              "name": "[format('{0}/{1}', parameters('keyVaultName'), parameters('connectionStringKey'))]",
+                                              "properties": {
+                                                "value": "[parameters('connectionString')]"
+                                              }
+                                            }
+                                          ]
+                                        }
                                       },
                                       "dependsOn": [
                                         "[resourceId('Microsoft.DocumentDB/databaseAccounts', parameters('name'))]"
