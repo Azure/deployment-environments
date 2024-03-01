@@ -1,4 +1,4 @@
-name: Todo-Nodejs-Mongo-ACA
+name: Todo-Mongo-ACA
 version: 1.0.0
 summary: Todo Nodejs Mongo ACA
 description: Deploys a todo app with Nodejs and Mongo
