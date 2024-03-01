@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.25.53.49325",
-      "templateHash": "11686091938214168014"
+      "templateHash": "10034134246524106464"
     }
   },
   "parameters": {
@@ -33,13 +33,16 @@
       "type": "string",
       "defaultValue": ""
     },
-    "keyvaultName": {
+    "keyVaultName": {
       "type": "string",
       "defaultValue": ""
     },
-    "keyVaultResourceGroupName": {
+    "principalId": {
       "type": "string",
-      "defaultValue": "[resourceGroup().name]"
+      "defaultValue": ""
+    },
+    "aksClusterIdentityObjectId": {
+      "type": "string"
     }
   },
   "variables": {
@@ -207,10 +210,7 @@
             "value": "[variables('tags')]"
           },
           "keyVaultName": {
-            "value": "[parameters('keyvaultName')]"
-          },
-          "keyVaultResourceGroupName": {
-            "value": "[parameters('keyVaultResourceGroupName')]"
+            "value": "[reference(resourceId('Microsoft.Resources/deployments', 'keyvault'), '2022-09-01').outputs.name.value]"
           }
         },
         "template": {
@@ -220,7 +220,7 @@
             "_generator": {
               "name": "bicep",
               "version": "0.25.53.49325",
-              "templateHash": "850519296196313996"
+              "templateHash": "5730728686647632614"
             }
           },
           "parameters": {
@@ -258,9 +258,6 @@
             },
             "keyVaultName": {
               "type": "string"
-            },
-            "keyVaultResourceGroupName": {
-              "type": "string"
             }
           },
           "variables": {
@@ -293,9 +290,6 @@
                   "keyVaultName": {
                     "value": "[parameters('keyVaultName')]"
                   },
-                  "keyVaultResourceGroupName": {
-                    "value": "[parameters('keyVaultResourceGroupName')]"
-                  },
                   "tags": {
                     "value": "[parameters('tags')]"
                   }
@@ -307,7 +301,7 @@
                     "_generator": {
                       "name": "bicep",
                       "version": "0.25.53.49325",
-                      "templateHash": "13509848683723089892"
+                      "templateHash": "14549161001187918251"
                     },
                     "description": "Creates an Azure Cosmos DB for MongoDB account with a database."
                   },
@@ -335,9 +329,6 @@
                       "defaultValue": "AZURE-COSMOS-CONNECTION-STRING"
                     },
                     "keyVaultName": {
-                      "type": "string"
-                    },
-                    "keyVaultResourceGroupName": {
                       "type": "string"
                     }
                   },
@@ -404,9 +395,6 @@
                           "keyVaultName": {
                             "value": "[parameters('keyVaultName')]"
                           },
-                          "keyVaultResourceGroupName": {
-                            "value": "[parameters('keyVaultResourceGroupName')]"
-                          },
                           "tags": {
                             "value": "[parameters('tags')]"
                           },
@@ -421,7 +409,7 @@
                             "_generator": {
                               "name": "bicep",
                               "version": "0.25.53.49325",
-                              "templateHash": "6834223066721695440"
+                              "templateHash": "8317058180807592714"
                             },
                             "description": "Creates an Azure Cosmos DB for MongoDB account."
                           },
@@ -438,9 +426,6 @@
                               "defaultValue": {}
                             },
                             "keyVaultName": {
-                              "type": "string"
-                            },
-                            "keyVaultResourceGroupName": {
                               "type": "string"
                             },
                             "connectionStringKey": {
@@ -471,9 +456,6 @@
                                   "keyVaultName": {
                                     "value": "[parameters('keyVaultName')]"
                                   },
-                                  "keyVaultResourceGroupName": {
-                                    "value": "[parameters('keyVaultResourceGroupName')]"
-                                  },
                                   "kind": {
                                     "value": "MongoDB"
                                   },
@@ -488,7 +470,7 @@
                                     "_generator": {
                                       "name": "bicep",
                                       "version": "0.25.53.49325",
-                                      "templateHash": "263326484500044406"
+                                      "templateHash": "13614361263700788271"
                                     },
                                     "description": "Creates an Azure Cosmos DB account."
                                   },
@@ -509,9 +491,6 @@
                                       "defaultValue": "AZURE-COSMOS-CONNECTION-STRING"
                                     },
                                     "keyVaultName": {
-                                      "type": "string"
-                                    },
-                                    "keyVaultResourceGroupName": {
                                       "type": "string"
                                     },
                                     "kind": {
@@ -554,58 +533,11 @@
                                       }
                                     },
                                     {
-                                      "type": "Microsoft.Resources/deployments",
-                                      "apiVersion": "2022-09-01",
-                                      "name": "cosmosConnectionStringModule",
-                                      "resourceGroup": "[parameters('keyVaultResourceGroupName')]",
+                                      "type": "Microsoft.KeyVault/vaults/secrets",
+                                      "apiVersion": "2022-07-01",
+                                      "name": "[format('{0}/{1}', parameters('keyVaultName'), parameters('connectionStringKey'))]",
                                       "properties": {
-                                        "expressionEvaluationOptions": {
-                                          "scope": "inner"
-                                        },
-                                        "mode": "Incremental",
-                                        "parameters": {
-                                          "keyVaultName": {
-                                            "value": "[parameters('keyVaultName')]"
-                                          },
-                                          "connectionStringKey": {
-                                            "value": "[parameters('connectionStringKey')]"
-                                          },
-                                          "connectionString": {
-                                            "value": "[listConnectionStrings(resourceId('Microsoft.DocumentDB/databaseAccounts', parameters('name')), '2022-08-15').connectionStrings[0].connectionString]"
-                                          }
-                                        },
-                                        "template": {
-                                          "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
-                                          "contentVersion": "1.0.0.0",
-                                          "metadata": {
-                                            "_generator": {
-                                              "name": "bicep",
-                                              "version": "0.25.53.49325",
-                                              "templateHash": "16039028337730776547"
-                                            }
-                                          },
-                                          "parameters": {
-                                            "keyVaultName": {
-                                              "type": "string"
-                                            },
-                                            "connectionStringKey": {
-                                              "type": "string"
-                                            },
-                                            "connectionString": {
-                                              "type": "string"
-                                            }
-                                          },
-                                          "resources": [
-                                            {
-                                              "type": "Microsoft.KeyVault/vaults/secrets",
-                                              "apiVersion": "2022-07-01",
-                                              "name": "[format('{0}/{1}', parameters('keyVaultName'), parameters('connectionStringKey'))]",
-                                              "properties": {
-                                                "value": "[parameters('connectionString')]"
-                                              }
-                                            }
-                                          ]
-                                        }
+                                        "value": "[listConnectionStrings(resourceId('Microsoft.DocumentDB/databaseAccounts', parameters('name')), '2022-08-15').connectionStrings[0].connectionString]"
                                       },
                                       "dependsOn": [
                                         "[resourceId('Microsoft.DocumentDB/databaseAccounts', parameters('name'))]"
@@ -685,6 +617,156 @@
             }
           }
         }
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.Resources/deployments', 'keyvault')]"
+      ]
+    },
+    {
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2022-09-01",
+      "name": "keyvault",
+      "properties": {
+        "expressionEvaluationOptions": {
+          "scope": "inner"
+        },
+        "mode": "Incremental",
+        "parameters": {
+          "name": "[if(not(empty(parameters('keyVaultName'))), createObject('value', parameters('keyVaultName')), createObject('value', format('{0}{1}', variables('abbrs').keyVaultVaults, variables('resourceToken'))))]",
+          "location": {
+            "value": "[parameters('location')]"
+          },
+          "tags": {
+            "value": "[variables('tags')]"
+          },
+          "principalId": {
+            "value": "[parameters('principalId')]"
+          }
+        },
+        "template": {
+          "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+          "contentVersion": "1.0.0.0",
+          "metadata": {
+            "_generator": {
+              "name": "bicep",
+              "version": "0.25.53.49325",
+              "templateHash": "17948623451174129396"
+            },
+            "description": "Creates an Azure Key Vault."
+          },
+          "parameters": {
+            "name": {
+              "type": "string"
+            },
+            "location": {
+              "type": "string",
+              "defaultValue": "[resourceGroup().location]"
+            },
+            "tags": {
+              "type": "object",
+              "defaultValue": {}
+            },
+            "principalId": {
+              "type": "string",
+              "defaultValue": ""
+            }
+          },
+          "resources": [
+            {
+              "type": "Microsoft.KeyVault/vaults",
+              "apiVersion": "2022-07-01",
+              "name": "[parameters('name')]",
+              "location": "[parameters('location')]",
+              "tags": "[parameters('tags')]",
+              "properties": {
+                "tenantId": "[subscription().tenantId]",
+                "sku": {
+                  "family": "A",
+                  "name": "standard"
+                },
+                "accessPolicies": "[if(not(empty(parameters('principalId'))), createArray(createObject('objectId', parameters('principalId'), 'permissions', createObject('secrets', createArray('get', 'list')), 'tenantId', subscription().tenantId)), createArray())]"
+              }
+            }
+          ],
+          "outputs": {
+            "endpoint": {
+              "type": "string",
+              "value": "[reference(resourceId('Microsoft.KeyVault/vaults', parameters('name')), '2022-07-01').vaultUri]"
+            },
+            "name": {
+              "type": "string",
+              "value": "[parameters('name')]"
+            }
+          }
+        }
+      }
+    },
+    {
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2022-09-01",
+      "name": "cluster-keyvault-access",
+      "properties": {
+        "expressionEvaluationOptions": {
+          "scope": "inner"
+        },
+        "mode": "Incremental",
+        "parameters": {
+          "keyVaultName": {
+            "value": "[parameters('keyVaultName')]"
+          },
+          "principalId": {
+            "value": "[parameters('aksClusterIdentityObjectId')]"
+          }
+        },
+        "template": {
+          "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+          "contentVersion": "1.0.0.0",
+          "metadata": {
+            "_generator": {
+              "name": "bicep",
+              "version": "0.25.53.49325",
+              "templateHash": "815983560956742247"
+            },
+            "description": "Assigns an Azure Key Vault access policy."
+          },
+          "parameters": {
+            "name": {
+              "type": "string",
+              "defaultValue": "add"
+            },
+            "keyVaultName": {
+              "type": "string"
+            },
+            "permissions": {
+              "type": "object",
+              "defaultValue": {
+                "secrets": [
+                  "get",
+                  "list"
+                ]
+              }
+            },
+            "principalId": {
+              "type": "string"
+            }
+          },
+          "resources": [
+            {
+              "type": "Microsoft.KeyVault/vaults/accessPolicies",
+              "apiVersion": "2022-07-01",
+              "name": "[format('{0}/{1}', parameters('keyVaultName'), parameters('name'))]",
+              "properties": {
+                "accessPolicies": [
+                  {
+                    "objectId": "[parameters('principalId')]",
+                    "tenantId": "[subscription().tenantId]",
+                    "permissions": "[parameters('permissions')]"
+                  }
+                ]
+              }
+            }
+          ]
+        }
       }
     }
   ],
@@ -704,6 +786,14 @@
     "AZURE_TENANT_ID": {
       "type": "string",
       "value": "[tenant().tenantId]"
+    },
+    "AZURE_KEY_VAULT_ENDPOINT": {
+      "type": "string",
+      "value": "[reference(resourceId('Microsoft.Resources/deployments', 'keyvault'), '2022-09-01').outputs.endpoint.value]"
+    },
+    "AZURE_KEY_VAULT_NAME": {
+      "type": "string",
+      "value": "[reference(resourceId('Microsoft.Resources/deployments', 'keyvault'), '2022-09-01').outputs.name.value]"
     }
   }
 }
