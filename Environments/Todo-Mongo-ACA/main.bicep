@@ -80,7 +80,7 @@ module api './app/api.bicep' = {
 module containerRegistry './core/host/container-registry.bicep' = {
   name: 'app-container-registry'
   params: {
-    name: containerRegistryName
+    name: !empty(containerRegistryName) ? containerRegistryName : '${abbrs.containerRegistryRegistries}${resourceToken}'
     location: location
     adminUserEnabled: containerRegistryAdminUserEnabled
     tags: tags
