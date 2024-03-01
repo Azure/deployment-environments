@@ -43,7 +43,7 @@ module keyVault './core/security/keyvault.bicep' = {
 module clusterKeyVaultAccess './core/security/keyvault-access.bicep' = {
   name: 'cluster-keyvault-access'
   params: {
-    keyVaultName: keyVaultName
+    keyVaultName: keyVault.outputs.name
     principalId: aksClusterIdentityObjectId
   }
 }
