@@ -18,14 +18,8 @@ parameters:
   type: string
   required: true
 
-- id: "keyvaultName"
-  name: "keyvaultName (e.g. kv-abc123)"
-  description: "keyvault name that store the secret for mongo connection string"
+- id: "aksClusterIdentityObjectId"
+  name: "AKS Cluster Identity Object Id"
+  description: "Object Id of the identity used by the AKS cluster to access the KeyVault"
   type: string
   required: true
-
-- id: "keyvaultResourceGroupName"
-  name: "keyvaultResourceGroupName (e.g. rg-abc123)"
-  description: "keyvault group name contains the key vault above"
-  type: string
-  required: true 
