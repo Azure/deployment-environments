@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.25.53.49325",
-      "templateHash": "7624760505230248688"
+      "templateHash": "14453627926966060746"
     }
   },
   "parameters": {
@@ -1920,9 +1920,7 @@
         },
         "mode": "Incremental",
         "parameters": {
-          "name": {
-            "value": "[parameters('containerRegistryName')]"
-          },
+          "name": "[if(not(empty(parameters('containerRegistryName'))), createObject('value', parameters('containerRegistryName')), createObject('value', format('{0}{1}', variables('abbrs').containerRegistryRegistries, variables('resourceToken'))))]",
           "location": {
             "value": "[parameters('location')]"
           },
