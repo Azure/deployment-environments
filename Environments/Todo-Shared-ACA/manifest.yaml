@@ -1,0 +1,19 @@
+name: Todo-Shared-ACA
+version: 1.0.0
+summary: Todo Shared ACA
+description: Deploys base env (Container environment and monitoring) for todo app
+runner: ARM
+templatePath: azuredeploy.json
+
+parameters:
+- id: "environmentName"
+  name: "Environment Name (e.g. testenv)"
+  description: "Name of the Environment"
+  type: string
+  required: true
+
+- id: "location"
+  name: "Region (e.g. eastus)"
+  description: "Location of the resources"
+  type: string
+  required: true
