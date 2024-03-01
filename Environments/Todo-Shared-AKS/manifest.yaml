@@ -18,11 +18,4 @@ parameters:
   type: string
   required: true
 
-- id: "principalId"
-  name: "principalId (e.g. <GUID>)"
-  description: "principal id that have the permission (get list) to access key vault"
-  type: string
-  required: false
-  default: ''
-
 
