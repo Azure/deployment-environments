@@ -15,11 +15,7 @@ param containerRegistryName string = ''
 
 param applicationInsightsDashboardName string = ''
 param applicationInsightsName string = ''
-param keyVaultName string = ''
 param logAnalyticsName string = ''
-
-@description('Id of the user or app to assign application roles')
-param principalId string = ''
 
 var abbrs = loadJsonContent('./abbreviations.json')
 var resourceToken = toLower(uniqueString(subscription().id, environmentName, location))
@@ -33,18 +29,6 @@ module aks './core/host/aks.bicep' = {
     name: !empty(clusterName) ? clusterName : '${abbrs.containerServiceManagedClusters}${resourceToken}'
     containerRegistryName: !empty(containerRegistryName) ? containerRegistryName : '${abbrs.containerRegistryRegistries}${resourceToken}'
     logAnalyticsName: monitoring.outputs.logAnalyticsWorkspaceName
-    keyVaultName: keyVault.outputs.name
-  }
-}
-
-// Store secrets in a keyvault
-module keyVault './core/security/keyvault.bicep' = {
-  name: 'keyvault'
-  params: {
-    name: !empty(keyVaultName) ? keyVaultName : '${abbrs.keyVaultVaults}${resourceToken}'
-    location: location
-    tags: tags
-    principalId: principalId
   }
 }
 
@@ -62,8 +46,6 @@ module monitoring './core/monitor/monitoring.bicep' = {
 
 // App outputs
 output APPLICATIONINSIGHTS_CONNECTION_STRING string = monitoring.outputs.applicationInsightsConnectionString
-output AZURE_KEY_VAULT_ENDPOINT string = keyVault.outputs.endpoint
-output AZURE_KEY_VAULT_NAME string = keyVault.outputs.name
 output AZURE_LOCATION string = location
 output AZURE_TENANT_ID string = tenant().tenantId
 output AZURE_AKS_CLUSTER_NAME string = aks.outputs.clusterName

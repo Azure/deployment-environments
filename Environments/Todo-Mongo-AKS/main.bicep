@@ -9,8 +9,9 @@ param location string = resourceGroup().location
 
 param cosmosAccountName string = ''
 param cosmosDatabaseName string = ''
-param keyvaultName string = ''
-param keyVaultResourceGroupName string = resourceGroup().name
+param keyVaultName string = ''
+param principalId string = ''
+param aksClusterIdentityObjectId string
 
 var abbrs = loadJsonContent('./abbreviations.json')
 var resourceToken = toLower(uniqueString(subscription().id, environmentName, location))
@@ -24,8 +25,26 @@ module cosmos './app/db.bicep' = {
     databaseName: cosmosDatabaseName
     location: location
     tags: tags
-    keyVaultName: keyvaultName
-    keyVaultResourceGroupName: keyVaultResourceGroupName
+    keyVaultName: keyVault.outputs.name
+  }
+}
+
+// Store secrets in a keyvault
+module keyVault './core/security/keyvault.bicep' = {
+  name: 'keyvault'
+  params: {
+    name: !empty(keyVaultName) ? keyVaultName : '${abbrs.keyVaultVaults}${resourceToken}'
+    location: location
+    tags: tags
+    principalId: principalId
+  }
+}
+
+module clusterKeyVaultAccess './core/security/keyvault-access.bicep' = {
+  name: 'cluster-keyvault-access'
+  params: {
+    keyVaultName: keyVaultName
+    principalId: aksClusterIdentityObjectId
   }
 }
 
@@ -36,3 +55,5 @@ output AZURE_COSMOS_DATABASE_NAME string = cosmos.outputs.databaseName
 // App outputs
 output AZURE_LOCATION string = location
 output AZURE_TENANT_ID string = tenant().tenantId
+output AZURE_KEY_VAULT_ENDPOINT string = keyVault.outputs.endpoint
+output AZURE_KEY_VAULT_NAME string = keyVault.outputs.name

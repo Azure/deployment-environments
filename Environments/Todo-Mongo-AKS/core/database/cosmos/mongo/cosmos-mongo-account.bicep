@@ -4,7 +4,6 @@ param location string = resourceGroup().location
 param tags object = {}
 
 param keyVaultName string
-param keyVaultResourceGroupName string
 param connectionStringKey string = 'AZURE-COSMOS-CONNECTION-STRING'
 
 module cosmos '../../cosmos/cosmos-account.bicep' = {
@@ -14,7 +13,6 @@ module cosmos '../../cosmos/cosmos-account.bicep' = {
     location: location
     connectionStringKey: connectionStringKey
     keyVaultName: keyVaultName
-    keyVaultResourceGroupName: keyVaultResourceGroupName
     kind: 'MongoDB'
     tags: tags
   }

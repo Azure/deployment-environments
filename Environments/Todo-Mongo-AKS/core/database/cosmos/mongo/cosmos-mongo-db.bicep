@@ -7,7 +7,6 @@ param tags object = {}
 param collections array = []
 param connectionStringKey string = 'AZURE-COSMOS-CONNECTION-STRING'
 param keyVaultName string
-param keyVaultResourceGroupName string
 
 module cosmos 'cosmos-mongo-account.bicep' = {
   name: 'cosmos-mongo-account'
@@ -15,7 +14,6 @@ module cosmos 'cosmos-mongo-account.bicep' = {
     name: accountName
     location: location
     keyVaultName: keyVaultName
-    keyVaultResourceGroupName: keyVaultResourceGroupName
     tags: tags
     connectionStringKey: connectionStringKey
   }

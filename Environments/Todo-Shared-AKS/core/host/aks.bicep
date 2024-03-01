@@ -8,9 +8,6 @@ param containerRegistryName string
 @description('The name of the connected log analytics workspace')
 param logAnalyticsName string = ''
 
-@description('The name of the keyvault to grant access')
-param keyVaultName string
-
 @description('The Azure region/location for the AKS resources')
 param location string = resourceGroup().location
 
@@ -209,15 +206,6 @@ module clusterAccess '../security/aks-managed-cluster-access.bicep' = if (enable
   params: {
     clusterName: managedCluster.outputs.clusterName
     principalId: principalId
-  }
-}
-
-// Give the AKS Cluster access to KeyVault
-module clusterKeyVaultAccess '../security/keyvault-access.bicep' = {
-  name: 'cluster-keyvault-access'
-  params: {
-    keyVaultName: keyVaultName
-    principalId: managedCluster.outputs.clusterIdentity.objectId
   }
 }
 
