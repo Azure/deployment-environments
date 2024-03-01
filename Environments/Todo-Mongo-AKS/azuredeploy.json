@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.25.53.49325",
-      "templateHash": "10034134246524106464"
+      "templateHash": "2845459636497042502"
     }
   },
   "parameters": {
@@ -712,7 +712,7 @@
         "mode": "Incremental",
         "parameters": {
           "keyVaultName": {
-            "value": "[parameters('keyVaultName')]"
+            "value": "[reference(resourceId('Microsoft.Resources/deployments', 'keyvault'), '2022-09-01').outputs.name.value]"
           },
           "principalId": {
             "value": "[parameters('aksClusterIdentityObjectId')]"
@@ -767,7 +767,10 @@
             }
           ]
         }
-      }
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.Resources/deployments', 'keyvault')]"
+      ]
     }
   ],
   "outputs": {
