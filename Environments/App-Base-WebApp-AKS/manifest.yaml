@@ -1,0 +1,28 @@
+name: App-Base-WebApp-AKS
+version: 1.0.0
+summary: App Base Nodejs Mongo AKS
+description: Deploys a base infra for AKS app dev with Nodejs and Mongo
+runner: ARM
+templatePath: azuredeploy.json
+
+parameters:
+- id: "environmentName"
+  name: "Environment Name (e.g. testenv)"
+  description: "Name of the Environment"
+  type: string
+  required: true
+
+- id: "location"
+  name: "Region (e.g. eastus)"
+  description: "Location of the resources"
+  type: string
+  required: true
+
+- id: "principalId"
+  name: "principalId (e.g. <GUID>)"
+  description: "principal id that have the permission (get list) to access key vault"
+  type: string
+  required: false
+  default: ''
+
+
