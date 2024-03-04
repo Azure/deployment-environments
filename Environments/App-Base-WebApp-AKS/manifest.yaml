@@ -1,7 +1,7 @@
 name: App-Base-WebApp-AKS
 version: 1.0.0
-summary: App Base Nodejs Mongo AKS
-description: Deploys a base infra for AKS app dev with Nodejs and Mongo
+summary: Base infra for AKS web app dev
+description: Deploys a todo app with Nodejs and Mongo
 runner: ARM
 templatePath: azuredeploy.json
 
@@ -18,11 +18,8 @@ parameters:
   type: string
   required: true
 
-- id: "principalId"
-  name: "principalId (e.g. <GUID>)"
-  description: "principal id that have the permission (get list) to access key vault"
+- id: "aksClusterIdentityObjectId"
+  name: "AKS Cluster Identity Object Id"
+  description: "Object Id of the identity used by the AKS cluster to access the KeyVault"
   type: string
-  required: false
-  default: ''
-
-
+  required: true
