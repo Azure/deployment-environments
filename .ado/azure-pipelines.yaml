@@ -1,0 +1,12 @@
+jobs:
+  - job: create_ADE
+    variables:
+      environmentName: 'WebApp'
+    steps:
+    - task: AzureCLI@2
+      displayName: Deploy ADE Environment
+      inputs:
+        azureSubscription: <AzureServiceConnectionName>
+        scriptType: 'pscore'
+        scriptLocation: 'inlineScript'
+        inlineScript: 'az devcenter dev environment create --dev-center-name <DevCenterName> --project-name <DevCenterProjectName> --catalog-name <DevCenterCatalogName> --environment-definition-name ${{ variables.environmentName }} --environment-type <DevCenterProjectEnvironmentTypeName> --name <DeploymentEnvironmentInstanceToCreateName> --parameters Environments/${{ variables.environmentName }}/ade.parameters.json '
