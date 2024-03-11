@@ -6,7 +6,6 @@ set -e # exit on error
 
 DIR=$(dirname "$0")
 source  $DIR/_common.sh
-source "/shared/commands.sh"
 
 deploymentName=$(date +"%Y-%m-%d-%H%M%S")
 deploymentOutput=""
@@ -14,25 +13,24 @@ deploymentOutput=""
 # format the parameters as arm parameters
 deploymentParameters=$(echo "$ADE_OPERATION_PARAMETERS" | jq --compact-output '{ "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#", "contentVersion": "1.0.0.0", "parameters": (to_entries | if length == 0 then {} else (map( { (.key): { "value": .value } } ) | add) end) }' )
 
-log "Signing into Azure using MSI"
+echo "Signing into Azure using MSI"
 while true; do
     # managed identity isn't available immediately
     # we need to do retry after a short nap
-    az login --identity --allow-no-subscriptions --only-show-errors --output none 2> $ADE_ERROR_LOG && {
-        log "Successfully signed into Azure"
+    az login --identity --allow-no-subscriptions --only-show-errors --output none && {
+        echo "Successfully signed into Azure"
         break
     } || sleep 5
 done
 
-header "Deploying ARM/Bicep template"
-log $(az deployment group create --subscription $ADE_SUBSCRIPTION_ID \
-                                                    --resource-group "$ADE_RESOURCE_GROUP_NAME" \
-                                                    --name "$deploymentName" \
-                                                    --no-prompt true --no-wait \
-                                                    --template-file "$ADE_TEMPLATE_FILE" \
-                                                    --parameters "$deploymentParameters" \
-                                                    --only-show-errors \
-                                                    2>$ADE_ERROR_LOG) ">>> Beginning Deployment ...\n"
+echo -e "\n>>>Deploying ARM/Bicep template...\n"
+az deployment group create --subscription $ADE_SUBSCRIPTION_ID \
+    --resource-group "$ADE_RESOURCE_GROUP_NAME" \
+    --name "$deploymentName" \
+    --no-prompt true --no-wait \
+    --template-file "$ADE_TEMPLATE_FILE" \
+    --parameters "$deploymentParameters" \
+    --only-show-errors
 
 if [ $? -eq 0 ]; then # deployment successfully created
     while true; do
@@ -46,7 +44,7 @@ if [ $? -eq 0 ]; then # deployment successfully created
 
         if [[ "CANCELED|FAILED|SUCCEEDED" == *"${ProvisioningState^^}"* ]]; then
 
-            log "\nDeployment $deploymentName: $ProvisioningState"
+            echo -e "\nDeployment $deploymentName: $ProvisioningState"
 
             if [[ "CANCELED|FAILED" == *"${ProvisioningState^^}"* ]]; then
                 outputDeploymentErrors "$ProvisioningDetails"
@@ -57,11 +55,15 @@ if [ $? -eq 0 ]; then # deployment successfully created
         fi
 
     done
+    
+    echo -e "\n>>> Generating outputs for ADE...\n"
 
-    header "Generating Outputs"
     deploymentOutput=$(az deployment group show -g "$ADE_RESOURCE_GROUP_NAME" -n "$deploymentName" --query properties.outputs)
+    if [ -z "$deploymentOutput" ]; then
+        deploymentOutput="{}"
+    fi
     echo "{\"outputs\": $deploymentOutput}" > $ADE_OUTPUTS
-    log "Outputs successfully generated"
+    echo "Outputs successfully generated for ADE"
 else
-    log "Deployment failed to create."
+    echo "Deployment failed to create."
 fi

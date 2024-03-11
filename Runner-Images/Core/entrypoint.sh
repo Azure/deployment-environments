@@ -7,7 +7,7 @@ set -e # exit on error
 trap 'catch $? $LINENO' EXIT
 
 source "/shared/commands.sh"
-declare -g -x -A exitCodeMap=( ["1"]="DeploymentError" ["7"]="InvalidEndpoint" ["8"]="InvalidDevCenterId" ["9"]="CliSetupError" ["10"]="InvalidOperationId" ["11"]="RequestFailed" ["12"]="InvalidCliInput" ["13"]="FileOperationError" ["99"]="UnknownError")
+declare -g -x -A exitCodeMap=( ["1"]="DeploymentError" ["7"]="InvalidEndpoint" ["8"]="InvalidDevCenterId" ["9"]="CliSetupError" ["10"]="InvalidOperationId" ["11"]="RequestFailed" ["12"]="InvalidCliInput" ["13"]="FileOperationError" ["14"]="EnvironmentStorageExceeded" ["15"]="SecurityError" ["16"]="DeploymentIdentitySignInError" ["99"]="UnknownError")
 
 # Called on exit.
 # Handles failures, updating storage, logs, etc.
@@ -15,13 +15,13 @@ declare -g -x -A exitCodeMap=( ["1"]="DeploymentError" ["7"]="InvalidEndpoint" [
 catch() {
     # Enable glob bash options, use a glob to list all files in storage, then count the number of them.
     if (shopt -s nullglob dotglob; f=($ADE_STORAGE/*); ((${#f[@]}))); then
-        echo "Uploading environment state to $ADE_STORAGE"
+        verbose "Uploading environment state to $ADE_STORAGE"
         ade files upload --folder-path $ADE_STORAGE
     fi
 
     # Send outputs if we've written any
     if [ -s $ADE_OUTPUTS ]; then
-        echo "Uploading outputs"
+        verbose "Uploading outputs"
         ade outputs upload --file $ADE_OUTPUTS
     fi
 
@@ -43,64 +43,21 @@ catch() {
 
 }
 
-# New hard-coded variables
-export ADE_TEMP=/ade/temp
-export ADE_OPERATION_LOG=$ADE_TEMP/operation.log
-export ADE_ERROR_LOG=$ADE_TEMP/error.log
-export ADE_OUTPUTS=$ADE_TEMP/output.json
-export ADE_STORAGE=/ade/storage
+verbose "Initializing runner"
+eval "$(ade init)"
 
-mkdir -p $ADE_TEMP
-touch $ADE_OPERATION_LOG
-touch $ADE_ERROR_LOG
-
-# TODO: consider using the CLI to set these variables. Would make versioning easier post-custom runner.
-# TODO: handle errors returned from RMS API.
-# TODO: review all environment variable names.
-# TODO: upload outputs.
-
-echo "Fetching definition"
-definition=$(ade definitions list)
-
-echo "Identifying managed identity"
-export ADE_CLIENT_ID=$(ade info client-id)
-export ADE_TENANT_ID=$(ade info tenant-id)
-
-echo "Setting up catalog folder structure"
-contentSourcePath=$(echo $definition | jq -r ".ContentSourcePath")
-templatePath=$(echo $definition | jq -r ".TemplatePath")
-catalogRoot=/ade/repository
-export ADE_MANIFEST_FOLDER="$catalogRoot/$contentSourcePath"
-export ADE_TEMPLATE_FILE="$catalogRoot/$templatePath"
-mkdir -p $ADE_MANIFEST_FOLDER
-
-echo "Fetching environment"
-environment=$(ade environment)
-export ADE_OPERATION_PARAMETERS=$(echo $environment | jq ".Parameters")
-export ADE_ENVIRONMENT_TYPE=$(echo $environment | jq -r ".EnvironmentType")
-export ADE_ENVIRONMENT_NAME=$(echo $environment | jq -r ".Name")
-export ADE_ENVIRONMENT_LOCATION=$(echo $environment | jq -r ".Location")
-environmentRgId=$(echo $environment | jq -r ".ResourceGroupId")
-
-export ADE_RESOURCE_GROUP_NAME=$(echo $environmentRgId | cut -d"/" -f5)
-export ADE_SUBSCRIPTION_ID=$(echo $environmentRgId | cut -d"/" -f3)
-
-echo "Downloading environment definition to $ADE_MANIFEST_FOLDER"
-ade definitions download --folder-path $ADE_MANIFEST_FOLDER
-
-echo "Downloading environment state to $ADE_STORAGE"
+verbose "Downloading environment state to $ADE_STORAGE"
 # Download data, ignoring if it doesn't exist
-#TODO: Would like to only run this for terraform actions, would need to pass in runner type variable to do so.
 ade files download --file-name storage.zip --folder-path $ADE_STORAGE --unzip || true
 
-echo "Selecting catalog directory: $(dirname $ADE_TEMPLATE_FILE)"
+verbose "Selecting catalog directory: $(dirname $ADE_TEMPLATE_FILE)"
 cd $(dirname $ADE_TEMPLATE_FILE)
 
 # the script to execute is defined by the following options
 # (the first option matching an executable script file wins)
 #
 # Option 1: a script file following the pattern [ADE_OPERATION_NAME].sh exists in the
-#           current working directory (catalog item directory)
+#           current working directory (environment definition directory)
 #
 # Option 2: a script file following the pattern [ADE_OPERATION_NAME].sh exists in the
 #           /scripts directory (operation script directory)
@@ -116,8 +73,10 @@ if [[ -z "$script" ]]; then
 fi
 
 if [[ -f "$script" && -x "$script" ]]; then
-    # lets execute the task script - isolate execution in sub shell
-    verbose "Executing script ($script)"; ( exec "$script"; exit $? ) || exit $?
+    verbose "Executing script ($script)"
+
+    # Execute the script, but ensure we still save stderr to an error log file.
+    ade execute --command "$script" 2> >(tee -a $ADE_ERROR_LOG)
 elif [[ -f "$script" ]]; then
     error "Script '$script' is not marked as executable" && exit 1
 else
