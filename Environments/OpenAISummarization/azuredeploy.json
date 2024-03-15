@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.25.53.49325",
-      "templateHash": "4415727950855254716"
+      "templateHash": "6718158956593452240"
     }
   },
   "parameters": {
@@ -250,7 +250,7 @@
             "_generator": {
               "name": "bicep",
               "version": "0.25.53.49325",
-              "templateHash": "7233160254411631600"
+              "templateHash": "9150824237650559673"
             }
           },
           "parameters": {
@@ -280,7 +280,8 @@
               "kind": "OpenAI",
               "properties": {
                 "customSubDomainName": "[parameters('name')]",
-                "publicNetworkAccess": "Enabled"
+                "publicNetworkAccess": "Enabled",
+                "disableLocalAuth": true
               },
               "sku": {
                 "name": "S0"
@@ -438,7 +439,7 @@
             "_generator": {
               "name": "bicep",
               "version": "0.25.53.49325",
-              "templateHash": "11821310300065265050"
+              "templateHash": "1905516507240704714"
             }
           },
           "parameters": {
@@ -472,7 +473,7 @@
             },
             "allowSharedKeyAccess": {
               "type": "bool",
-              "defaultValue": true
+              "defaultValue": false
             },
             "defaultToOAuthAuthentication": {
               "type": "bool",

@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.25.53.49325",
-      "templateHash": "3847265105826312822"
+      "templateHash": "8618545896355817640"
     }
   },
   "parameters": {
@@ -650,7 +650,7 @@
             "_generator": {
               "name": "bicep",
               "version": "0.25.53.49325",
-              "templateHash": "9784023372961823844"
+              "templateHash": "558853153341605687"
             }
           },
           "parameters": {
@@ -698,7 +698,8 @@
               "kind": "[parameters('kind')]",
               "properties": {
                 "customSubDomainName": "[parameters('customSubDomainName')]",
-                "publicNetworkAccess": "[parameters('publicNetworkAccess')]"
+                "publicNetworkAccess": "[parameters('publicNetworkAccess')]",
+                "disableLocalAuth": true
               },
               "sku": "[parameters('sku')]"
             },
@@ -772,7 +773,7 @@
             "_generator": {
               "name": "bicep",
               "version": "0.25.53.49325",
-              "templateHash": "9784023372961823844"
+              "templateHash": "558853153341605687"
             }
           },
           "parameters": {
@@ -820,7 +821,8 @@
               "kind": "[parameters('kind')]",
               "properties": {
                 "customSubDomainName": "[parameters('customSubDomainName')]",
-                "publicNetworkAccess": "[parameters('publicNetworkAccess')]"
+                "publicNetworkAccess": "[parameters('publicNetworkAccess')]",
+                "disableLocalAuth": true
               },
               "sku": "[parameters('sku')]"
             },
@@ -998,6 +1000,9 @@
           "publicNetworkAccess": {
             "value": "Enabled"
           },
+          "allowSharedKeyAccess": {
+            "value": false
+          },
           "sku": {
             "value": {
               "name": "Standard_ZRS"
@@ -1025,7 +1030,7 @@
             "_generator": {
               "name": "bicep",
               "version": "0.25.53.49325",
-              "templateHash": "546351219266755734"
+              "templateHash": "10058363838811997106"
             }
           },
           "parameters": {
@@ -1059,7 +1064,7 @@
             },
             "allowSharedKeyAccess": {
               "type": "bool",
-              "defaultValue": true
+              "defaultValue": false
             },
             "defaultToOAuthAuthentication": {
               "type": "bool",
