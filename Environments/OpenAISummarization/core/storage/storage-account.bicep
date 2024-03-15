@@ -6,7 +6,7 @@ param tags object = {}
 param accessTier string = 'Hot'
 param allowBlobPublicAccess bool = false
 param allowCrossTenantReplication bool = true
-param allowSharedKeyAccess bool = true
+param allowSharedKeyAccess bool = false
 param defaultToOAuthAuthentication bool = false
 @allowed([ 'AzureDnsZone', 'Standard' ])
 param dnsEndpointType string = 'Standard'

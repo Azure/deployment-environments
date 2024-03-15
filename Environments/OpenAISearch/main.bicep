@@ -154,6 +154,7 @@ module storage 'core/storage/storage-account.bicep' = {
     location: storageResourceGroupLocation
     tags: tags
     publicNetworkAccess: 'Enabled'
+    allowSharedKeyAccess: false
     sku: {
       name: 'Standard_ZRS'
     }

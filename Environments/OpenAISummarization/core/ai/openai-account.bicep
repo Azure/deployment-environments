@@ -12,6 +12,7 @@ resource account 'Microsoft.CognitiveServices/accounts@2022-10-01' = {
   properties: {
     customSubDomainName: name
     publicNetworkAccess: 'Enabled'
+    disableLocalAuth: true
   }
   sku: {
     name: 'S0'
