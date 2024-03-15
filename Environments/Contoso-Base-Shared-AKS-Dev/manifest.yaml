@@ -1,0 +1,21 @@
+name: Contoso-Base-Shared-AKS-Dev
+version: 1.0.0
+summary: Base shared environment for app development in AKS
+description: Deploys base shared env (Container environment and monitoring) for app development in AKS
+runner: ARM
+templatePath: azuredeploy.json
+
+parameters:
+- id: "environmentName"
+  name: "Environment Name (e.g. testenv)"
+  description: "Name of the Environment"
+  type: string
+  required: true
+
+- id: "location"
+  name: "Region (e.g. eastus)"
+  description: "Location of the resources"
+  type: string
+  required: true
+
+

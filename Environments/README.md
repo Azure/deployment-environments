@@ -7,6 +7,14 @@ The sample Catalog consists of a few catalog items (ARM Template + associated ma
 - [Function App](FunctionApp): Deploys an Azure Function App, Storage Account, and Application Insights
 - [Sandbox](Sandbox): Deploys an empty "sandbox" environment
 - [Web App](WebApp): Deploys an Azure Web App without a data store
+- [OpenAI Search](OpenAISearch): Deploys Azure Web App, OpenAI service and Cogonitive search
+- [OpenAI Summarization](OpenAISummarization): Deploys Azure OpenAI along with Azure Cognitive Search, Azure Storage
+- [AKS](AKS): Deploys Azure Kubernetes Service with MongoDB
+- [Container App](ContainerApp): Deploys Container Apps with Azure Key Vault and Container Registry
+- [Spring Apps](Spring): Deploys Spring Apps
+- [APIM](APIM): Deploys API Management 
+- [AppVNet](AppVNet): Deploys App Service in Private Network
+- [Static Web](StaticWeb): Deploys Static Web with Function App and MongoDB
 
 ## ARM and Bicep
 

@@ -1,0 +1,69 @@
+name: OpenAISearch
+version: 1.0.0
+summary: OpenAI search app environment
+description: Deploys an OpenAI search demo application
+runner: ARM
+templatePath: azuredeploy.json
+
+parameters:
+- id: "environmentName"
+  name: "Environment Name (e.g. test)"
+  description: "Name of the Environment"
+  type: "string"
+  required: false
+  default: "test"
+
+- id: "principalId"
+  name: "Principal Id (e.g. <user id>)"
+  description: "Id of the user or app to assign application roles"
+  type: "string"
+  required: true
+
+- id: "appServicePlanName"
+  name: "App service plan Name (e.g. plan-aisearch)"
+  description: "Name of App service plan"
+  type: "string"
+  required: false
+  default: ""
+
+- id: "backendServiceName"
+  name: "Backend Service Name (e.g. app-aisearch)"
+  description: "Name of app service"
+  type: "string"
+  required: false
+  default: ""
+
+- id: "storageAccountName"
+  name: "Storage Account Name (e.g. staisearch)"
+  description: "Name of storage account"
+  type: "string"
+  required: false
+  default: ""
+
+- id: "searchServiceName"
+  name: "Search Service Name (e.g. gptkb-aisearch)"
+  description: "Name of search service"
+  type: "string"
+  required: false
+  default: ""
+
+- id: "formRecognizerServiceName"
+  name: "Form Recognizer Service Name (e.g. cog-fr-aisearch)"
+  description: "Name of form recognizer service"
+  type: "string"
+  required: false
+  default: ""
+
+- id: "openAiServiceName"
+  name: "OpenAI Service Name (e.g. cog-aisearch)"
+  description: "Name of OpenAI service"
+  type: "string"
+  required: false
+  default: ""
+
+- id: "location"
+  name: "Region (e.g. eastus)"
+  description: "Region"
+  type: "string"
+  required: false
+  default: "eastus"

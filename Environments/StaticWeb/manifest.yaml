@@ -1,0 +1,21 @@
+name: StaticWeb
+version: 1.0.0
+summary: Static Web
+description: Deploy static web application
+runner: ARM
+templatePath: azuredeploy.json
+
+parameters:
+- id: "environmentName"
+  name: "Environment Name (e.g. test)"
+  description: "Name of the Environment"
+  type: "string"
+  required: false
+  default: "test"
+
+- id: "location"
+  name: "Location (e.g. westus2, centralus, eastus2, westeurope, eastasia or eastasiastage)"
+  description: "location or region"
+  type: "string"
+  required: false
+  default: "eastus2"
