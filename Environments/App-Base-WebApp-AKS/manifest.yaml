@@ -1,0 +1,25 @@
+name: App-Base-WebApp-AKS
+version: 1.0.0
+summary: Base infra for AKS web app dev
+description: Deploys a todo app with Nodejs and Mongo
+runner: ARM
+templatePath: azuredeploy.json
+
+parameters:
+- id: "environmentName"
+  name: "Environment Name (e.g. testenv)"
+  description: "Name of the Environment"
+  type: string
+  required: true
+
+- id: "location"
+  name: "Region (e.g. eastus)"
+  description: "Location of the resources"
+  type: string
+  required: true
+
+- id: "aksClusterIdentityObjectId"
+  name: "AKS Cluster Identity Object Id"
+  description: "Object Id of the identity used by the AKS cluster to access the KeyVault"
+  type: string
+  required: true
