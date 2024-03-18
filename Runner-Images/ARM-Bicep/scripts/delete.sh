@@ -6,26 +6,26 @@ set -e # exit on error
 
 DIR=$(dirname "$0")
 . $DIR/_common.sh
-source "/shared/commands.sh"
 
 deploymentName=$(date +"%Y-%m-%d-%H%M%S")
-log "Deleting resource group: $ADE_RESOURCE_GROUP_NAME"
+echo "Deleting resource group: $ADE_RESOURCE_GROUP_NAME"
 
-log "Signing into Azure using MSI"
+echo "Signing into Azure using MSI"
 while true; do
     # managed identity isn't available immediately
     # we need to do retry after a short nap
-    az login --identity --allow-no-subscriptions --only-show-errors --output none 2> $ADE_ERROR_LOG && {
-        log "Successfully signed into Azure"
+    az login --identity --allow-no-subscriptions --only-show-errors --output none && {
+        echo "Successfully signed into Azure"
         break
     } || sleep 5
 done
 
-log $(az deployment group create --resource-group "$ADE_RESOURCE_GROUP_NAME" \
-                                              --name "$deploymentName" \
-                                              --no-prompt true --no-wait --mode Complete \
-                                              --only-show-errors \
-                                              --template-file "$DIR/empty.json" 2>$ADE_ERROR_LOG) ">>> Beginning Deletion ..."
+echo -e "\n>>> Beginning Deletion...\n"
+az deployment group create --resource-group "$ADE_RESOURCE_GROUP_NAME" \
+    --name "$deploymentName" \
+    --no-prompt true --no-wait --mode Complete \
+    --only-show-errors \
+    --template-file "$DIR/empty.json"
 
 if [ $? -eq 0 ]; then # deployment successfully created
     while true; do
@@ -51,5 +51,5 @@ if [ $? -eq 0 ]; then # deployment successfully created
 
     done
 else
-    log "Failed to Delete Resources"
+    echo "Failed to Delete Resources"
 fi

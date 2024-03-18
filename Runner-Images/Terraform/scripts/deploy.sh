@@ -5,11 +5,9 @@
 
 set -e # exit on error
 
-source "/shared/commands.sh"
-
 EnvironmentState="$ADE_STORAGE/environment.tfstate"
-EnvironmentPlan="$ADE_TEMP/environment.tfplan"
-EnvironmentVars="$ADE_TEMP/environment.tfvars.json"
+EnvironmentPlan="/environment.tfplan"
+EnvironmentVars="/environment.tfvars.json"
 
 echo "$ADE_OPERATION_PARAMETERS" > $EnvironmentVars
 
@@ -19,13 +17,13 @@ export ARM_CLIENT_ID=$ADE_CLIENT_ID
 export ARM_TENANT_ID=$ADE_TENANT_ID
 export ARM_SUBSCRIPTION_ID=$ADE_SUBSCRIPTION_ID
 
-header "Terraform Info"
-log "$(terraform -version 2> $ADE_ERROR_LOG)"
+echo -e "\n>>> Terraform Info...\n"
+terraform -version
 
-header "Initializing Terraform"
-log "$(terraform init -no-color 2> $ADE_ERROR_LOG)"
+echo -e "\n>>> Initializing Terraform...\n"
+terraform init -no-color
 
-header "Creating Terraform Plan"
+echo -e "\n>>> Creating Terraform Plan...\n"
 export TF_VAR_resource_group_name=$ADE_RESOURCE_GROUP_NAME
 export TF_VAR_ade_env_name=$ADE_ENVIRONMENT_NAME
 export TF_VAR_env_name=$ADE_ENVIRONMENT_NAME
@@ -33,17 +31,17 @@ export TF_VAR_ade_subscription=$ADE_SUBSCRIPTION_ID
 export TF_VAR_ade_location=$ADE_ENVIRONMENT_LOCATION
 export TF_VAR_ade_environment_type=$ADE_ENVIRONMENT_TYPE
 
-log "$(terraform plan -no-color -compact-warnings -refresh=true -lock=true -state=$EnvironmentState -out=$EnvironmentPlan -var-file="$EnvironmentVars" 2> $ADE_ERROR_LOG)"
+terraform plan -no-color -compact-warnings -refresh=true -lock=true -state=$EnvironmentState -out=$EnvironmentPlan -var-file="$EnvironmentVars"
 
-header "Applying Terraform Plan"
-log "$(terraform apply -no-color -compact-warnings -auto-approve -lock=true -state=$EnvironmentState $EnvironmentPlan 2> $ADE_ERROR_LOG)"
+echo -e "\n>>> Applying Terraform Plan...\n"
+terraform apply -no-color -compact-warnings -auto-approve -lock=true -state=$EnvironmentState $EnvironmentPlan
 
 # Outputs must be written to a specific file location.
 # ADE expects data types array, boolean, number, object and string.
 # Terraform outputs list, bool, number, map, set, string and null
 # In addition, Terraform has type constraints, which allow for specifying the types of nested properties.
-header "Generating outputs for ADE"
-tfout="$(terraform output -state=$EnvironmentState -json 2> $ADE_ERROR_LOG)"
+echo -e "\n>>> Generating outputs for ADE...\n"
+tfout="$(terraform output -state=$EnvironmentState -json)"
 
 # Convert Terraform output format to our internal format.
 tfout=$(jq 'walk(if type == "object" then 
@@ -63,4 +61,4 @@ tfout=$(jq 'walk(if type == "object" then
         end)' <<< "$tfout")
 
 echo "{\"outputs\": $tfout}" > $ADE_OUTPUTS
-log "Outputs successfully generated for ADE"
+echo "Outputs successfully generated for ADE"
