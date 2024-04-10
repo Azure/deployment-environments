@@ -4,8 +4,8 @@
   "metadata": {
     "_generator": {
       "name": "bicep",
-      "version": "0.25.53.49325",
-      "templateHash": "11426766062419716265"
+      "version": "0.26.54.24096",
+      "templateHash": "1499570709905675063"
     }
   },
   "parameters": {
@@ -221,8 +221,8 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.25.53.49325",
-              "templateHash": "13278918148041449332"
+              "version": "0.26.54.24096",
+              "templateHash": "5116950368212491210"
             },
             "description": "Creates an Azure Kubernetes Service (AKS) cluster with a system agent pool as well as an additional user agent pool."
           },
@@ -566,8 +566,8 @@
                   "metadata": {
                     "_generator": {
                       "name": "bicep",
-                      "version": "0.25.53.49325",
-                      "templateHash": "8184151159222198677"
+                      "version": "0.26.54.24096",
+                      "templateHash": "1485594887423027715"
                     },
                     "description": "Creates an Azure Kubernetes Service (AKS) cluster with a system agent pool."
                   },
@@ -847,8 +847,8 @@
                   "metadata": {
                     "_generator": {
                       "name": "bicep",
-                      "version": "0.25.53.49325",
-                      "templateHash": "6072270897511874144"
+                      "version": "0.26.54.24096",
+                      "templateHash": "6919390155052012096"
                     },
                     "description": "Adds an agent pool to an Azure Kubernetes Service (AKS) cluster."
                   },
@@ -910,8 +910,8 @@
                   "metadata": {
                     "_generator": {
                       "name": "bicep",
-                      "version": "0.25.53.49325",
-                      "templateHash": "12834334744516280883"
+                      "version": "0.26.54.24096",
+                      "templateHash": "2826959983387823188"
                     },
                     "description": "Creates an Azure Container Registry."
                   },
@@ -1080,8 +1080,8 @@
                   "metadata": {
                     "_generator": {
                       "name": "bicep",
-                      "version": "0.25.53.49325",
-                      "templateHash": "15144906240959446537"
+                      "version": "0.26.54.24096",
+                      "templateHash": "16513018934906094568"
                     },
                     "description": "Assigns ACR Pull permissions to access an Azure Container Registry."
                   },
@@ -1140,8 +1140,8 @@
                   "metadata": {
                     "_generator": {
                       "name": "bicep",
-                      "version": "0.25.53.49325",
-                      "templateHash": "8205013527918052324"
+                      "version": "0.26.54.24096",
+                      "templateHash": "16891164712798672456"
                     },
                     "description": "Assigns RBAC role to the specified AKS cluster and principal."
                   },
@@ -1238,8 +1238,8 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.25.53.49325",
-              "templateHash": "10041669792322197047"
+              "version": "0.26.54.24096",
+              "templateHash": "54270050405814058"
             },
             "description": "Creates an Application Insights instance and a Log Analytics workspace."
           },
@@ -1290,8 +1290,8 @@
                   "metadata": {
                     "_generator": {
                       "name": "bicep",
-                      "version": "0.25.53.49325",
-                      "templateHash": "9622176141085970536"
+                      "version": "0.26.54.24096",
+                      "templateHash": "5766449277789384912"
                     },
                     "description": "Creates a Log Analytics workspace."
                   },
@@ -1371,8 +1371,8 @@
                   "metadata": {
                     "_generator": {
                       "name": "bicep",
-                      "version": "0.25.53.49325",
-                      "templateHash": "1335628967363670282"
+                      "version": "0.26.54.24096",
+                      "templateHash": "1697740909761260680"
                     },
                     "description": "Creates an Application Insights instance based on an existing Log Analytics workspace."
                   },
@@ -1436,8 +1436,8 @@
                           "metadata": {
                             "_generator": {
                               "name": "bicep",
-                              "version": "0.25.53.49325",
-                              "templateHash": "2145880658446193205"
+                              "version": "0.26.54.24096",
+                              "templateHash": "623850250427461329"
                             },
                             "description": "Creates a dashboard for an Application Insights instance."
                           },
