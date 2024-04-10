@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.26.54.24096",
-      "templateHash": "9798675544251830912"
+      "templateHash": "5335287364340536322"
     }
   },
   "parameters": {
@@ -19,6 +19,7 @@
     },
     "location": {
       "type": "string",
+      "defaultValue": "[resourceGroup().location]",
       "minLength": 1,
       "metadata": {
         "description": "The location used for all deployed resources"
