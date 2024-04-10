@@ -8,18 +8,12 @@ param environmentName string
 param location string = resourceGroup().location
 
 @secure()
-@metadata({azd: {
-  type: 'inputs'
-  autoGenerate: {
-    eventbus: {
-      password: { len: 10 }
-    }
-    postgres: {
-      password: { len: 10 }
-    }
-  }}
-})
-param inputs object
+@minLength(10)
+param eventbusPassword string
+
+@secure()
+@minLength(10)
+param postgresPassword string
 
 var tags = {
   'azd-env-name': environmentName
@@ -28,9 +22,10 @@ var tags = {
 module resources 'resources.bicep' = {
   name: 'resources'
   params: {
+    eventbusPassword: eventbusPassword
+    postgresPassword: postgresPassword
     location: location
     tags: tags
-    inputs: inputs
   }
 }
 

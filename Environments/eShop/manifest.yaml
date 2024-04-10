@@ -12,9 +12,23 @@ parameters:
   type: "string"
   required: true
 
+- id: "eventbusPassword"
+  name: "Eventbus Password"
+  description: "Password for the Eventbus"
+  type: "string"
+  required: true
+
+- id: "postgresPassword"
+  name: "Postgres Password"
+  description: "Password for the Postgres"
+  type: "string"
+  required: true
+
 - id: "location"
   name: "Region (e.g. eastus)"
   description: "Region"
   type: "string"
   required: false
   default: "eastus"
+
+
