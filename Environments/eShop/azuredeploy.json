@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.26.54.24096",
-      "templateHash": "5335287364340536322"
+      "templateHash": "6443241281576436581"
     }
   },
   "parameters": {
@@ -25,25 +25,13 @@
         "description": "The location used for all deployed resources"
       }
     },
-    "inputs": {
-      "type": "secureObject",
-      "metadata": {
-        "azd": {
-          "type": "inputs",
-          "autoGenerate": {
-            "eventbus": {
-              "password": {
-                "len": 10
-              }
-            },
-            "postgres": {
-              "password": {
-                "len": 10
-              }
-            }
-          }
-        }
-      }
+    "eventbusPassword": {
+      "type": "securestring",
+      "minLength": 10
+    },
+    "postgresPassword": {
+      "type": "securestring",
+      "minLength": 10
     }
   },
   "variables": {
@@ -62,14 +50,17 @@
         },
         "mode": "Incremental",
         "parameters": {
+          "eventbusPassword": {
+            "value": "[parameters('eventbusPassword')]"
+          },
+          "postgresPassword": {
+            "value": "[parameters('postgresPassword')]"
+          },
           "location": {
             "value": "[parameters('location')]"
           },
           "tags": {
             "value": "[variables('tags')]"
-          },
-          "inputs": {
-            "value": "[parameters('inputs')]"
           }
         },
         "template": {
@@ -79,7 +70,7 @@
             "_generator": {
               "name": "bicep",
               "version": "0.26.54.24096",
-              "templateHash": "13501501416131613708"
+              "templateHash": "7811954589280961793"
             }
           },
           "parameters": {
@@ -97,8 +88,13 @@
                 "description": "Tags that will be applied to all resources"
               }
             },
-            "inputs": {
-              "type": "secureObject"
+            "eventbusPassword": {
+              "type": "securestring",
+              "minLength": 10
+            },
+            "postgresPassword": {
+              "type": "securestring",
+              "minLength": 10
             }
           },
           "variables": {
@@ -188,7 +184,7 @@
                   "secrets": [
                     {
                       "name": "rabbitmq-default-pass",
-                      "value": "[parameters('inputs').eventbus.password]"
+                      "value": "[parameters('eventbusPassword')]"
                     }
                   ]
                 },
@@ -236,7 +232,7 @@
                   "secrets": [
                     {
                       "name": "postgres-password",
-                      "value": "[parameters('inputs').postgres.password]"
+                      "value": "[parameters('postgresPassword')]"
                     }
                   ]
                 },
