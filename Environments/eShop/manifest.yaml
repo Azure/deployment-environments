@@ -1,0 +1,21 @@
+name: eShop
+version: 1.0.0
+summary: eShop Reference Application
+description: eShop Reference Application - "Northern Mountains"
+runner: ARM
+templatePath: azuredeploy.json
+
+parameters:
+- id: "environmentName"
+  name: "Environment Name (e.g. test)"
+  description: "Name of the Environment"
+  type: "string"
+  required: false
+  default: "test"
+
+- id: "location"
+  name: "Region (e.g. eastus)"
+  description: "Region"
+  type: "string"
+  required: false
+  default: "eastus"
