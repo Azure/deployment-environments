@@ -10,8 +10,7 @@ parameters:
   name: "Environment Name (e.g. test)"
   description: "Name of the Environment"
   type: "string"
-  required: false
-  default: "test"
+  required: true
 
 - id: "location"
   name: "Region (e.g. eastus)"
