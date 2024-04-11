@@ -87,3 +87,9 @@ Additionally, if you would like to push to a specific repository and tag name, y
 ```powershell
 .\quickstart-image.build.ps1 -Registry '{YOUR_REGISTRY}' -Directory '{DIRECTORY_TO_YOUR_IMAGE}' -Repository '{YOUR_REPOSITORY}' -Tag '{YOUR_TAG}'
 ```
+
+# Getting help or providing feedback
+
+If you are facing any issues or have feedback to share on Terraform support, please create a new issues in [GitHub Issues](https://github.com/Azure/deployment-environments/issues). 
+
+If you have general feedback about the product, please submit the feedback on the [Developer Community](https://developercommunity.visualstudio.com/deploymentenvironments) or by [emailing us directly](mailto:adesupport@microsoft.com).

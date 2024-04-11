@@ -3,7 +3,6 @@
 ## Featured Repos
 + Core: Core ADE Image
 + ARM-Bicep: ADE Image for ARM/Bicep Deployments/Deletions
-+ Terraform: ADE Image for Terraform Deployments/Deletions
 
 ## About Azure Deployment Environments
 Azure Deployment Environments empowers development teams to quickly and easily spin up app infrastructure with project-based templates that establish consistency and best practices while maximizing security. This on-demand access to secure environments accelerates the stages of the software development lifecycle in a compliant and cost-efficient way.
@@ -21,9 +20,8 @@ In addtion, by using the provided runner images, you can invoke the ADE CLI with
 You can find more information about Custom Image Support [here](../documentation/custom-image-support/README.md).
 
 ## Available Image Repositories and Versions
-Core: 2.5.0-preview(latest), latest
-ARM/Bicep: 2.5.0-preview(latest), latest
-Terraform: 2.5.0-preview(latest), latest
+Core: 2.6.0-preview(latest), latest
+ARM/Bicep: 2.6.0-preview(latest), latest
 
 ## Support
 
