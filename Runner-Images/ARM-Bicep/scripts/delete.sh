@@ -5,13 +5,10 @@
 set -e # exit on error
 
 DIR=$(dirname "$0")
-source  $DIR/_common.sh
+. $DIR/_common.sh
 
 deploymentName=$(date +"%Y-%m-%d-%H%M%S")
-deploymentOutput=""
-
-# format the parameters as arm parameters
-deploymentParameters=$(echo "$ADE_OPERATION_PARAMETERS" | jq --compact-output '{ "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#", "contentVersion": "1.0.0.0", "parameters": (to_entries | if length == 0 then {} else (map( { (.key): { "value": .value } } ) | add) end) }' )
+echo "Deleting resource group: $ADE_RESOURCE_GROUP_NAME"
 
 echo "Signing into Azure using MSI"
 while true; do
@@ -23,14 +20,12 @@ while true; do
     } || sleep 5
 done
 
-echo -e "\n>>>Deploying ARM/Bicep template...\n"
-az deployment group create --subscription $ADE_SUBSCRIPTION_ID \
-    --resource-group "$ADE_RESOURCE_GROUP_NAME" \
+echo -e "\n>>> Beginning Deletion...\n"
+az deployment group create --resource-group "$ADE_RESOURCE_GROUP_NAME" \
     --name "$deploymentName" \
-    --no-prompt true --no-wait \
-    --template-file "$ADE_TEMPLATE_FILE" \
-    --parameters "$deploymentParameters" \
-    --only-show-errors
+    --no-prompt true --no-wait --mode Complete \
+    --only-show-errors \
+    --template-file "$DIR/empty.json"
 
 if [ $? -eq 0 ]; then # deployment successfully created
     while true; do
@@ -55,15 +50,6 @@ if [ $? -eq 0 ]; then # deployment successfully created
         fi
 
     done
-    
-    echo -e "\n>>> Generating outputs for ADE...\n"
-
-    deploymentOutput=$(az deployment group show -g "$ADE_RESOURCE_GROUP_NAME" -n "$deploymentName" --query properties.outputs)
-    if [ -z "$deploymentOutput" ]; then
-        deploymentOutput="{}"
-    fi
-    echo "{\"outputs\": $deploymentOutput}" > $ADE_OUTPUTS
-    echo "Outputs successfully generated for ADE"
 else
-    echo "Deployment failed to create."
+    echo "Failed to Delete Resources"
 fi
