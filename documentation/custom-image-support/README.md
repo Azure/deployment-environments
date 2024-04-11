@@ -43,10 +43,10 @@ RUN find /scripts/ -type f -iname "*.sh" -exec chmod +x {} \;
 
 To build the image to be pushed to your registry, please ensure the Docker Engine is installed on your computer, navigate to the directory of your Dockerfile, and run the following command:
 ```
-docker build . -t {YOUR_REGISTRY}.azurecr.io/{YOUR_IMAGE_LOCATION}:{YOUR_TAG}
+docker build . -t {YOUR_REGISTRY}.azurecr.io/{YOUR_REPOSITORY}:{YOUR_TAG}
 ```
 
-For example, if you wanted to save your image under a repository within your repo named 'customImage', and you wanted to upload with the tag version of '1.0.0', you would run:
+For example, if you wanted to save your image under a repository within your registry named 'customImage', and you wanted to upload with the tag version of '1.0.0', you would run:
 
 ```
 docker build . -t {YOUR_REGISTRY}.azurecr.io/customImage:1.0.0
@@ -67,12 +67,23 @@ az acr update -n {YOUR_REGISTRY} --anonymous-pull-enabled true
 ```
 When you are ready to push your image to your registry, run the following command:
 ```
-docker push {YOUR_REGISTRY}.azurecr.io/{YOUR_IMAGE_LOCATION}:{YOUR_TAG}
+docker push {YOUR_REGISTRY}.azurecr.io/{YOUR_REPOSITORY}:{YOUR_TAG}
 ```
 
 ## Connecting the Image to your Environment Definition
 
 When authoring environment definitions to use your custom image in their deployment, simply edit the 'runner' property on the manifest file (environment.yaml or manifest.yaml).
 ```yaml
-runner: "{YOUR_REGISTRY}.azurecr.io/{YOUR_IMAGE_LOCATION}:{YOUR_TAG}"
+runner: "{YOUR_REGISTRY}.azurecr.io/{YOUR_REPOSITORY}:{YOUR_TAG}"
+```
+
+## Image Building Quickstart Script
+If you have a Dockerfile and scripts folder configured for ADE's extensibility model, you can run the script [here](../../Runner-Images/quickstart-image-build.ps1) to build and push to a specified Azure Container Registry (ACR) under the repository 'ade' and the tag 'latest'. This script requires your registry name and directory for your custom image, have the Azure CLI and Docker Desktop installed and in your PATH variables, and requires that you have permissions to push to the specified registry. You can call the script using the following command in Powershell:
+```powershell
+.\quickstart-image-build.ps1 -Registry '{YOUR_REGISTRY}' -Directory '{DIRECTORY_TO_YOUR_IMAGE}'
+```
+
+Additionally, if you would like to push to a specific repository and tag name, you can run:
+```powershell
+.\quickstart-image.build.ps1 -Registry '{YOUR_REGISTRY}' -Directory '{DIRECTORY_TO_YOUR_IMAGE}' -Repository '{YOUR_REPOSITORY}' -Tag '{YOUR_TAG}'
 ```

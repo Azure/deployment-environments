@@ -24,3 +24,5 @@ This command will log a simple string to a specified file named 'specialLogFile.
 ```
 ade log --content "This is a special log." --file "specialLogFile.txt"
 ```
+
+**NOTE**: If you are using an ADE-authored image as a base for your custom image, you will not need to log all statements explicitly. When using `ade execute` in your workflow, ADE will pipe all standard output and standard error logging to the operation's log file. If you would like to log to additional files, or are not executing scripts using `ade execute`, then it would be appropriate to use `ade log`.
