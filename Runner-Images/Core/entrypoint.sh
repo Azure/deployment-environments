@@ -7,7 +7,7 @@ set -e # exit on error
 trap 'catch $? $LINENO' EXIT
 
 source "/shared/commands.sh"
-declare -g -x -A exitCodeMap=( ["1"]="DeploymentError" ["7"]="InvalidEndpoint" ["8"]="InvalidDevCenterId" ["9"]="CliSetupError" ["10"]="InvalidOperationId" ["11"]="RequestFailed" ["12"]="InvalidCliInput" ["13"]="FileOperationError" ["14"]="EnvironmentStorageExceeded" ["15"]="SecurityError" ["16"]="DeploymentIdentitySignInError" ["99"]="UnknownError")
+declare -g -x -A exitCodeMap=( ["1"]="DeploymentError" ["7"]="InvalidEndpoint" ["8"]="InvalidDevCenterId" ["9"]="CliSetupError" ["10"]="InvalidOperationId" ["11"]="RequestFailed" ["12"]="InvalidCliInput" ["13"]="FileOperationError" ["14"]="EnvironmentStorageExceeded" ["15"]="SecurityError" ["16"]="DeploymentIdentitySignInError" ["17"]="CliUpgradeError" ["99"]="UnknownError")
 
 # Called on exit.
 # Handles failures, updating storage, logs, etc.
@@ -43,6 +43,9 @@ catch() {
 
 }
 
+# verbose "Checking for ADE CLI updates"
+# upgradeCli
+
 verbose "Initializing runner"
 eval "$(ade init)"
 
@@ -76,7 +79,7 @@ if [[ -f "$script" && -x "$script" ]]; then
     verbose "Executing script ($script)"
 
     # Execute the script, but ensure we still save stderr to an error log file.
-    ade execute --command "$script" 2> >(tee -a $ADE_ERROR_LOG)
+    ade execute --operation $ADE_OPERATION_NAME --command "$script" 2> >(tee -a $ADE_ERROR_LOG)
 elif [[ -f "$script" ]]; then
     error "Script '$script' is not marked as executable" && exit 1
 else
