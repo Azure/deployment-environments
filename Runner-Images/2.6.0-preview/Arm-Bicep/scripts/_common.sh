@@ -2,7 +2,6 @@
 
 # Copyright (c) Microsoft Corporation.
 # Licensed under the MIT License.
-source "/shared/commands.sh"
 
 trackDeployment() {
 
@@ -20,10 +19,10 @@ trackDeployment() {
 
             if ! grep -q "$operationHash" /tmp/hashes 2>/dev/null ; then
 
-                log "\n$operationTimestamp\t$operationId - $operationType ($operationState)"
+                echo -e "\n$operationTimestamp\t$operationId - $operationType ($operationState)"
 
                 if [[ ! -z "$operationTarget" ]]; then
-                    log "\t\t\t$operationTarget"
+                    echo -e "\t\t\t$operationTarget"
                 fi
 
                 echo "$operationHash" >> /tmp/hashes
@@ -34,17 +33,15 @@ trackDeployment() {
 }
 
 outputDeploymentErrors() {
-    error "Deployment failed with the following errors:\n"
+    echo -e "Deployment failed with the following errors:\n" 1>&2
     readarray errors -t <<< $(echo $1 | jq -c '.[] | .properties | select(has("statusMessage") and (.statusMessage | has("error")))')
-    error "Number of errors: ${#errors[@]}\n"
+    echo -e "Number of errors: ${#errors[@]}\n" 1>&2
     for item in "${errors[@]}"; do
-        error "Target Resource ID: $( echo $item | jq '. | .targetResource.id' )\nError Code: $( echo $item | jq '.statusMessage.error.code' )\nError Message: $( echo $item | jq '.statusMessage.error.message' )\n"
-        echo "Target Resource ID: $( echo $item | jq '. | .targetResource.id' )\nError Code: $( echo $item | jq '.statusMessage.error.code' )\nError Message: $( echo $item | jq '.statusMessage.error.message' )\n" >> $ADE_ERROR_LOG
+        echo -e "Target Resource ID: $( echo $item | jq '. | .targetResource.id' )\nError Code: $( echo $item | jq '.statusMessage.error.code' )\nError Message: $( echo $item | jq '.statusMessage.error.message' )\n" 1>&2
         readarray errorDetails -t <<< $(echo $item | jq -c '.statusMessage.error.details')
         if [ "${errorDetails[0]}" != null ]; then
             for detail in "${errorDetails[@]}"; do
-                error "Error Detail Code: $( echo $detail | jq '.[] | .code')\nError Detail Message: $(echo $detail | jq '.[] | .message')\n"
-                echo "Error Detail Code: $( echo $detail | jq '.[] | .code')\nError Detail Message: $(echo $detail | jq '.[] | .message')\n" >> $ADE_ERROR_LOG
+                echo -e "Error Detail Code: $( echo $detail | jq '.[] | .code')\nError Detail Message: $(echo $detail | jq '.[] | .message')\n" 1>&2
             done
         fi
     done
