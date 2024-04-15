@@ -7,9 +7,16 @@ In order to use the ADE CLI, you will need to use an ADE-authored image as a bas
 
 ## Creating and Building the Docker Image
 
+The basic steps for creating a building an image configured for ADE are as follows:
+1. Base your image off of an ADE-authored image or the image of your choice using the FROM statement
+2. Install any necessary packages for your image using the RUN statement
+3. Create a 'scripts' folder at the same level as your Dockerfile, store your 'deploy.sh' and 'delete.sh' files within it, and ensure those scripts are discoverable and executable inside your created container. Note that this is necessary for your deployment to work using the ADE core image.
+4. Build and push your image to your container registry, and ensure it is accessible to ADE
+5. Reference your image in the 'runner' property of your environment definition
+
 ### FROM Statement
 
-If you are wanting to build a Docker image to utilize ADE deployments and access the ADE CLI, you will want to base your image off of one of the ADE-authored images. This can be done by including a FROM statement within a created DockerFile for your new image pointing to an ADE-authored image hosted on Microsoft Artifact Registry.
+If you are wanting to build a Docker image to utilize ADE deployments and access the ADE CLI, you will want to base your image off of one of the ADE-authored images. This can be done by including a FROM statement within a created DockerFile for your new image pointing to an ADE-authored image hosted on Microsoft Artifact Registry. When using ADE-authored images, it is recommended you build your custom image off of the ADE core image.
 
 Here's an example of that FROM statement, pointing to the ADE-authored core image:
 ```docker
@@ -86,6 +93,24 @@ If you have a Dockerfile and scripts folder configured for ADE's extensibility m
 Additionally, if you would like to push to a specific repository and tag name, you can run:
 ```powershell
 .\quickstart-image.build.ps1 -Registry '{YOUR_REGISTRY}' -Directory '{DIRECTORY_TO_YOUR_IMAGE}' -Repository '{YOUR_REPOSITORY}' -Tag '{YOUR_TAG}'
+```
+
+## Accessing Operation Logs And Error Details
+To view error details with deployments and deletions, you can use the [Developer Portal](https://devportal.microsoft.com/) to view the error details stored in the file $ADE_ERROR_LOG at the end of the deployment by clicking on the 'See Details' button of a failed deployment, shown below:
+![A Screenshot of a failed deployment of an environment with the 'See Details' button displayed](failedDeploymentCard.png)
+![A Screenshot of the failed deployment's error details, specifically an invalid name for a storage account](deploymentErrorDetails.png)
+
+Additionally, you can use the Azure CLI to view an environment's error details using the following command:
+```bash
+az devcenter dev environment show --environment-name {YOUR_ENVIRONMENT_NAME} --project {YOUR_PROJECT_NAME}
+```
+
+To view the operation logs for an environment deployment or deletion you can use the Azure CLI to retrieve the latest operation for your environment, and then view the logs for that operation ID, shown below:
+```bash
+# Get list of operations on the environment, choose the latest operation
+az devcenter dev environment list-operation --environment-name {YOUR_ENVIRONMENT_NAME} --project {YOUR_PROJECT_NAME}
+# Using the latest operation ID, view the operation logs
+az devcenter dev environment show-logs-by-operation --environment-name {YOUR_ENVIRONMENT_NAME} --project {YOUR_PROJECT_NAME} --operation-id {LATEST_OPERATION_ID}
 ```
 
 # Getting help or providing feedback
