@@ -1,13 +1,13 @@
-name: eShop
+name: AKS-Store-Demo
 version: 1.0.0
-summary: eShop Reference Application
-description: eShop Reference Application - "Northern Mountains"
+summary: AKS Store Demo
+description: A realistic scenario using a polyglot architecture, event-driven design, and common open source back-end services (eg - RabbitMQ, MongoDB)
 runner: ARM
 templatePath: azuredeploy.json
 
 parameters:
 - id: "environmentName"
-  name: "Environment Name (e.g. test)"
+  name: "Environment Name (e.g. aksstoreenv1)"
   description: "Name of the Environment"
   type: "string"
   required: true
