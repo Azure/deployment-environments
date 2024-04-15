@@ -13,6 +13,36 @@ deploymentOutput=""
 # format the parameters as arm parameters
 deploymentParameters=$(echo "$ADE_OPERATION_PARAMETERS" | jq --compact-output '{ "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#", "contentVersion": "1.0.0.0", "parameters": (to_entries | if length == 0 then {} else (map( { (.key): { "value": .value } } ) | add) end) }' )
 
+# We can resolve linked templates with
+# relativePaths before submitting the deployment to ARM by:
+#
+#   1. Use `bicep decompile` to transpile the ARM template into
+#      bicep modules. During this process bicep will resolve the linked
+#      templates locally and convert them each into bicep modules.
+#
+#   2. Then run `bicep build` to transpile those bicep modules back
+#      into ARM. This will output a new, single ARM template with the
+#      linked templates embedded as nested templates
+if [[ $ADE_TEMPLATE_FILE == *.json ]]; then
+
+    hasRelativePath=$( cat $ADE_TEMPLATE_FILE | jq '[.. | objects | select(has("templateLink") and (.templateLink | has("relativePath")))] | any' )
+
+    if [ "$hasRelativePath" = "true" ]; then
+        echo "Resolving linked ARM templates"
+
+        bicepTemplate="${ADE_TEMPLATE_FILE/.json/.bicep}"
+        generatedTemplate="${ADE_TEMPLATE_FILE/.json/.generated.json}"
+
+        az bicep decompile --file "$ADE_TEMPLATE_FILE"
+        az bicep build --file "$bicepTemplate" --outfile "$generatedTemplate"
+
+        # Correctly reassign ADE_TEMPLATE_FILE without the $ prefix during assignment
+        ADE_TEMPLATE_FILE="$generatedTemplate"
+    else
+        echo "Not linked template"
+    fi
+fi
+
 echo "Signing into Azure using MSI"
 while true; do
     # managed identity isn't available immediately
