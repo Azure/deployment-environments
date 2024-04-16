@@ -20,8 +20,8 @@ In addtion, by using the provided runner images, you can invoke the ADE CLI with
 You can find more information about Custom Image Support [here](../documentation/custom-image-support/README.md).
 
 ## Available Image Repositories and Versions
-- Core: 2.6.0-preview(latest), latest
-- ARM/Bicep: 2.6.0-preview(latest), latest
+- Core: 2.7.0-preview(latest), latest
+- ARM/Bicep: 2.7.0-preview(latest), latest
 
 ## Image Building Quickstart Script
 If you have a Dockerfile and scripts folder configured for ADE's extensibility model, you can run the script [here](../../Runner-Images/quickstart-image-build.ps1) to build and push to a specified Azure Container Registry (ACR) under the repository 'ade' and the tag 'latest'. This script requires your registry name and directory for your custom image, have the Azure CLI and Docker Desktop installed and in your PATH variables, and requires that you have permissions to push to the specified registry. You can call the script using the following command in Powershell:
