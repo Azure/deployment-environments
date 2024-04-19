@@ -12,6 +12,7 @@ param cosmosDatabaseName string = ''
 param keyVaultName string = ''
 param principalId string = ''
 param aksClusterIdentityObjectId string
+param configStoreName string = ''
 
 var abbrs = loadJsonContent('./abbreviations.json')
 var resourceToken = toLower(uniqueString(subscription().id, environmentName, location))
@@ -45,6 +46,48 @@ module clusterKeyVaultAccess './core/security/keyvault-access.bicep' = {
   params: {
     keyVaultName: keyVault.outputs.name
     principalId: aksClusterIdentityObjectId
+  }
+}
+
+@description('Specifies the content type of the key-value resources. For feature flag, the value should be application/vnd.microsoft.appconfig.ff+json;charset=utf-8. For Key Value reference, the value should be application/vnd.microsoft.appconfig.keyvaultref+json;charset=utf-8. Otherwise, it\'s optional.')
+param contentType string = ''
+
+
+resource configStore 'Microsoft.AppConfiguration/configurationStores@2021-10-01-preview' = {
+  name: !empty(configStoreName) ? configStoreName : '${abbrs.appConfigurationConfigurationStores}-${resourceToken}'
+  location: location
+  sku: {
+    name: 'standard'
+  }
+}
+
+resource configStoreKeyValue 'Microsoft.AppConfiguration/configurationStores/keyValues@2021-10-01-preview' = {
+  parent: configStore
+  name: 'AZURE_COSMOS_CONNECTION_STRING_KEY'
+  properties: {
+    value: cosmos.outputs.connectionStringKey
+    contentType: contentType
+    tags: tags
+  }
+}
+
+resource configStoreKeyValue2 'Microsoft.AppConfiguration/configurationStores/keyValues@2021-10-01-preview' = {
+  parent: configStore
+  name: 'AZURE_COSMOS_DATABASE_NAME'
+  properties: {
+    value: cosmos.outputs.databaseName
+    contentType: contentType
+    tags: tags
+  }
+}
+
+resource configStoreKeyValue3 'Microsoft.AppConfiguration/configurationStores/keyValues@2021-10-01-preview' = {
+  parent: configStore
+  name: 'AZURE_KEY_VAULT_ENDPOINT'
+  properties: {
+    value: keyVault.outputs.endpoint
+    contentType: contentType
+    tags: tags
   }
 }
 
