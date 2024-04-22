@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.26.170.59819",
-      "templateHash": "2114239967834469967"
+      "templateHash": "16034083465139663619"
     }
   },
   "parameters": {
@@ -1106,7 +1106,7 @@
             "_generator": {
               "name": "bicep",
               "version": "0.26.170.59819",
-              "templateHash": "18381885242494360931"
+              "templateHash": "10664478597037280079"
             }
           },
           "parameters": {
@@ -1187,7 +1187,7 @@
                     "_generator": {
                       "name": "bicep",
                       "version": "0.26.170.59819",
-                      "templateHash": "16622766300017925980"
+                      "templateHash": "11639574980696241038"
                     }
                   },
                   "parameters": {
@@ -1294,7 +1294,7 @@
                             "_generator": {
                               "name": "bicep",
                               "version": "0.26.170.59819",
-                              "templateHash": "17196584048072227928"
+                              "templateHash": "15854138267854445037"
                             }
                           },
                           "parameters": {
@@ -1354,7 +1354,7 @@
                                     "_generator": {
                                       "name": "bicep",
                                       "version": "0.26.170.59819",
-                                      "templateHash": "7688648017235778909"
+                                      "templateHash": "15842445230570505343"
                                     }
                                   },
                                   "parameters": {
@@ -1412,7 +1412,8 @@
                                           {
                                             "name": "EnableServerless"
                                           }
-                                        ]
+                                        ],
+                                        "disableLocalAuth": true
                                       }
                                     },
                                     {
