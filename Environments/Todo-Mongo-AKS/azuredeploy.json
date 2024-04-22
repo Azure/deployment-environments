@@ -4,8 +4,8 @@
   "metadata": {
     "_generator": {
       "name": "bicep",
-      "version": "0.26.54.24096",
-      "templateHash": "1751087585348510436"
+      "version": "0.26.170.59819",
+      "templateHash": "11835380275388562123"
     }
   },
   "parameters": {
@@ -43,6 +43,17 @@
     },
     "aksClusterIdentityObjectId": {
       "type": "string"
+    },
+    "configStoreName": {
+      "type": "string",
+      "defaultValue": ""
+    },
+    "contentType": {
+      "type": "string",
+      "defaultValue": "",
+      "metadata": {
+        "description": "Specifies the content type of the key-value resources. For feature flag, the value should be application/vnd.microsoft.appconfig.ff+json;charset=utf-8. For Key Value reference, the value should be application/vnd.microsoft.appconfig.keyvaultref+json;charset=utf-8. Otherwise, it's optional."
+      }
     }
   },
   "variables": {
@@ -190,6 +201,57 @@
   },
   "resources": [
     {
+      "type": "Microsoft.AppConfiguration/configurationStores",
+      "apiVersion": "2021-10-01-preview",
+      "name": "[if(not(empty(parameters('configStoreName'))), parameters('configStoreName'), format('{0}-{1}', variables('abbrs').appConfigurationConfigurationStores, variables('resourceToken')))]",
+      "location": "[parameters('location')]",
+      "sku": {
+        "name": "standard"
+      }
+    },
+    {
+      "type": "Microsoft.AppConfiguration/configurationStores/keyValues",
+      "apiVersion": "2021-10-01-preview",
+      "name": "[format('{0}/{1}', if(not(empty(parameters('configStoreName'))), parameters('configStoreName'), format('{0}-{1}', variables('abbrs').appConfigurationConfigurationStores, variables('resourceToken'))), 'AZURE_COSMOS_CONNECTION_STRING_KEY')]",
+      "properties": {
+        "value": "[reference(resourceId('Microsoft.Resources/deployments', 'cosmos'), '2022-09-01').outputs.connectionStringKey.value]",
+        "contentType": "[parameters('contentType')]",
+        "tags": "[variables('tags')]"
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.AppConfiguration/configurationStores', if(not(empty(parameters('configStoreName'))), parameters('configStoreName'), format('{0}-{1}', variables('abbrs').appConfigurationConfigurationStores, variables('resourceToken'))))]",
+        "[resourceId('Microsoft.Resources/deployments', 'cosmos')]"
+      ]
+    },
+    {
+      "type": "Microsoft.AppConfiguration/configurationStores/keyValues",
+      "apiVersion": "2021-10-01-preview",
+      "name": "[format('{0}/{1}', if(not(empty(parameters('configStoreName'))), parameters('configStoreName'), format('{0}-{1}', variables('abbrs').appConfigurationConfigurationStores, variables('resourceToken'))), 'AZURE_COSMOS_DATABASE_NAME')]",
+      "properties": {
+        "value": "[reference(resourceId('Microsoft.Resources/deployments', 'cosmos'), '2022-09-01').outputs.databaseName.value]",
+        "contentType": "[parameters('contentType')]",
+        "tags": "[variables('tags')]"
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.AppConfiguration/configurationStores', if(not(empty(parameters('configStoreName'))), parameters('configStoreName'), format('{0}-{1}', variables('abbrs').appConfigurationConfigurationStores, variables('resourceToken'))))]",
+        "[resourceId('Microsoft.Resources/deployments', 'cosmos')]"
+      ]
+    },
+    {
+      "type": "Microsoft.AppConfiguration/configurationStores/keyValues",
+      "apiVersion": "2021-10-01-preview",
+      "name": "[format('{0}/{1}', if(not(empty(parameters('configStoreName'))), parameters('configStoreName'), format('{0}-{1}', variables('abbrs').appConfigurationConfigurationStores, variables('resourceToken'))), 'AZURE_KEY_VAULT_ENDPOINT')]",
+      "properties": {
+        "value": "[reference(resourceId('Microsoft.Resources/deployments', 'keyvault'), '2022-09-01').outputs.endpoint.value]",
+        "contentType": "[parameters('contentType')]",
+        "tags": "[variables('tags')]"
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.AppConfiguration/configurationStores', if(not(empty(parameters('configStoreName'))), parameters('configStoreName'), format('{0}-{1}', variables('abbrs').appConfigurationConfigurationStores, variables('resourceToken'))))]",
+        "[resourceId('Microsoft.Resources/deployments', 'keyvault')]"
+      ]
+    },
+    {
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2022-09-01",
       "name": "cosmos",
@@ -219,8 +281,8 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.26.54.24096",
-              "templateHash": "3191030148362316528"
+              "version": "0.26.170.59819",
+              "templateHash": "9506725499169300305"
             }
           },
           "parameters": {
@@ -300,8 +362,8 @@
                   "metadata": {
                     "_generator": {
                       "name": "bicep",
-                      "version": "0.26.54.24096",
-                      "templateHash": "13527588968236853243"
+                      "version": "0.26.170.59819",
+                      "templateHash": "5808186645938946038"
                     },
                     "description": "Creates an Azure Cosmos DB for MongoDB account with a database."
                   },
@@ -408,8 +470,8 @@
                           "metadata": {
                             "_generator": {
                               "name": "bicep",
-                              "version": "0.26.54.24096",
-                              "templateHash": "3220231753590578091"
+                              "version": "0.26.170.59819",
+                              "templateHash": "7950805331497391447"
                             },
                             "description": "Creates an Azure Cosmos DB for MongoDB account."
                           },
@@ -469,8 +531,8 @@
                                   "metadata": {
                                     "_generator": {
                                       "name": "bicep",
-                                      "version": "0.26.54.24096",
-                                      "templateHash": "11668109951104513744"
+                                      "version": "0.26.170.59819",
+                                      "templateHash": "5772648737959552265"
                                     },
                                     "description": "Creates an Azure Cosmos DB account."
                                   },
@@ -649,8 +711,8 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.26.54.24096",
-              "templateHash": "4552321833419182500"
+              "version": "0.26.170.59819",
+              "templateHash": "18407114162280426775"
             },
             "description": "Creates an Azure Key Vault."
           },
@@ -724,8 +786,8 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.26.54.24096",
-              "templateHash": "4480412712998156633"
+              "version": "0.26.170.59819",
+              "templateHash": "7922086847377910894"
             },
             "description": "Assigns an Azure Key Vault access policy."
           },
