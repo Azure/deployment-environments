@@ -14,6 +14,9 @@ resource serviceBusNamespace 'Microsoft.ServiceBus/namespaces@2022-01-01-preview
   sku: {
     name: 'Standard'
   }
+  properties: {
+    disableLocalAuth: true
+  }
 }
 
 // Service Bus Namespace Authorization Rule
