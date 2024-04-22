@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.26.170.59819",
-      "templateHash": "4758816057439609930"
+      "templateHash": "8189193153050722730"
     }
   },
   "parameters": {
@@ -203,7 +203,7 @@
     {
       "type": "Microsoft.AppConfiguration/configurationStores",
       "apiVersion": "2021-10-01-preview",
-      "name": "[if(not(empty(parameters('configStoreName'))), parameters('configStoreName'), format('{0}-{1}', variables('abbrs').appConfigurationConfigurationStores, variables('resourceToken')))]",
+      "name": "[if(not(empty(parameters('configStoreName'))), parameters('configStoreName'), format('{0}{1}', variables('abbrs').appConfigurationConfigurationStores, variables('resourceToken')))]",
       "location": "[parameters('location')]",
       "sku": {
         "name": "standard"
@@ -212,42 +212,42 @@
     {
       "type": "Microsoft.AppConfiguration/configurationStores/keyValues",
       "apiVersion": "2021-10-01-preview",
-      "name": "[format('{0}/{1}', if(not(empty(parameters('configStoreName'))), parameters('configStoreName'), format('{0}-{1}', variables('abbrs').appConfigurationConfigurationStores, variables('resourceToken'))), 'AZURE_COSMOS_CONNECTION_STRING_KEY')]",
+      "name": "[format('{0}/{1}', if(not(empty(parameters('configStoreName'))), parameters('configStoreName'), format('{0}{1}', variables('abbrs').appConfigurationConfigurationStores, variables('resourceToken'))), 'AZURE_COSMOS_CONNECTION_STRING_KEY')]",
       "properties": {
         "value": "[reference(resourceId('Microsoft.Resources/deployments', 'cosmos'), '2022-09-01').outputs.connectionStringKey.value]",
         "contentType": "[parameters('contentType')]",
         "tags": "[variables('tags')]"
       },
       "dependsOn": [
-        "[resourceId('Microsoft.AppConfiguration/configurationStores', if(not(empty(parameters('configStoreName'))), parameters('configStoreName'), format('{0}-{1}', variables('abbrs').appConfigurationConfigurationStores, variables('resourceToken'))))]",
+        "[resourceId('Microsoft.AppConfiguration/configurationStores', if(not(empty(parameters('configStoreName'))), parameters('configStoreName'), format('{0}{1}', variables('abbrs').appConfigurationConfigurationStores, variables('resourceToken'))))]",
         "[resourceId('Microsoft.Resources/deployments', 'cosmos')]"
       ]
     },
     {
       "type": "Microsoft.AppConfiguration/configurationStores/keyValues",
       "apiVersion": "2021-10-01-preview",
-      "name": "[format('{0}/{1}', if(not(empty(parameters('configStoreName'))), parameters('configStoreName'), format('{0}-{1}', variables('abbrs').appConfigurationConfigurationStores, variables('resourceToken'))), 'AZURE_COSMOS_DATABASE_NAME')]",
+      "name": "[format('{0}/{1}', if(not(empty(parameters('configStoreName'))), parameters('configStoreName'), format('{0}{1}', variables('abbrs').appConfigurationConfigurationStores, variables('resourceToken'))), 'AZURE_COSMOS_DATABASE_NAME')]",
       "properties": {
         "value": "[reference(resourceId('Microsoft.Resources/deployments', 'cosmos'), '2022-09-01').outputs.databaseName.value]",
         "contentType": "[parameters('contentType')]",
         "tags": "[variables('tags')]"
       },
       "dependsOn": [
-        "[resourceId('Microsoft.AppConfiguration/configurationStores', if(not(empty(parameters('configStoreName'))), parameters('configStoreName'), format('{0}-{1}', variables('abbrs').appConfigurationConfigurationStores, variables('resourceToken'))))]",
+        "[resourceId('Microsoft.AppConfiguration/configurationStores', if(not(empty(parameters('configStoreName'))), parameters('configStoreName'), format('{0}{1}', variables('abbrs').appConfigurationConfigurationStores, variables('resourceToken'))))]",
         "[resourceId('Microsoft.Resources/deployments', 'cosmos')]"
       ]
     },
     {
       "type": "Microsoft.AppConfiguration/configurationStores/keyValues",
       "apiVersion": "2021-10-01-preview",
-      "name": "[format('{0}/{1}', if(not(empty(parameters('configStoreName'))), parameters('configStoreName'), format('{0}-{1}', variables('abbrs').appConfigurationConfigurationStores, variables('resourceToken'))), 'AZURE_KEY_VAULT_ENDPOINT')]",
+      "name": "[format('{0}/{1}', if(not(empty(parameters('configStoreName'))), parameters('configStoreName'), format('{0}{1}', variables('abbrs').appConfigurationConfigurationStores, variables('resourceToken'))), 'AZURE_KEY_VAULT_ENDPOINT')]",
       "properties": {
         "value": "[reference(resourceId('Microsoft.Resources/deployments', 'keyvault'), '2022-09-01').outputs.endpoint.value]",
         "contentType": "[parameters('contentType')]",
         "tags": "[variables('tags')]"
       },
       "dependsOn": [
-        "[resourceId('Microsoft.AppConfiguration/configurationStores', if(not(empty(parameters('configStoreName'))), parameters('configStoreName'), format('{0}-{1}', variables('abbrs').appConfigurationConfigurationStores, variables('resourceToken'))))]",
+        "[resourceId('Microsoft.AppConfiguration/configurationStores', if(not(empty(parameters('configStoreName'))), parameters('configStoreName'), format('{0}{1}', variables('abbrs').appConfigurationConfigurationStores, variables('resourceToken'))))]",
         "[resourceId('Microsoft.Resources/deployments', 'keyvault')]"
       ]
     },
