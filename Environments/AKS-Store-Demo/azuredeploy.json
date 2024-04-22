@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.26.170.59819",
-      "templateHash": "575350053962925419"
+      "templateHash": "10704493879961365284"
     }
   },
   "parameters": {
@@ -1003,7 +1003,7 @@
             "_generator": {
               "name": "bicep",
               "version": "0.26.170.59819",
-              "templateHash": "12563724890341115562"
+              "templateHash": "1712593165933286164"
             }
           },
           "parameters": {
@@ -1085,7 +1085,7 @@
                     "_generator": {
                       "name": "bicep",
                       "version": "0.26.170.59819",
-                      "templateHash": "5808186645938946038"
+                      "templateHash": "3051764932488625981"
                     },
                     "description": "Creates an Azure Cosmos DB for MongoDB account with a database."
                   },
@@ -1193,7 +1193,7 @@
                             "_generator": {
                               "name": "bicep",
                               "version": "0.26.170.59819",
-                              "templateHash": "7950805331497391447"
+                              "templateHash": "4693794629197446458"
                             },
                             "description": "Creates an Azure Cosmos DB for MongoDB account."
                           },
@@ -1254,7 +1254,7 @@
                                     "_generator": {
                                       "name": "bicep",
                                       "version": "0.26.170.59819",
-                                      "templateHash": "5772648737959552265"
+                                      "templateHash": "10034279666465122994"
                                     },
                                     "description": "Creates an Azure Cosmos DB account."
                                   },
@@ -1313,7 +1313,8 @@
                                           {
                                             "name": "EnableServerless"
                                           }
-                                        ]
+                                        ],
+                                        "disableLocalAuth": true
                                       }
                                     },
                                     {
@@ -1428,7 +1429,7 @@
                     "_generator": {
                       "name": "bicep",
                       "version": "0.26.170.59819",
-                      "templateHash": "7737694719083989185"
+                      "templateHash": "16116103805544296619"
                     },
                     "description": "Creates an Azure Cosmos DB for NoSQL account with a database."
                   },
@@ -1526,7 +1527,7 @@
                             "_generator": {
                               "name": "bicep",
                               "version": "0.26.170.59819",
-                              "templateHash": "15106079368020532347"
+                              "templateHash": "18220013070549790672"
                             },
                             "description": "Creates an Azure Cosmos DB for NoSQL account."
                           },
@@ -1580,7 +1581,7 @@
                                     "_generator": {
                                       "name": "bicep",
                                       "version": "0.26.170.59819",
-                                      "templateHash": "5772648737959552265"
+                                      "templateHash": "10034279666465122994"
                                     },
                                     "description": "Creates an Azure Cosmos DB account."
                                   },
@@ -1639,7 +1640,8 @@
                                           {
                                             "name": "EnableServerless"
                                           }
-                                        ]
+                                        ],
+                                        "disableLocalAuth": true
                                       }
                                     },
                                     {
@@ -1909,7 +1911,7 @@
             "_generator": {
               "name": "bicep",
               "version": "0.26.170.59819",
-              "templateHash": "2125607583208873548"
+              "templateHash": "2154407021129517742"
             }
           },
           "parameters": {
@@ -1944,6 +1946,9 @@
               "tags": "[parameters('tags')]",
               "sku": {
                 "name": "Standard"
+              },
+              "properties": {
+                "disableLocalAuth": true
               }
             },
             {

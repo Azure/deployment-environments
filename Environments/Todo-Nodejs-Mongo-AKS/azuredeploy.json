@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.26.170.59819",
-      "templateHash": "18446031272399398207"
+      "templateHash": "7077090465907669075"
     }
   },
   "parameters": {
@@ -1342,7 +1342,7 @@
             "_generator": {
               "name": "bicep",
               "version": "0.26.170.59819",
-              "templateHash": "9506725499169300305"
+              "templateHash": "11074299330608515845"
             }
           },
           "parameters": {
@@ -1423,7 +1423,7 @@
                     "_generator": {
                       "name": "bicep",
                       "version": "0.26.170.59819",
-                      "templateHash": "5808186645938946038"
+                      "templateHash": "3051764932488625981"
                     },
                     "description": "Creates an Azure Cosmos DB for MongoDB account with a database."
                   },
@@ -1531,7 +1531,7 @@
                             "_generator": {
                               "name": "bicep",
                               "version": "0.26.170.59819",
-                              "templateHash": "7950805331497391447"
+                              "templateHash": "4693794629197446458"
                             },
                             "description": "Creates an Azure Cosmos DB for MongoDB account."
                           },
@@ -1592,7 +1592,7 @@
                                     "_generator": {
                                       "name": "bicep",
                                       "version": "0.26.170.59819",
-                                      "templateHash": "5772648737959552265"
+                                      "templateHash": "10034279666465122994"
                                     },
                                     "description": "Creates an Azure Cosmos DB account."
                                   },
@@ -1651,7 +1651,8 @@
                                           {
                                             "name": "EnableServerless"
                                           }
-                                        ]
+                                        ],
+                                        "disableLocalAuth": true
                                       }
                                     },
                                     {
