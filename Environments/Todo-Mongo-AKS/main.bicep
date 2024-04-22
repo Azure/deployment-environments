@@ -54,7 +54,7 @@ param contentType string = ''
 
 
 resource configStore 'Microsoft.AppConfiguration/configurationStores@2021-10-01-preview' = {
-  name: !empty(configStoreName) ? configStoreName : '${abbrs.appConfigurationConfigurationStores}-${resourceToken}'
+  name: !empty(configStoreName) ? configStoreName : '${abbrs.appConfigurationConfigurationStores}${resourceToken}'
   location: location
   sku: {
     name: 'standard'
