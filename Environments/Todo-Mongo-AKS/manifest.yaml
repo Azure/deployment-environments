@@ -18,8 +18,14 @@ parameters:
   type: string
   required: true
 
-- id: "aksClusterIdentityObjectId"
-  name: "AKS Cluster Identity Object Id"
-  description: "Object Id of the identity used by the AKS cluster to access the KeyVault"
+- id: "sharedAKSProjectName"
+  name: "sharedAKSProjectName"
+  description: "ADE Project name for the shared AKS cluster"
+  type: string
+  required: true
+
+- id: "sharedAKSEnvironmentName"
+  name: "sharedAKSEnvironmentName"
+  description: "ADE environment name for the shared AKS cluster"
   type: string
   required: true
