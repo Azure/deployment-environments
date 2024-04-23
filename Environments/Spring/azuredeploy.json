@@ -1,0 +1,436 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "metadata": {
+    "_generator": {
+      "name": "bicep",
+      "version": "0.26.170.59819",
+      "templateHash": "7459537732843475328"
+    }
+  },
+  "parameters": {
+    "environmentName": {
+      "type": "string",
+      "defaultValue": "test",
+      "minLength": 1,
+      "maxLength": 64,
+      "metadata": {
+        "description": "Name which is used to generate a short unique hash for each resource"
+      }
+    },
+    "springCloudInstanceName": {
+      "type": "string",
+      "defaultValue": "",
+      "metadata": {
+        "description": "The instance name of the Azure Spring Cloud resource"
+      }
+    },
+    "appInsightsName": {
+      "type": "string",
+      "defaultValue": "",
+      "metadata": {
+        "description": "The name of the Application Insights instance for Azure Spring Cloud"
+      }
+    },
+    "logAnalyticsWorkspaceName": {
+      "type": "string",
+      "defaultValue": ""
+    },
+    "springCloudAppSubnetID": {
+      "type": "string",
+      "defaultValue": "",
+      "metadata": {
+        "description": "The resourceID of the Azure Spring Cloud App Subnet"
+      }
+    },
+    "springCloudRuntimeSubnetID": {
+      "type": "string",
+      "defaultValue": "",
+      "metadata": {
+        "description": "The resourceID of the Azure Spring Cloud Runtime Subnet"
+      }
+    },
+    "springCloudServiceCidrs": {
+      "type": "string",
+      "defaultValue": "10.20.0.0/16,10.21.0.0/16,10.22.0.1/16"
+    },
+    "vnetName": {
+      "type": "string",
+      "defaultValue": "",
+      "metadata": {
+        "description": "The name of the Virtual Network"
+      }
+    },
+    "ascAppSubnetName": {
+      "type": "string",
+      "defaultValue": "",
+      "metadata": {
+        "description": "the app subnet name of the Azure Spring Cloud"
+      }
+    },
+    "ascRuntimeSubnetName": {
+      "type": "string",
+      "defaultValue": "",
+      "metadata": {
+        "description": "the runtime subnet name of the Azure Spring Cloud"
+      }
+    },
+    "vnetAddressPrefixes": {
+      "type": "string",
+      "defaultValue": "10.4.0.0/16",
+      "metadata": {
+        "description": "The address prefixes of the vnet"
+      }
+    },
+    "ascAppSubnetAddressPrefixes": {
+      "type": "string",
+      "defaultValue": "10.4.0.0/24",
+      "metadata": {
+        "description": "The Azure Spring Cloud App subnet address prefixes in the vnet"
+      }
+    },
+    "ascRuntimeSubnetAddressPrefixes": {
+      "type": "string",
+      "defaultValue": "10.4.1.0/24",
+      "metadata": {
+        "description": "The Azure Spring Cloud Runtime subnet address prefixes in the vnet"
+      }
+    },
+    "location": {
+      "type": "string",
+      "defaultValue": "[resourceGroup().location]"
+    }
+  },
+  "variables": {
+    "resourceToken": "[toLower(uniqueString(resourceGroup().id, parameters('location')))]",
+    "tags": {
+      "env-name": "[parameters('environmentName')]"
+    }
+  },
+  "resources": [
+    {
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2022-09-01",
+      "name": "vnet",
+      "properties": {
+        "expressionEvaluationOptions": {
+          "scope": "inner"
+        },
+        "mode": "Incremental",
+        "parameters": {
+          "vnetName": "[if(not(empty(parameters('vnetName'))), createObject('value', parameters('vnetName')), createObject('value', format('vnet-{0}', variables('resourceToken'))))]",
+          "location": {
+            "value": "[parameters('location')]"
+          },
+          "ascAppSubnetName": "[if(not(empty(parameters('ascAppSubnetName'))), createObject('value', parameters('ascAppSubnetName')), createObject('value', format('app-sub-{0}', variables('resourceToken'))))]",
+          "ascRuntimeSubnetName": "[if(not(empty(parameters('ascRuntimeSubnetName'))), createObject('value', parameters('ascRuntimeSubnetName')), createObject('value', format('runtime-sub-{0}', variables('resourceToken'))))]",
+          "vnetAddressPrefixes": {
+            "value": "[parameters('vnetAddressPrefixes')]"
+          },
+          "ascAppSubnetAddressPrefixes": {
+            "value": "[parameters('ascAppSubnetAddressPrefixes')]"
+          },
+          "ascRuntimeSubnetAddressPrefixes": {
+            "value": "[parameters('ascRuntimeSubnetAddressPrefixes')]"
+          },
+          "tags": {
+            "value": "[variables('tags')]"
+          }
+        },
+        "template": {
+          "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+          "contentVersion": "1.0.0.0",
+          "metadata": {
+            "_generator": {
+              "name": "bicep",
+              "version": "0.26.170.59819",
+              "templateHash": "15588594590211857731"
+            }
+          },
+          "parameters": {
+            "vnetName": {
+              "type": "string",
+              "metadata": {
+                "description": "The name of the Virtual Network"
+              }
+            },
+            "ascAppSubnetName": {
+              "type": "string",
+              "metadata": {
+                "description": "the app subnet name of the Azure Spring Cloud"
+              }
+            },
+            "ascRuntimeSubnetName": {
+              "type": "string",
+              "metadata": {
+                "description": "the runtime subnet name of the Azure Spring Cloud"
+              }
+            },
+            "vnetAddressPrefixes": {
+              "type": "string",
+              "metadata": {
+                "description": "The address prefixes of the vnet"
+              }
+            },
+            "ascAppSubnetAddressPrefixes": {
+              "type": "string",
+              "metadata": {
+                "description": "The Azure Spring Cloud App subnet address prefixes in the vnet"
+              }
+            },
+            "ascRuntimeSubnetAddressPrefixes": {
+              "type": "string",
+              "metadata": {
+                "description": "The Azure Spring Cloud Runtime subnet address prefixes in the vnet"
+              }
+            },
+            "location": {
+              "type": "string",
+              "metadata": {
+                "description": "The location of the resource"
+              }
+            },
+            "tags": {
+              "type": "object",
+              "metadata": {
+                "description": "The tags that will be associated to the Resources"
+              }
+            }
+          },
+          "resources": [
+            {
+              "type": "Microsoft.Network/virtualNetworks",
+              "apiVersion": "2019-11-01",
+              "name": "[parameters('vnetName')]",
+              "location": "[parameters('location')]",
+              "properties": {
+                "addressSpace": {
+                  "addressPrefixes": [
+                    "[parameters('vnetAddressPrefixes')]"
+                  ]
+                },
+                "subnets": [
+                  {
+                    "name": "[parameters('ascAppSubnetName')]",
+                    "properties": {
+                      "addressPrefix": "[parameters('ascAppSubnetAddressPrefixes')]"
+                    }
+                  },
+                  {
+                    "name": "[parameters('ascRuntimeSubnetName')]",
+                    "properties": {
+                      "addressPrefix": "[parameters('ascRuntimeSubnetAddressPrefixes')]"
+                    }
+                  }
+                ]
+              },
+              "tags": "[parameters('tags')]"
+            },
+            {
+              "type": "Microsoft.Authorization/roleAssignments",
+              "apiVersion": "2020-10-01-preview",
+              "scope": "[format('Microsoft.Network/virtualNetworks/{0}', parameters('vnetName'))]",
+              "name": "[guid(resourceGroup().id)]",
+              "properties": {
+                "principalId": "d2531223-68f9-459e-b225-5592f90d145e",
+                "roleDefinitionId": "[format('{0}/providers/Microsoft.Authorization/roleDefinitions/8e3af657-a8ff-443c-a75c-2fe8c4bcb635', subscription().id)]"
+              },
+              "dependsOn": [
+                "[resourceId('Microsoft.Network/virtualNetworks', parameters('vnetName'))]"
+              ]
+            }
+          ],
+          "outputs": {
+            "ascAppSubnetId": {
+              "type": "string",
+              "value": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('vnetName'), parameters('ascAppSubnetName'))]"
+            },
+            "ascRuntimeSubetId": {
+              "type": "string",
+              "value": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('vnetName'), parameters('ascRuntimeSubnetName'))]"
+            }
+          }
+        }
+      }
+    },
+    {
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2022-09-01",
+      "name": "springcloud",
+      "properties": {
+        "expressionEvaluationOptions": {
+          "scope": "inner"
+        },
+        "mode": "Incremental",
+        "parameters": {
+          "springCloudInstanceName": "[if(not(empty(parameters('springCloudInstanceName'))), createObject('value', parameters('springCloudInstanceName')), createObject('value', format('asa-{0}', variables('resourceToken'))))]",
+          "location": {
+            "value": "[parameters('location')]"
+          },
+          "appInsightsName": "[if(not(empty(parameters('appInsightsName'))), createObject('value', parameters('appInsightsName')), createObject('value', format('appi-{0}', variables('resourceToken'))))]",
+          "logAnalyticsWorkspaceName": "[if(not(empty(parameters('logAnalyticsWorkspaceName'))), createObject('value', parameters('logAnalyticsWorkspaceName')), createObject('value', format('log-{0}', variables('resourceToken'))))]",
+          "springCloudAppSubnetID": "[if(not(empty(parameters('springCloudAppSubnetID'))), createObject('value', parameters('springCloudAppSubnetID')), createObject('value', reference(resourceId('Microsoft.Resources/deployments', 'vnet'), '2022-09-01').outputs.ascAppSubnetId.value))]",
+          "springCloudRuntimeSubnetID": "[if(not(empty(parameters('springCloudRuntimeSubnetID'))), createObject('value', parameters('springCloudRuntimeSubnetID')), createObject('value', reference(resourceId('Microsoft.Resources/deployments', 'vnet'), '2022-09-01').outputs.ascRuntimeSubetId.value))]",
+          "springCloudServiceCidrs": {
+            "value": "[parameters('springCloudServiceCidrs')]"
+          },
+          "tags": {
+            "value": "[variables('tags')]"
+          }
+        },
+        "template": {
+          "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+          "contentVersion": "1.0.0.0",
+          "metadata": {
+            "_generator": {
+              "name": "bicep",
+              "version": "0.26.170.59819",
+              "templateHash": "16898314659086455378"
+            }
+          },
+          "parameters": {
+            "springCloudInstanceName": {
+              "type": "string",
+              "metadata": {
+                "description": "The instance name of the Azure Spring Cloud resource"
+              }
+            },
+            "logAnalyticsWorkspaceName": {
+              "type": "string"
+            },
+            "appInsightsName": {
+              "type": "string",
+              "metadata": {
+                "description": "The name of the Application Insights instance for Azure Spring Cloud"
+              }
+            },
+            "springCloudAppSubnetID": {
+              "type": "string",
+              "defaultValue": "10.4.0.0/24",
+              "metadata": {
+                "description": "The resourceID of the Azure Spring Cloud App Subnet"
+              }
+            },
+            "springCloudRuntimeSubnetID": {
+              "type": "string",
+              "defaultValue": "10.4.1.0/24",
+              "metadata": {
+                "description": "The resourceID of the Azure Spring Cloud Runtime Subnet"
+              }
+            },
+            "springCloudServiceCidrs": {
+              "type": "string",
+              "defaultValue": "10.0.0.0/16,10.2.0.0/16,10.3.0.1/16",
+              "metadata": {
+                "description": "Comma-separated list of IP address ranges in CIDR format. The IP ranges are reserved to host underlying Azure Spring Cloud infrastructure, which should be 3 at least /16 unused IP ranges, must not overlap with any Subnet IP ranges"
+              }
+            },
+            "tags": {
+              "type": "object",
+              "defaultValue": {},
+              "metadata": {
+                "description": "The tags that will be associated to the Resources"
+              }
+            },
+            "location": {
+              "type": "string",
+              "defaultValue": "[resourceGroup().location]"
+            }
+          },
+          "resources": [
+            {
+              "type": "Microsoft.OperationalInsights/workspaces",
+              "apiVersion": "2020-03-01-preview",
+              "name": "[parameters('logAnalyticsWorkspaceName')]",
+              "location": "[parameters('location')]",
+              "tags": "[parameters('tags')]",
+              "properties": {
+                "retentionInDays": 30,
+                "features": {
+                  "searchVersion": 1
+                },
+                "sku": {
+                  "name": "PerGB2018"
+                }
+              }
+            },
+            {
+              "type": "Microsoft.Insights/components",
+              "apiVersion": "2020-02-02-preview",
+              "name": "[parameters('appInsightsName')]",
+              "location": "[parameters('location')]",
+              "kind": "web",
+              "tags": "[parameters('tags')]",
+              "properties": {
+                "Application_Type": "web",
+                "Flow_Type": "Bluefield",
+                "Request_Source": "rest",
+                "WorkspaceResourceId": "[resourceId('Microsoft.OperationalInsights/workspaces', parameters('logAnalyticsWorkspaceName'))]"
+              },
+              "dependsOn": [
+                "[resourceId('Microsoft.OperationalInsights/workspaces', parameters('logAnalyticsWorkspaceName'))]"
+              ]
+            },
+            {
+              "type": "Microsoft.AppPlatform/Spring",
+              "apiVersion": "2022-03-01-preview",
+              "name": "[parameters('springCloudInstanceName')]",
+              "location": "[parameters('location')]",
+              "tags": "[parameters('tags')]",
+              "sku": {
+                "name": "S0",
+                "tier": "Standard"
+              },
+              "properties": {
+                "networkProfile": {
+                  "serviceCidr": "[parameters('springCloudServiceCidrs')]",
+                  "serviceRuntimeSubnetId": "[parameters('springCloudRuntimeSubnetID')]",
+                  "appSubnetId": "[parameters('springCloudAppSubnetID')]"
+                }
+              }
+            },
+            {
+              "type": "Microsoft.AppPlatform/Spring/monitoringSettings",
+              "apiVersion": "2020-07-01",
+              "name": "[format('{0}/default', parameters('springCloudInstanceName'))]",
+              "properties": {
+                "traceEnabled": true,
+                "appInsightsInstrumentationKey": "[reference(resourceId('Microsoft.Insights/components', parameters('appInsightsName')), '2020-02-02-preview').InstrumentationKey]"
+              },
+              "dependsOn": [
+                "[resourceId('Microsoft.Insights/components', parameters('appInsightsName'))]",
+                "[resourceId('Microsoft.AppPlatform/Spring', parameters('springCloudInstanceName'))]"
+              ]
+            },
+            {
+              "type": "Microsoft.Insights/diagnosticSettings",
+              "apiVersion": "2017-05-01-preview",
+              "scope": "[format('Microsoft.AppPlatform/Spring/{0}', parameters('springCloudInstanceName'))]",
+              "name": "monitoring",
+              "properties": {
+                "workspaceId": "[resourceId('Microsoft.OperationalInsights/workspaces', parameters('logAnalyticsWorkspaceName'))]",
+                "logs": [
+                  {
+                    "category": "ApplicationConsole",
+                    "enabled": true,
+                    "retentionPolicy": {
+                      "days": 30,
+                      "enabled": false
+                    }
+                  }
+                ]
+              },
+              "dependsOn": [
+                "[resourceId('Microsoft.OperationalInsights/workspaces', parameters('logAnalyticsWorkspaceName'))]",
+                "[resourceId('Microsoft.AppPlatform/Spring', parameters('springCloudInstanceName'))]"
+              ]
+            }
+          ]
+        }
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.Resources/deployments', 'vnet')]"
+      ]
+    }
+  ]
+}

@@ -4,8 +4,8 @@
   "metadata": {
     "_generator": {
       "name": "bicep",
-      "version": "0.15.31.15270",
-      "templateHash": "135257884104161714"
+      "version": "0.26.170.59819",
+      "templateHash": "11565551485009026934"
     }
   },
   "parameters": {
@@ -102,7 +102,8 @@
       },
       "kind": "StorageV2",
       "properties": {
-        "supportsHttpsTrafficOnly": "[parameters('supportsHttpsTrafficOnly')]"
+        "supportsHttpsTrafficOnly": "[parameters('supportsHttpsTrafficOnly')]",
+        "allowSharedKeyAccess": false
       },
       "tags": "[parameters('tags')]"
     },
@@ -122,8 +123,8 @@
           "linuxFxVersion": "[variables('linexFxVersions')[parameters('runtime')]]",
           "appSettings": [
             {
-              "name": "AzureWebJobsStorage",
-              "value": "[format('DefaultEndpointsProtocol=https;AccountName={0};AccountKey={1}', variables('storageAcctName'), listKeys(resourceId('Microsoft.Storage/storageAccounts', variables('storageAcctName')), '2022-05-01').keys[0].value)]"
+              "name": "AzureWebJobsStorage__accountName",
+              "value": "[variables('storageAcctName')]"
             },
             {
               "name": "WEBSITE_CONTENTAZUREFILECONNECTIONSTRING",

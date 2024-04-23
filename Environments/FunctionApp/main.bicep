@@ -71,6 +71,7 @@ resource storageAccount 'Microsoft.Storage/storageAccounts@2022-05-01' = {
   kind: 'StorageV2'
   properties: {
     supportsHttpsTrafficOnly: supportsHttpsTrafficOnly
+    allowSharedKeyAccess: false
   }
   tags: tags
 }
@@ -89,8 +90,8 @@ resource functionApp 'Microsoft.Web/sites@2022-03-01' = {
       linuxFxVersion: linexFxVersions[runtime]
       appSettings: [
         {
-          name: 'AzureWebJobsStorage'
-          value: 'DefaultEndpointsProtocol=https;AccountName=${storageAccount.name};AccountKey=${storageAccount.listKeys().keys[0].value}'
+          name: 'AzureWebJobsStorage__accountName'
+          value: storageAccount.name
         }
         {
           name: 'WEBSITE_CONTENTAZUREFILECONNECTIONSTRING'

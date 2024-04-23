@@ -1,0 +1,2589 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "metadata": {
+    "_generator": {
+      "name": "bicep",
+      "version": "0.26.170.59819",
+      "templateHash": "8180529666560946925"
+    }
+  },
+  "parameters": {
+    "environmentName": {
+      "type": "string",
+      "defaultValue": "test",
+      "minLength": 1,
+      "maxLength": 64,
+      "metadata": {
+        "description": "Name which is used to generate a short unique hash for each resource"
+      }
+    },
+    "location": {
+      "type": "string",
+      "defaultValue": "[resourceGroup().location]",
+      "minLength": 1,
+      "metadata": {
+        "description": "Primary location for all resources"
+      }
+    },
+    "publisherEmail": {
+      "type": "string",
+      "minLength": 1,
+      "metadata": {
+        "description": "The email address of the owner of the service"
+      }
+    },
+    "publisherName": {
+      "type": "string",
+      "minLength": 1,
+      "metadata": {
+        "description": "The name of the owner of the service"
+      }
+    }
+  },
+  "variables": {
+    "resourceToken": "[toLower(uniqueString(resourceGroup().id, parameters('location')))]",
+    "tags": {
+      "azd-env-name": "[parameters('environmentName')]"
+    },
+    "prefix": "[format('{0}-{1}', parameters('environmentName'), variables('resourceToken'))]",
+    "validStoragePrefix": "[toLower(take(replace(variables('prefix'), '-', ''), 17))]"
+  },
+  "resources": [
+    {
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2022-09-01",
+      "name": "monitoring",
+      "properties": {
+        "expressionEvaluationOptions": {
+          "scope": "inner"
+        },
+        "mode": "Incremental",
+        "parameters": {
+          "location": {
+            "value": "[parameters('location')]"
+          },
+          "tags": {
+            "value": "[variables('tags')]"
+          },
+          "logAnalyticsName": {
+            "value": "[format('log-{0}', variables('prefix'))]"
+          },
+          "applicationInsightsName": {
+            "value": "[format('appi-{0}', variables('prefix'))]"
+          },
+          "applicationInsightsDashboardName": {
+            "value": "appinsights-dashboard"
+          }
+        },
+        "template": {
+          "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+          "contentVersion": "1.0.0.0",
+          "metadata": {
+            "_generator": {
+              "name": "bicep",
+              "version": "0.26.170.59819",
+              "templateHash": "6525308576612279557"
+            }
+          },
+          "parameters": {
+            "logAnalyticsName": {
+              "type": "string"
+            },
+            "applicationInsightsName": {
+              "type": "string"
+            },
+            "applicationInsightsDashboardName": {
+              "type": "string"
+            },
+            "location": {
+              "type": "string",
+              "defaultValue": "[resourceGroup().location]"
+            },
+            "tags": {
+              "type": "object",
+              "defaultValue": {}
+            }
+          },
+          "resources": [
+            {
+              "type": "Microsoft.Resources/deployments",
+              "apiVersion": "2022-09-01",
+              "name": "loganalytics",
+              "properties": {
+                "expressionEvaluationOptions": {
+                  "scope": "inner"
+                },
+                "mode": "Incremental",
+                "parameters": {
+                  "name": {
+                    "value": "[parameters('logAnalyticsName')]"
+                  },
+                  "location": {
+                    "value": "[parameters('location')]"
+                  },
+                  "tags": {
+                    "value": "[parameters('tags')]"
+                  }
+                },
+                "template": {
+                  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+                  "contentVersion": "1.0.0.0",
+                  "metadata": {
+                    "_generator": {
+                      "name": "bicep",
+                      "version": "0.26.170.59819",
+                      "templateHash": "17741619895875240893"
+                    }
+                  },
+                  "parameters": {
+                    "name": {
+                      "type": "string"
+                    },
+                    "location": {
+                      "type": "string",
+                      "defaultValue": "[resourceGroup().location]"
+                    },
+                    "tags": {
+                      "type": "object",
+                      "defaultValue": {}
+                    }
+                  },
+                  "resources": [
+                    {
+                      "type": "Microsoft.OperationalInsights/workspaces",
+                      "apiVersion": "2021-12-01-preview",
+                      "name": "[parameters('name')]",
+                      "location": "[parameters('location')]",
+                      "tags": "[parameters('tags')]",
+                      "properties": {
+                        "retentionInDays": 30,
+                        "features": {
+                          "searchVersion": 1
+                        },
+                        "sku": {
+                          "name": "PerGB2018"
+                        }
+                      }
+                    }
+                  ],
+                  "outputs": {
+                    "id": {
+                      "type": "string",
+                      "value": "[resourceId('Microsoft.OperationalInsights/workspaces', parameters('name'))]"
+                    },
+                    "name": {
+                      "type": "string",
+                      "value": "[parameters('name')]"
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "type": "Microsoft.Resources/deployments",
+              "apiVersion": "2022-09-01",
+              "name": "applicationinsights",
+              "properties": {
+                "expressionEvaluationOptions": {
+                  "scope": "inner"
+                },
+                "mode": "Incremental",
+                "parameters": {
+                  "name": {
+                    "value": "[parameters('applicationInsightsName')]"
+                  },
+                  "location": {
+                    "value": "[parameters('location')]"
+                  },
+                  "tags": {
+                    "value": "[parameters('tags')]"
+                  },
+                  "dashboardName": {
+                    "value": "[parameters('applicationInsightsDashboardName')]"
+                  },
+                  "logAnalyticsWorkspaceId": {
+                    "value": "[reference(resourceId('Microsoft.Resources/deployments', 'loganalytics'), '2022-09-01').outputs.id.value]"
+                  }
+                },
+                "template": {
+                  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+                  "contentVersion": "1.0.0.0",
+                  "metadata": {
+                    "_generator": {
+                      "name": "bicep",
+                      "version": "0.26.170.59819",
+                      "templateHash": "1554147265545062632"
+                    }
+                  },
+                  "parameters": {
+                    "name": {
+                      "type": "string"
+                    },
+                    "dashboardName": {
+                      "type": "string"
+                    },
+                    "location": {
+                      "type": "string",
+                      "defaultValue": "[resourceGroup().location]"
+                    },
+                    "tags": {
+                      "type": "object",
+                      "defaultValue": {}
+                    },
+                    "logAnalyticsWorkspaceId": {
+                      "type": "string"
+                    }
+                  },
+                  "resources": [
+                    {
+                      "type": "Microsoft.Insights/components",
+                      "apiVersion": "2020-02-02",
+                      "name": "[parameters('name')]",
+                      "location": "[parameters('location')]",
+                      "tags": "[parameters('tags')]",
+                      "kind": "web",
+                      "properties": {
+                        "Application_Type": "web",
+                        "WorkspaceResourceId": "[parameters('logAnalyticsWorkspaceId')]"
+                      }
+                    },
+                    {
+                      "type": "Microsoft.Resources/deployments",
+                      "apiVersion": "2022-09-01",
+                      "name": "application-insights-dashboard",
+                      "properties": {
+                        "expressionEvaluationOptions": {
+                          "scope": "inner"
+                        },
+                        "mode": "Incremental",
+                        "parameters": {
+                          "name": {
+                            "value": "[parameters('dashboardName')]"
+                          },
+                          "location": {
+                            "value": "[parameters('location')]"
+                          },
+                          "applicationInsightsName": {
+                            "value": "[parameters('name')]"
+                          }
+                        },
+                        "template": {
+                          "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+                          "contentVersion": "1.0.0.0",
+                          "metadata": {
+                            "_generator": {
+                              "name": "bicep",
+                              "version": "0.26.170.59819",
+                              "templateHash": "8407206116835390544"
+                            }
+                          },
+                          "parameters": {
+                            "name": {
+                              "type": "string"
+                            },
+                            "applicationInsightsName": {
+                              "type": "string"
+                            },
+                            "location": {
+                              "type": "string",
+                              "defaultValue": "[resourceGroup().location]"
+                            },
+                            "tags": {
+                              "type": "object",
+                              "defaultValue": {}
+                            }
+                          },
+                          "resources": [
+                            {
+                              "type": "Microsoft.Portal/dashboards",
+                              "apiVersion": "2020-09-01-preview",
+                              "name": "[parameters('name')]",
+                              "location": "[parameters('location')]",
+                              "tags": "[parameters('tags')]",
+                              "properties": {
+                                "lenses": [
+                                  {
+                                    "order": 0,
+                                    "parts": [
+                                      {
+                                        "position": {
+                                          "x": 0,
+                                          "y": 0,
+                                          "colSpan": 2,
+                                          "rowSpan": 1
+                                        },
+                                        "metadata": {
+                                          "inputs": [
+                                            {
+                                              "name": "id",
+                                              "value": "[format('/subscriptions/{0}/resourceGroups/{1}/providers/Microsoft.Insights/components/{2}', subscription().subscriptionId, resourceGroup().name, parameters('applicationInsightsName'))]"
+                                            },
+                                            {
+                                              "name": "Version",
+                                              "value": "1.0"
+                                            }
+                                          ],
+                                          "type": "Extension/AppInsightsExtension/PartType/AspNetOverviewPinnedPart",
+                                          "asset": {
+                                            "idInputName": "id",
+                                            "type": "ApplicationInsights"
+                                          },
+                                          "defaultMenuItemId": "overview"
+                                        }
+                                      },
+                                      {
+                                        "position": {
+                                          "x": 2,
+                                          "y": 0,
+                                          "colSpan": 1,
+                                          "rowSpan": 1
+                                        },
+                                        "metadata": {
+                                          "inputs": [
+                                            {
+                                              "name": "ComponentId",
+                                              "value": {
+                                                "Name": "[parameters('applicationInsightsName')]",
+                                                "SubscriptionId": "[subscription().subscriptionId]",
+                                                "ResourceGroup": "[resourceGroup().name]"
+                                              }
+                                            },
+                                            {
+                                              "name": "Version",
+                                              "value": "1.0"
+                                            }
+                                          ],
+                                          "type": "Extension/AppInsightsExtension/PartType/ProactiveDetectionAsyncPart",
+                                          "asset": {
+                                            "idInputName": "ComponentId",
+                                            "type": "ApplicationInsights"
+                                          },
+                                          "defaultMenuItemId": "ProactiveDetection"
+                                        }
+                                      },
+                                      {
+                                        "position": {
+                                          "x": 3,
+                                          "y": 0,
+                                          "colSpan": 1,
+                                          "rowSpan": 1
+                                        },
+                                        "metadata": {
+                                          "inputs": [
+                                            {
+                                              "name": "ComponentId",
+                                              "value": {
+                                                "Name": "[parameters('applicationInsightsName')]",
+                                                "SubscriptionId": "[subscription().subscriptionId]",
+                                                "ResourceGroup": "[resourceGroup().name]"
+                                              }
+                                            },
+                                            {
+                                              "name": "ResourceId",
+                                              "value": "[format('/subscriptions/{0}/resourceGroups/{1}/providers/Microsoft.Insights/components/{2}', subscription().subscriptionId, resourceGroup().name, parameters('applicationInsightsName'))]"
+                                            }
+                                          ],
+                                          "type": "Extension/AppInsightsExtension/PartType/QuickPulseButtonSmallPart",
+                                          "asset": {
+                                            "idInputName": "ComponentId",
+                                            "type": "ApplicationInsights"
+                                          }
+                                        }
+                                      },
+                                      {
+                                        "position": {
+                                          "x": 4,
+                                          "y": 0,
+                                          "colSpan": 1,
+                                          "rowSpan": 1
+                                        },
+                                        "metadata": {
+                                          "inputs": [
+                                            {
+                                              "name": "ComponentId",
+                                              "value": {
+                                                "Name": "[parameters('applicationInsightsName')]",
+                                                "SubscriptionId": "[subscription().subscriptionId]",
+                                                "ResourceGroup": "[resourceGroup().name]"
+                                              }
+                                            },
+                                            {
+                                              "name": "TimeContext",
+                                              "value": {
+                                                "durationMs": 86400000,
+                                                "endTime": null,
+                                                "createdTime": "2018-05-04T01:20:33.345Z",
+                                                "isInitialTime": true,
+                                                "grain": 1,
+                                                "useDashboardTimeRange": false
+                                              }
+                                            },
+                                            {
+                                              "name": "Version",
+                                              "value": "1.0"
+                                            }
+                                          ],
+                                          "type": "Extension/AppInsightsExtension/PartType/AvailabilityNavButtonPart",
+                                          "asset": {
+                                            "idInputName": "ComponentId",
+                                            "type": "ApplicationInsights"
+                                          }
+                                        }
+                                      },
+                                      {
+                                        "position": {
+                                          "x": 5,
+                                          "y": 0,
+                                          "colSpan": 1,
+                                          "rowSpan": 1
+                                        },
+                                        "metadata": {
+                                          "inputs": [
+                                            {
+                                              "name": "ComponentId",
+                                              "value": {
+                                                "Name": "[parameters('applicationInsightsName')]",
+                                                "SubscriptionId": "[subscription().subscriptionId]",
+                                                "ResourceGroup": "[resourceGroup().name]"
+                                              }
+                                            },
+                                            {
+                                              "name": "TimeContext",
+                                              "value": {
+                                                "durationMs": 86400000,
+                                                "endTime": null,
+                                                "createdTime": "2018-05-08T18:47:35.237Z",
+                                                "isInitialTime": true,
+                                                "grain": 1,
+                                                "useDashboardTimeRange": false
+                                              }
+                                            },
+                                            {
+                                              "name": "ConfigurationId",
+                                              "value": "78ce933e-e864-4b05-a27b-71fd55a6afad"
+                                            }
+                                          ],
+                                          "type": "Extension/AppInsightsExtension/PartType/AppMapButtonPart",
+                                          "asset": {
+                                            "idInputName": "ComponentId",
+                                            "type": "ApplicationInsights"
+                                          }
+                                        }
+                                      },
+                                      {
+                                        "position": {
+                                          "x": 0,
+                                          "y": 1,
+                                          "colSpan": 3,
+                                          "rowSpan": 1
+                                        },
+                                        "metadata": {
+                                          "inputs": [],
+                                          "type": "Extension/HubsExtension/PartType/MarkdownPart",
+                                          "settings": {
+                                            "content": {
+                                              "settings": {
+                                                "content": "# Usage",
+                                                "title": "",
+                                                "subtitle": ""
+                                              }
+                                            }
+                                          }
+                                        }
+                                      },
+                                      {
+                                        "position": {
+                                          "x": 3,
+                                          "y": 1,
+                                          "colSpan": 1,
+                                          "rowSpan": 1
+                                        },
+                                        "metadata": {
+                                          "inputs": [
+                                            {
+                                              "name": "ComponentId",
+                                              "value": {
+                                                "Name": "[parameters('applicationInsightsName')]",
+                                                "SubscriptionId": "[subscription().subscriptionId]",
+                                                "ResourceGroup": "[resourceGroup().name]"
+                                              }
+                                            },
+                                            {
+                                              "name": "TimeContext",
+                                              "value": {
+                                                "durationMs": 86400000,
+                                                "endTime": null,
+                                                "createdTime": "2018-05-04T01:22:35.782Z",
+                                                "isInitialTime": true,
+                                                "grain": 1,
+                                                "useDashboardTimeRange": false
+                                              }
+                                            }
+                                          ],
+                                          "type": "Extension/AppInsightsExtension/PartType/UsageUsersOverviewPart",
+                                          "asset": {
+                                            "idInputName": "ComponentId",
+                                            "type": "ApplicationInsights"
+                                          }
+                                        }
+                                      },
+                                      {
+                                        "position": {
+                                          "x": 4,
+                                          "y": 1,
+                                          "colSpan": 3,
+                                          "rowSpan": 1
+                                        },
+                                        "metadata": {
+                                          "inputs": [],
+                                          "type": "Extension/HubsExtension/PartType/MarkdownPart",
+                                          "settings": {
+                                            "content": {
+                                              "settings": {
+                                                "content": "# Reliability",
+                                                "title": "",
+                                                "subtitle": ""
+                                              }
+                                            }
+                                          }
+                                        }
+                                      },
+                                      {
+                                        "position": {
+                                          "x": 7,
+                                          "y": 1,
+                                          "colSpan": 1,
+                                          "rowSpan": 1
+                                        },
+                                        "metadata": {
+                                          "inputs": [
+                                            {
+                                              "name": "ResourceId",
+                                              "value": "[format('/subscriptions/{0}/resourceGroups/{1}/providers/Microsoft.Insights/components/{2}', subscription().subscriptionId, resourceGroup().name, parameters('applicationInsightsName'))]"
+                                            },
+                                            {
+                                              "name": "DataModel",
+                                              "value": {
+                                                "version": "1.0.0",
+                                                "timeContext": {
+                                                  "durationMs": 86400000,
+                                                  "createdTime": "2018-05-04T23:42:40.072Z",
+                                                  "isInitialTime": false,
+                                                  "grain": 1,
+                                                  "useDashboardTimeRange": false
+                                                }
+                                              },
+                                              "isOptional": true
+                                            },
+                                            {
+                                              "name": "ConfigurationId",
+                                              "value": "8a02f7bf-ac0f-40e1-afe9-f0e72cfee77f",
+                                              "isOptional": true
+                                            }
+                                          ],
+                                          "type": "Extension/AppInsightsExtension/PartType/CuratedBladeFailuresPinnedPart",
+                                          "isAdapter": true,
+                                          "asset": {
+                                            "idInputName": "ResourceId",
+                                            "type": "ApplicationInsights"
+                                          },
+                                          "defaultMenuItemId": "failures"
+                                        }
+                                      },
+                                      {
+                                        "position": {
+                                          "x": 8,
+                                          "y": 1,
+                                          "colSpan": 3,
+                                          "rowSpan": 1
+                                        },
+                                        "metadata": {
+                                          "inputs": [],
+                                          "type": "Extension/HubsExtension/PartType/MarkdownPart",
+                                          "settings": {
+                                            "content": {
+                                              "settings": {
+                                                "content": "# Responsiveness\r\n",
+                                                "title": "",
+                                                "subtitle": ""
+                                              }
+                                            }
+                                          }
+                                        }
+                                      },
+                                      {
+                                        "position": {
+                                          "x": 11,
+                                          "y": 1,
+                                          "colSpan": 1,
+                                          "rowSpan": 1
+                                        },
+                                        "metadata": {
+                                          "inputs": [
+                                            {
+                                              "name": "ResourceId",
+                                              "value": "[format('/subscriptions/{0}/resourceGroups/{1}/providers/Microsoft.Insights/components/{2}', subscription().subscriptionId, resourceGroup().name, parameters('applicationInsightsName'))]"
+                                            },
+                                            {
+                                              "name": "DataModel",
+                                              "value": {
+                                                "version": "1.0.0",
+                                                "timeContext": {
+                                                  "durationMs": 86400000,
+                                                  "createdTime": "2018-05-04T23:43:37.804Z",
+                                                  "isInitialTime": false,
+                                                  "grain": 1,
+                                                  "useDashboardTimeRange": false
+                                                }
+                                              },
+                                              "isOptional": true
+                                            },
+                                            {
+                                              "name": "ConfigurationId",
+                                              "value": "2a8ede4f-2bee-4b9c-aed9-2db0e8a01865",
+                                              "isOptional": true
+                                            }
+                                          ],
+                                          "type": "Extension/AppInsightsExtension/PartType/CuratedBladePerformancePinnedPart",
+                                          "isAdapter": true,
+                                          "asset": {
+                                            "idInputName": "ResourceId",
+                                            "type": "ApplicationInsights"
+                                          },
+                                          "defaultMenuItemId": "performance"
+                                        }
+                                      },
+                                      {
+                                        "position": {
+                                          "x": 12,
+                                          "y": 1,
+                                          "colSpan": 3,
+                                          "rowSpan": 1
+                                        },
+                                        "metadata": {
+                                          "inputs": [],
+                                          "type": "Extension/HubsExtension/PartType/MarkdownPart",
+                                          "settings": {
+                                            "content": {
+                                              "settings": {
+                                                "content": "# Browser",
+                                                "title": "",
+                                                "subtitle": ""
+                                              }
+                                            }
+                                          }
+                                        }
+                                      },
+                                      {
+                                        "position": {
+                                          "x": 15,
+                                          "y": 1,
+                                          "colSpan": 1,
+                                          "rowSpan": 1
+                                        },
+                                        "metadata": {
+                                          "inputs": [
+                                            {
+                                              "name": "ComponentId",
+                                              "value": {
+                                                "Name": "[parameters('applicationInsightsName')]",
+                                                "SubscriptionId": "[subscription().subscriptionId]",
+                                                "ResourceGroup": "[resourceGroup().name]"
+                                              }
+                                            },
+                                            {
+                                              "name": "MetricsExplorerJsonDefinitionId",
+                                              "value": "BrowserPerformanceTimelineMetrics"
+                                            },
+                                            {
+                                              "name": "TimeContext",
+                                              "value": {
+                                                "durationMs": 86400000,
+                                                "createdTime": "2018-05-08T12:16:27.534Z",
+                                                "isInitialTime": false,
+                                                "grain": 1,
+                                                "useDashboardTimeRange": false
+                                              }
+                                            },
+                                            {
+                                              "name": "CurrentFilter",
+                                              "value": {
+                                                "eventTypes": [
+                                                  4,
+                                                  1,
+                                                  3,
+                                                  5,
+                                                  2,
+                                                  6,
+                                                  13
+                                                ],
+                                                "typeFacets": {},
+                                                "isPermissive": false
+                                              }
+                                            },
+                                            {
+                                              "name": "id",
+                                              "value": {
+                                                "Name": "[parameters('applicationInsightsName')]",
+                                                "SubscriptionId": "[subscription().subscriptionId]",
+                                                "ResourceGroup": "[resourceGroup().name]"
+                                              }
+                                            },
+                                            {
+                                              "name": "Version",
+                                              "value": "1.0"
+                                            }
+                                          ],
+                                          "type": "Extension/AppInsightsExtension/PartType/MetricsExplorerBladePinnedPart",
+                                          "asset": {
+                                            "idInputName": "ComponentId",
+                                            "type": "ApplicationInsights"
+                                          },
+                                          "defaultMenuItemId": "browser"
+                                        }
+                                      },
+                                      {
+                                        "position": {
+                                          "x": 0,
+                                          "y": 2,
+                                          "colSpan": 4,
+                                          "rowSpan": 3
+                                        },
+                                        "metadata": {
+                                          "inputs": [
+                                            {
+                                              "name": "options",
+                                              "value": {
+                                                "chart": {
+                                                  "metrics": [
+                                                    {
+                                                      "resourceMetadata": {
+                                                        "id": "[format('/subscriptions/{0}/resourceGroups/{1}/providers/Microsoft.Insights/components/{2}', subscription().subscriptionId, resourceGroup().name, parameters('applicationInsightsName'))]"
+                                                      },
+                                                      "name": "sessions/count",
+                                                      "aggregationType": 5,
+                                                      "namespace": "microsoft.insights/components/kusto",
+                                                      "metricVisualization": {
+                                                        "displayName": "Sessions",
+                                                        "color": "#47BDF5"
+                                                      }
+                                                    },
+                                                    {
+                                                      "resourceMetadata": {
+                                                        "id": "[format('/subscriptions/{0}/resourceGroups/{1}/providers/Microsoft.Insights/components/{2}', subscription().subscriptionId, resourceGroup().name, parameters('applicationInsightsName'))]"
+                                                      },
+                                                      "name": "users/count",
+                                                      "aggregationType": 5,
+                                                      "namespace": "microsoft.insights/components/kusto",
+                                                      "metricVisualization": {
+                                                        "displayName": "Users",
+                                                        "color": "#7E58FF"
+                                                      }
+                                                    }
+                                                  ],
+                                                  "title": "Unique sessions and users",
+                                                  "visualization": {
+                                                    "chartType": 2,
+                                                    "legendVisualization": {
+                                                      "isVisible": true,
+                                                      "position": 2,
+                                                      "hideSubtitle": false
+                                                    },
+                                                    "axisVisualization": {
+                                                      "x": {
+                                                        "isVisible": true,
+                                                        "axisType": 2
+                                                      },
+                                                      "y": {
+                                                        "isVisible": true,
+                                                        "axisType": 1
+                                                      }
+                                                    }
+                                                  },
+                                                  "openBladeOnClick": {
+                                                    "openBlade": true,
+                                                    "destinationBlade": {
+                                                      "extensionName": "HubsExtension",
+                                                      "bladeName": "ResourceMenuBlade",
+                                                      "parameters": {
+                                                        "id": "[format('/subscriptions/{0}/resourceGroups/{1}/providers/Microsoft.Insights/components/{2}', subscription().subscriptionId, resourceGroup().name, parameters('applicationInsightsName'))]",
+                                                        "menuid": "segmentationUsers"
+                                                      }
+                                                    }
+                                                  }
+                                                }
+                                              }
+                                            },
+                                            {
+                                              "name": "sharedTimeRange",
+                                              "isOptional": true
+                                            }
+                                          ],
+                                          "type": "Extension/HubsExtension/PartType/MonitorChartPart",
+                                          "settings": {}
+                                        }
+                                      },
+                                      {
+                                        "position": {
+                                          "x": 4,
+                                          "y": 2,
+                                          "colSpan": 4,
+                                          "rowSpan": 3
+                                        },
+                                        "metadata": {
+                                          "inputs": [
+                                            {
+                                              "name": "options",
+                                              "value": {
+                                                "chart": {
+                                                  "metrics": [
+                                                    {
+                                                      "resourceMetadata": {
+                                                        "id": "[format('/subscriptions/{0}/resourceGroups/{1}/providers/Microsoft.Insights/components/{2}', subscription().subscriptionId, resourceGroup().name, parameters('applicationInsightsName'))]"
+                                                      },
+                                                      "name": "requests/failed",
+                                                      "aggregationType": 7,
+                                                      "namespace": "microsoft.insights/components",
+                                                      "metricVisualization": {
+                                                        "displayName": "Failed requests",
+                                                        "color": "#EC008C"
+                                                      }
+                                                    }
+                                                  ],
+                                                  "title": "Failed requests",
+                                                  "visualization": {
+                                                    "chartType": 3,
+                                                    "legendVisualization": {
+                                                      "isVisible": true,
+                                                      "position": 2,
+                                                      "hideSubtitle": false
+                                                    },
+                                                    "axisVisualization": {
+                                                      "x": {
+                                                        "isVisible": true,
+                                                        "axisType": 2
+                                                      },
+                                                      "y": {
+                                                        "isVisible": true,
+                                                        "axisType": 1
+                                                      }
+                                                    }
+                                                  },
+                                                  "openBladeOnClick": {
+                                                    "openBlade": true,
+                                                    "destinationBlade": {
+                                                      "extensionName": "HubsExtension",
+                                                      "bladeName": "ResourceMenuBlade",
+                                                      "parameters": {
+                                                        "id": "[format('/subscriptions/{0}/resourceGroups/{1}/providers/Microsoft.Insights/components/{2}', subscription().subscriptionId, resourceGroup().name, parameters('applicationInsightsName'))]",
+                                                        "menuid": "failures"
+                                                      }
+                                                    }
+                                                  }
+                                                }
+                                              }
+                                            },
+                                            {
+                                              "name": "sharedTimeRange",
+                                              "isOptional": true
+                                            }
+                                          ],
+                                          "type": "Extension/HubsExtension/PartType/MonitorChartPart",
+                                          "settings": {}
+                                        }
+                                      },
+                                      {
+                                        "position": {
+                                          "x": 8,
+                                          "y": 2,
+                                          "colSpan": 4,
+                                          "rowSpan": 3
+                                        },
+                                        "metadata": {
+                                          "inputs": [
+                                            {
+                                              "name": "options",
+                                              "value": {
+                                                "chart": {
+                                                  "metrics": [
+                                                    {
+                                                      "resourceMetadata": {
+                                                        "id": "[format('/subscriptions/{0}/resourceGroups/{1}/providers/Microsoft.Insights/components/{2}', subscription().subscriptionId, resourceGroup().name, parameters('applicationInsightsName'))]"
+                                                      },
+                                                      "name": "requests/duration",
+                                                      "aggregationType": 4,
+                                                      "namespace": "microsoft.insights/components",
+                                                      "metricVisualization": {
+                                                        "displayName": "Server response time",
+                                                        "color": "#00BCF2"
+                                                      }
+                                                    }
+                                                  ],
+                                                  "title": "Server response time",
+                                                  "visualization": {
+                                                    "chartType": 2,
+                                                    "legendVisualization": {
+                                                      "isVisible": true,
+                                                      "position": 2,
+                                                      "hideSubtitle": false
+                                                    },
+                                                    "axisVisualization": {
+                                                      "x": {
+                                                        "isVisible": true,
+                                                        "axisType": 2
+                                                      },
+                                                      "y": {
+                                                        "isVisible": true,
+                                                        "axisType": 1
+                                                      }
+                                                    }
+                                                  },
+                                                  "openBladeOnClick": {
+                                                    "openBlade": true,
+                                                    "destinationBlade": {
+                                                      "extensionName": "HubsExtension",
+                                                      "bladeName": "ResourceMenuBlade",
+                                                      "parameters": {
+                                                        "id": "[format('/subscriptions/{0}/resourceGroups/{1}/providers/Microsoft.Insights/components/{2}', subscription().subscriptionId, resourceGroup().name, parameters('applicationInsightsName'))]",
+                                                        "menuid": "performance"
+                                                      }
+                                                    }
+                                                  }
+                                                }
+                                              }
+                                            },
+                                            {
+                                              "name": "sharedTimeRange",
+                                              "isOptional": true
+                                            }
+                                          ],
+                                          "type": "Extension/HubsExtension/PartType/MonitorChartPart",
+                                          "settings": {}
+                                        }
+                                      },
+                                      {
+                                        "position": {
+                                          "x": 12,
+                                          "y": 2,
+                                          "colSpan": 4,
+                                          "rowSpan": 3
+                                        },
+                                        "metadata": {
+                                          "inputs": [
+                                            {
+                                              "name": "options",
+                                              "value": {
+                                                "chart": {
+                                                  "metrics": [
+                                                    {
+                                                      "resourceMetadata": {
+                                                        "id": "[format('/subscriptions/{0}/resourceGroups/{1}/providers/Microsoft.Insights/components/{2}', subscription().subscriptionId, resourceGroup().name, parameters('applicationInsightsName'))]"
+                                                      },
+                                                      "name": "browserTimings/networkDuration",
+                                                      "aggregationType": 4,
+                                                      "namespace": "microsoft.insights/components",
+                                                      "metricVisualization": {
+                                                        "displayName": "Page load network connect time",
+                                                        "color": "#7E58FF"
+                                                      }
+                                                    },
+                                                    {
+                                                      "resourceMetadata": {
+                                                        "id": "[format('/subscriptions/{0}/resourceGroups/{1}/providers/Microsoft.Insights/components/{2}', subscription().subscriptionId, resourceGroup().name, parameters('applicationInsightsName'))]"
+                                                      },
+                                                      "name": "browserTimings/processingDuration",
+                                                      "aggregationType": 4,
+                                                      "namespace": "microsoft.insights/components",
+                                                      "metricVisualization": {
+                                                        "displayName": "Client processing time",
+                                                        "color": "#44F1C8"
+                                                      }
+                                                    },
+                                                    {
+                                                      "resourceMetadata": {
+                                                        "id": "[format('/subscriptions/{0}/resourceGroups/{1}/providers/Microsoft.Insights/components/{2}', subscription().subscriptionId, resourceGroup().name, parameters('applicationInsightsName'))]"
+                                                      },
+                                                      "name": "browserTimings/sendDuration",
+                                                      "aggregationType": 4,
+                                                      "namespace": "microsoft.insights/components",
+                                                      "metricVisualization": {
+                                                        "displayName": "Send request time",
+                                                        "color": "#EB9371"
+                                                      }
+                                                    },
+                                                    {
+                                                      "resourceMetadata": {
+                                                        "id": "[format('/subscriptions/{0}/resourceGroups/{1}/providers/Microsoft.Insights/components/{2}', subscription().subscriptionId, resourceGroup().name, parameters('applicationInsightsName'))]"
+                                                      },
+                                                      "name": "browserTimings/receiveDuration",
+                                                      "aggregationType": 4,
+                                                      "namespace": "microsoft.insights/components",
+                                                      "metricVisualization": {
+                                                        "displayName": "Receiving response time",
+                                                        "color": "#0672F1"
+                                                      }
+                                                    }
+                                                  ],
+                                                  "title": "Average page load time breakdown",
+                                                  "visualization": {
+                                                    "chartType": 3,
+                                                    "legendVisualization": {
+                                                      "isVisible": true,
+                                                      "position": 2,
+                                                      "hideSubtitle": false
+                                                    },
+                                                    "axisVisualization": {
+                                                      "x": {
+                                                        "isVisible": true,
+                                                        "axisType": 2
+                                                      },
+                                                      "y": {
+                                                        "isVisible": true,
+                                                        "axisType": 1
+                                                      }
+                                                    }
+                                                  }
+                                                }
+                                              }
+                                            },
+                                            {
+                                              "name": "sharedTimeRange",
+                                              "isOptional": true
+                                            }
+                                          ],
+                                          "type": "Extension/HubsExtension/PartType/MonitorChartPart",
+                                          "settings": {}
+                                        }
+                                      },
+                                      {
+                                        "position": {
+                                          "x": 0,
+                                          "y": 5,
+                                          "colSpan": 4,
+                                          "rowSpan": 3
+                                        },
+                                        "metadata": {
+                                          "inputs": [
+                                            {
+                                              "name": "options",
+                                              "value": {
+                                                "chart": {
+                                                  "metrics": [
+                                                    {
+                                                      "resourceMetadata": {
+                                                        "id": "[format('/subscriptions/{0}/resourceGroups/{1}/providers/Microsoft.Insights/components/{2}', subscription().subscriptionId, resourceGroup().name, parameters('applicationInsightsName'))]"
+                                                      },
+                                                      "name": "availabilityResults/availabilityPercentage",
+                                                      "aggregationType": 4,
+                                                      "namespace": "microsoft.insights/components",
+                                                      "metricVisualization": {
+                                                        "displayName": "Availability",
+                                                        "color": "#47BDF5"
+                                                      }
+                                                    }
+                                                  ],
+                                                  "title": "Average availability",
+                                                  "visualization": {
+                                                    "chartType": 3,
+                                                    "legendVisualization": {
+                                                      "isVisible": true,
+                                                      "position": 2,
+                                                      "hideSubtitle": false
+                                                    },
+                                                    "axisVisualization": {
+                                                      "x": {
+                                                        "isVisible": true,
+                                                        "axisType": 2
+                                                      },
+                                                      "y": {
+                                                        "isVisible": true,
+                                                        "axisType": 1
+                                                      }
+                                                    }
+                                                  },
+                                                  "openBladeOnClick": {
+                                                    "openBlade": true,
+                                                    "destinationBlade": {
+                                                      "extensionName": "HubsExtension",
+                                                      "bladeName": "ResourceMenuBlade",
+                                                      "parameters": {
+                                                        "id": "[format('/subscriptions/{0}/resourceGroups/{1}/providers/Microsoft.Insights/components/{2}', subscription().subscriptionId, resourceGroup().name, parameters('applicationInsightsName'))]",
+                                                        "menuid": "availability"
+                                                      }
+                                                    }
+                                                  }
+                                                }
+                                              }
+                                            },
+                                            {
+                                              "name": "sharedTimeRange",
+                                              "isOptional": true
+                                            }
+                                          ],
+                                          "type": "Extension/HubsExtension/PartType/MonitorChartPart",
+                                          "settings": {}
+                                        }
+                                      },
+                                      {
+                                        "position": {
+                                          "x": 4,
+                                          "y": 5,
+                                          "colSpan": 4,
+                                          "rowSpan": 3
+                                        },
+                                        "metadata": {
+                                          "inputs": [
+                                            {
+                                              "name": "options",
+                                              "value": {
+                                                "chart": {
+                                                  "metrics": [
+                                                    {
+                                                      "resourceMetadata": {
+                                                        "id": "[format('/subscriptions/{0}/resourceGroups/{1}/providers/Microsoft.Insights/components/{2}', subscription().subscriptionId, resourceGroup().name, parameters('applicationInsightsName'))]"
+                                                      },
+                                                      "name": "exceptions/server",
+                                                      "aggregationType": 7,
+                                                      "namespace": "microsoft.insights/components",
+                                                      "metricVisualization": {
+                                                        "displayName": "Server exceptions",
+                                                        "color": "#47BDF5"
+                                                      }
+                                                    },
+                                                    {
+                                                      "resourceMetadata": {
+                                                        "id": "[format('/subscriptions/{0}/resourceGroups/{1}/providers/Microsoft.Insights/components/{2}', subscription().subscriptionId, resourceGroup().name, parameters('applicationInsightsName'))]"
+                                                      },
+                                                      "name": "dependencies/failed",
+                                                      "aggregationType": 7,
+                                                      "namespace": "microsoft.insights/components",
+                                                      "metricVisualization": {
+                                                        "displayName": "Dependency failures",
+                                                        "color": "#7E58FF"
+                                                      }
+                                                    }
+                                                  ],
+                                                  "title": "Server exceptions and Dependency failures",
+                                                  "visualization": {
+                                                    "chartType": 2,
+                                                    "legendVisualization": {
+                                                      "isVisible": true,
+                                                      "position": 2,
+                                                      "hideSubtitle": false
+                                                    },
+                                                    "axisVisualization": {
+                                                      "x": {
+                                                        "isVisible": true,
+                                                        "axisType": 2
+                                                      },
+                                                      "y": {
+                                                        "isVisible": true,
+                                                        "axisType": 1
+                                                      }
+                                                    }
+                                                  }
+                                                }
+                                              }
+                                            },
+                                            {
+                                              "name": "sharedTimeRange",
+                                              "isOptional": true
+                                            }
+                                          ],
+                                          "type": "Extension/HubsExtension/PartType/MonitorChartPart",
+                                          "settings": {}
+                                        }
+                                      },
+                                      {
+                                        "position": {
+                                          "x": 8,
+                                          "y": 5,
+                                          "colSpan": 4,
+                                          "rowSpan": 3
+                                        },
+                                        "metadata": {
+                                          "inputs": [
+                                            {
+                                              "name": "options",
+                                              "value": {
+                                                "chart": {
+                                                  "metrics": [
+                                                    {
+                                                      "resourceMetadata": {
+                                                        "id": "[format('/subscriptions/{0}/resourceGroups/{1}/providers/Microsoft.Insights/components/{2}', subscription().subscriptionId, resourceGroup().name, parameters('applicationInsightsName'))]"
+                                                      },
+                                                      "name": "performanceCounters/processorCpuPercentage",
+                                                      "aggregationType": 4,
+                                                      "namespace": "microsoft.insights/components",
+                                                      "metricVisualization": {
+                                                        "displayName": "Processor time",
+                                                        "color": "#47BDF5"
+                                                      }
+                                                    },
+                                                    {
+                                                      "resourceMetadata": {
+                                                        "id": "[format('/subscriptions/{0}/resourceGroups/{1}/providers/Microsoft.Insights/components/{2}', subscription().subscriptionId, resourceGroup().name, parameters('applicationInsightsName'))]"
+                                                      },
+                                                      "name": "performanceCounters/processCpuPercentage",
+                                                      "aggregationType": 4,
+                                                      "namespace": "microsoft.insights/components",
+                                                      "metricVisualization": {
+                                                        "displayName": "Process CPU",
+                                                        "color": "#7E58FF"
+                                                      }
+                                                    }
+                                                  ],
+                                                  "title": "Average processor and process CPU utilization",
+                                                  "visualization": {
+                                                    "chartType": 2,
+                                                    "legendVisualization": {
+                                                      "isVisible": true,
+                                                      "position": 2,
+                                                      "hideSubtitle": false
+                                                    },
+                                                    "axisVisualization": {
+                                                      "x": {
+                                                        "isVisible": true,
+                                                        "axisType": 2
+                                                      },
+                                                      "y": {
+                                                        "isVisible": true,
+                                                        "axisType": 1
+                                                      }
+                                                    }
+                                                  }
+                                                }
+                                              }
+                                            },
+                                            {
+                                              "name": "sharedTimeRange",
+                                              "isOptional": true
+                                            }
+                                          ],
+                                          "type": "Extension/HubsExtension/PartType/MonitorChartPart",
+                                          "settings": {}
+                                        }
+                                      },
+                                      {
+                                        "position": {
+                                          "x": 12,
+                                          "y": 5,
+                                          "colSpan": 4,
+                                          "rowSpan": 3
+                                        },
+                                        "metadata": {
+                                          "inputs": [
+                                            {
+                                              "name": "options",
+                                              "value": {
+                                                "chart": {
+                                                  "metrics": [
+                                                    {
+                                                      "resourceMetadata": {
+                                                        "id": "[format('/subscriptions/{0}/resourceGroups/{1}/providers/Microsoft.Insights/components/{2}', subscription().subscriptionId, resourceGroup().name, parameters('applicationInsightsName'))]"
+                                                      },
+                                                      "name": "exceptions/browser",
+                                                      "aggregationType": 7,
+                                                      "namespace": "microsoft.insights/components",
+                                                      "metricVisualization": {
+                                                        "displayName": "Browser exceptions",
+                                                        "color": "#47BDF5"
+                                                      }
+                                                    }
+                                                  ],
+                                                  "title": "Browser exceptions",
+                                                  "visualization": {
+                                                    "chartType": 2,
+                                                    "legendVisualization": {
+                                                      "isVisible": true,
+                                                      "position": 2,
+                                                      "hideSubtitle": false
+                                                    },
+                                                    "axisVisualization": {
+                                                      "x": {
+                                                        "isVisible": true,
+                                                        "axisType": 2
+                                                      },
+                                                      "y": {
+                                                        "isVisible": true,
+                                                        "axisType": 1
+                                                      }
+                                                    }
+                                                  }
+                                                }
+                                              }
+                                            },
+                                            {
+                                              "name": "sharedTimeRange",
+                                              "isOptional": true
+                                            }
+                                          ],
+                                          "type": "Extension/HubsExtension/PartType/MonitorChartPart",
+                                          "settings": {}
+                                        }
+                                      },
+                                      {
+                                        "position": {
+                                          "x": 0,
+                                          "y": 8,
+                                          "colSpan": 4,
+                                          "rowSpan": 3
+                                        },
+                                        "metadata": {
+                                          "inputs": [
+                                            {
+                                              "name": "options",
+                                              "value": {
+                                                "chart": {
+                                                  "metrics": [
+                                                    {
+                                                      "resourceMetadata": {
+                                                        "id": "[format('/subscriptions/{0}/resourceGroups/{1}/providers/Microsoft.Insights/components/{2}', subscription().subscriptionId, resourceGroup().name, parameters('applicationInsightsName'))]"
+                                                      },
+                                                      "name": "availabilityResults/count",
+                                                      "aggregationType": 7,
+                                                      "namespace": "microsoft.insights/components",
+                                                      "metricVisualization": {
+                                                        "displayName": "Availability test results count",
+                                                        "color": "#47BDF5"
+                                                      }
+                                                    }
+                                                  ],
+                                                  "title": "Availability test results count",
+                                                  "visualization": {
+                                                    "chartType": 2,
+                                                    "legendVisualization": {
+                                                      "isVisible": true,
+                                                      "position": 2,
+                                                      "hideSubtitle": false
+                                                    },
+                                                    "axisVisualization": {
+                                                      "x": {
+                                                        "isVisible": true,
+                                                        "axisType": 2
+                                                      },
+                                                      "y": {
+                                                        "isVisible": true,
+                                                        "axisType": 1
+                                                      }
+                                                    }
+                                                  }
+                                                }
+                                              }
+                                            },
+                                            {
+                                              "name": "sharedTimeRange",
+                                              "isOptional": true
+                                            }
+                                          ],
+                                          "type": "Extension/HubsExtension/PartType/MonitorChartPart",
+                                          "settings": {}
+                                        }
+                                      },
+                                      {
+                                        "position": {
+                                          "x": 4,
+                                          "y": 8,
+                                          "colSpan": 4,
+                                          "rowSpan": 3
+                                        },
+                                        "metadata": {
+                                          "inputs": [
+                                            {
+                                              "name": "options",
+                                              "value": {
+                                                "chart": {
+                                                  "metrics": [
+                                                    {
+                                                      "resourceMetadata": {
+                                                        "id": "[format('/subscriptions/{0}/resourceGroups/{1}/providers/Microsoft.Insights/components/{2}', subscription().subscriptionId, resourceGroup().name, parameters('applicationInsightsName'))]"
+                                                      },
+                                                      "name": "performanceCounters/processIOBytesPerSecond",
+                                                      "aggregationType": 4,
+                                                      "namespace": "microsoft.insights/components",
+                                                      "metricVisualization": {
+                                                        "displayName": "Process IO rate",
+                                                        "color": "#47BDF5"
+                                                      }
+                                                    }
+                                                  ],
+                                                  "title": "Average process I/O rate",
+                                                  "visualization": {
+                                                    "chartType": 2,
+                                                    "legendVisualization": {
+                                                      "isVisible": true,
+                                                      "position": 2,
+                                                      "hideSubtitle": false
+                                                    },
+                                                    "axisVisualization": {
+                                                      "x": {
+                                                        "isVisible": true,
+                                                        "axisType": 2
+                                                      },
+                                                      "y": {
+                                                        "isVisible": true,
+                                                        "axisType": 1
+                                                      }
+                                                    }
+                                                  }
+                                                }
+                                              }
+                                            },
+                                            {
+                                              "name": "sharedTimeRange",
+                                              "isOptional": true
+                                            }
+                                          ],
+                                          "type": "Extension/HubsExtension/PartType/MonitorChartPart",
+                                          "settings": {}
+                                        }
+                                      },
+                                      {
+                                        "position": {
+                                          "x": 8,
+                                          "y": 8,
+                                          "colSpan": 4,
+                                          "rowSpan": 3
+                                        },
+                                        "metadata": {
+                                          "inputs": [
+                                            {
+                                              "name": "options",
+                                              "value": {
+                                                "chart": {
+                                                  "metrics": [
+                                                    {
+                                                      "resourceMetadata": {
+                                                        "id": "[format('/subscriptions/{0}/resourceGroups/{1}/providers/Microsoft.Insights/components/{2}', subscription().subscriptionId, resourceGroup().name, parameters('applicationInsightsName'))]"
+                                                      },
+                                                      "name": "performanceCounters/memoryAvailableBytes",
+                                                      "aggregationType": 4,
+                                                      "namespace": "microsoft.insights/components",
+                                                      "metricVisualization": {
+                                                        "displayName": "Available memory",
+                                                        "color": "#47BDF5"
+                                                      }
+                                                    }
+                                                  ],
+                                                  "title": "Average available memory",
+                                                  "visualization": {
+                                                    "chartType": 2,
+                                                    "legendVisualization": {
+                                                      "isVisible": true,
+                                                      "position": 2,
+                                                      "hideSubtitle": false
+                                                    },
+                                                    "axisVisualization": {
+                                                      "x": {
+                                                        "isVisible": true,
+                                                        "axisType": 2
+                                                      },
+                                                      "y": {
+                                                        "isVisible": true,
+                                                        "axisType": 1
+                                                      }
+                                                    }
+                                                  }
+                                                }
+                                              }
+                                            },
+                                            {
+                                              "name": "sharedTimeRange",
+                                              "isOptional": true
+                                            }
+                                          ],
+                                          "type": "Extension/HubsExtension/PartType/MonitorChartPart",
+                                          "settings": {}
+                                        }
+                                      }
+                                    ]
+                                  }
+                                ]
+                              }
+                            }
+                          ]
+                        }
+                      },
+                      "dependsOn": [
+                        "[resourceId('Microsoft.Insights/components', parameters('name'))]"
+                      ]
+                    }
+                  ],
+                  "outputs": {
+                    "connectionString": {
+                      "type": "string",
+                      "value": "[reference(resourceId('Microsoft.Insights/components', parameters('name')), '2020-02-02').ConnectionString]"
+                    },
+                    "instrumentationKey": {
+                      "type": "string",
+                      "value": "[reference(resourceId('Microsoft.Insights/components', parameters('name')), '2020-02-02').InstrumentationKey]"
+                    },
+                    "name": {
+                      "type": "string",
+                      "value": "[parameters('name')]"
+                    }
+                  }
+                }
+              },
+              "dependsOn": [
+                "[resourceId('Microsoft.Resources/deployments', 'loganalytics')]"
+              ]
+            }
+          ],
+          "outputs": {
+            "applicationInsightsConnectionString": {
+              "type": "string",
+              "value": "[reference(resourceId('Microsoft.Resources/deployments', 'applicationinsights'), '2022-09-01').outputs.connectionString.value]"
+            },
+            "applicationInsightsInstrumentationKey": {
+              "type": "string",
+              "value": "[reference(resourceId('Microsoft.Resources/deployments', 'applicationinsights'), '2022-09-01').outputs.instrumentationKey.value]"
+            },
+            "applicationInsightsName": {
+              "type": "string",
+              "value": "[reference(resourceId('Microsoft.Resources/deployments', 'applicationinsights'), '2022-09-01').outputs.name.value]"
+            },
+            "logAnalyticsWorkspaceId": {
+              "type": "string",
+              "value": "[reference(resourceId('Microsoft.Resources/deployments', 'loganalytics'), '2022-09-01').outputs.id.value]"
+            },
+            "logAnalyticsWorkspaceName": {
+              "type": "string",
+              "value": "[reference(resourceId('Microsoft.Resources/deployments', 'loganalytics'), '2022-09-01').outputs.name.value]"
+            }
+          }
+        }
+      }
+    },
+    {
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2022-09-01",
+      "name": "storage",
+      "properties": {
+        "expressionEvaluationOptions": {
+          "scope": "inner"
+        },
+        "mode": "Incremental",
+        "parameters": {
+          "name": {
+            "value": "[format('{0}storage', variables('validStoragePrefix'))]"
+          },
+          "location": {
+            "value": "[parameters('location')]"
+          },
+          "tags": {
+            "value": "[variables('tags')]"
+          }
+        },
+        "template": {
+          "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+          "contentVersion": "1.0.0.0",
+          "metadata": {
+            "_generator": {
+              "name": "bicep",
+              "version": "0.26.170.59819",
+              "templateHash": "15657907071797536763"
+            }
+          },
+          "parameters": {
+            "name": {
+              "type": "string"
+            },
+            "location": {
+              "type": "string",
+              "defaultValue": "[resourceGroup().location]"
+            },
+            "tags": {
+              "type": "object",
+              "defaultValue": {}
+            },
+            "allowBlobPublicAccess": {
+              "type": "bool",
+              "defaultValue": false
+            },
+            "containers": {
+              "type": "array",
+              "defaultValue": []
+            },
+            "kind": {
+              "type": "string",
+              "defaultValue": "StorageV2"
+            },
+            "minimumTlsVersion": {
+              "type": "string",
+              "defaultValue": "TLS1_2"
+            },
+            "sku": {
+              "type": "object",
+              "defaultValue": {
+                "name": "Standard_LRS"
+              }
+            }
+          },
+          "resources": [
+            {
+              "copy": {
+                "name": "container",
+                "count": "[length(parameters('containers'))]"
+              },
+              "condition": "[not(empty(parameters('containers')))]",
+              "type": "Microsoft.Storage/storageAccounts/blobServices/containers",
+              "apiVersion": "2022-05-01",
+              "name": "[format('{0}/{1}/{2}', parameters('name'), 'default', parameters('containers')[copyIndex()].name)]",
+              "properties": {
+                "publicAccess": "[if(contains(parameters('containers')[copyIndex()], 'publicAccess'), parameters('containers')[copyIndex()].publicAccess, 'None')]"
+              },
+              "dependsOn": [
+                "[resourceId('Microsoft.Storage/storageAccounts/blobServices', parameters('name'), 'default')]"
+              ]
+            },
+            {
+              "condition": "[not(empty(parameters('containers')))]",
+              "type": "Microsoft.Storage/storageAccounts/blobServices",
+              "apiVersion": "2022-05-01",
+              "name": "[format('{0}/{1}', parameters('name'), 'default')]",
+              "dependsOn": [
+                "[resourceId('Microsoft.Storage/storageAccounts', parameters('name'))]"
+              ]
+            },
+            {
+              "type": "Microsoft.Storage/storageAccounts",
+              "apiVersion": "2022-05-01",
+              "name": "[parameters('name')]",
+              "location": "[parameters('location')]",
+              "tags": "[parameters('tags')]",
+              "kind": "[parameters('kind')]",
+              "sku": "[parameters('sku')]",
+              "properties": {
+                "minimumTlsVersion": "[parameters('minimumTlsVersion')]",
+                "allowBlobPublicAccess": "[parameters('allowBlobPublicAccess')]",
+                "allowSharedKeyAccess": false,
+                "networkAcls": {
+                  "bypass": "AzureServices",
+                  "defaultAction": "Allow"
+                }
+              }
+            }
+          ],
+          "outputs": {
+            "name": {
+              "type": "string",
+              "value": "[parameters('name')]"
+            },
+            "primaryEndpoints": {
+              "type": "object",
+              "value": "[reference(resourceId('Microsoft.Storage/storageAccounts', parameters('name')), '2022-05-01').primaryEndpoints]"
+            }
+          }
+        }
+      }
+    },
+    {
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2022-09-01",
+      "name": "appserviceplan",
+      "properties": {
+        "expressionEvaluationOptions": {
+          "scope": "inner"
+        },
+        "mode": "Incremental",
+        "parameters": {
+          "name": {
+            "value": "[format('plan-{0}', variables('prefix'))]"
+          },
+          "location": {
+            "value": "[parameters('location')]"
+          },
+          "tags": {
+            "value": "[variables('tags')]"
+          },
+          "sku": {
+            "value": {
+              "name": "Y1",
+              "tier": "Dynamic"
+            }
+          }
+        },
+        "template": {
+          "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+          "contentVersion": "1.0.0.0",
+          "metadata": {
+            "_generator": {
+              "name": "bicep",
+              "version": "0.26.170.59819",
+              "templateHash": "10221529978834853957"
+            }
+          },
+          "parameters": {
+            "name": {
+              "type": "string"
+            },
+            "location": {
+              "type": "string",
+              "defaultValue": "[resourceGroup().location]"
+            },
+            "tags": {
+              "type": "object",
+              "defaultValue": {}
+            },
+            "kind": {
+              "type": "string",
+              "defaultValue": ""
+            },
+            "reserved": {
+              "type": "bool",
+              "defaultValue": true
+            },
+            "sku": {
+              "type": "object"
+            }
+          },
+          "resources": [
+            {
+              "type": "Microsoft.Web/serverfarms",
+              "apiVersion": "2022-03-01",
+              "name": "[parameters('name')]",
+              "location": "[parameters('location')]",
+              "tags": "[parameters('tags')]",
+              "sku": "[parameters('sku')]",
+              "kind": "[parameters('kind')]",
+              "properties": {
+                "reserved": "[parameters('reserved')]"
+              }
+            }
+          ],
+          "outputs": {
+            "id": {
+              "type": "string",
+              "value": "[resourceId('Microsoft.Web/serverfarms', parameters('name'))]"
+            }
+          }
+        }
+      }
+    },
+    {
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2022-09-01",
+      "name": "function",
+      "properties": {
+        "expressionEvaluationOptions": {
+          "scope": "inner"
+        },
+        "mode": "Incremental",
+        "parameters": {
+          "name": {
+            "value": "[format('func-{0}', take(variables('prefix'), 19))]"
+          },
+          "location": {
+            "value": "[parameters('location')]"
+          },
+          "tags": {
+            "value": "[union(variables('tags'), createObject('azd-service-name', 'api'))]"
+          },
+          "alwaysOn": {
+            "value": false
+          },
+          "appSettings": {
+            "value": {
+              "PYTHON_ISOLATE_WORKER_DEPENDENCIES": 1
+            }
+          },
+          "applicationInsightsName": {
+            "value": "[reference(resourceId('Microsoft.Resources/deployments', 'monitoring'), '2022-09-01').outputs.applicationInsightsName.value]"
+          },
+          "appServicePlanId": {
+            "value": "[reference(resourceId('Microsoft.Resources/deployments', 'appserviceplan'), '2022-09-01').outputs.id.value]"
+          },
+          "runtimeName": {
+            "value": "python"
+          },
+          "runtimeVersion": {
+            "value": "3.10"
+          },
+          "storageAccountName": {
+            "value": "[reference(resourceId('Microsoft.Resources/deployments', 'storage'), '2022-09-01').outputs.name.value]"
+          }
+        },
+        "template": {
+          "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+          "contentVersion": "1.0.0.0",
+          "metadata": {
+            "_generator": {
+              "name": "bicep",
+              "version": "0.26.170.59819",
+              "templateHash": "9806810283516288067"
+            }
+          },
+          "parameters": {
+            "name": {
+              "type": "string"
+            },
+            "location": {
+              "type": "string",
+              "defaultValue": "[resourceGroup().location]"
+            },
+            "tags": {
+              "type": "object",
+              "defaultValue": {}
+            },
+            "applicationInsightsName": {
+              "type": "string",
+              "defaultValue": ""
+            },
+            "appServicePlanId": {
+              "type": "string"
+            },
+            "keyVaultName": {
+              "type": "string",
+              "defaultValue": ""
+            },
+            "managedIdentity": {
+              "type": "bool",
+              "defaultValue": "[not(empty(parameters('keyVaultName')))]"
+            },
+            "storageAccountName": {
+              "type": "string"
+            },
+            "runtimeName": {
+              "type": "string",
+              "allowedValues": [
+                "dotnet",
+                "dotnetcore",
+                "dotnet-isolated",
+                "node",
+                "python",
+                "java",
+                "powershell",
+                "custom"
+              ]
+            },
+            "runtimeNameAndVersion": {
+              "type": "string",
+              "defaultValue": "[format('{0}|{1}', parameters('runtimeName'), parameters('runtimeVersion'))]"
+            },
+            "runtimeVersion": {
+              "type": "string"
+            },
+            "extensionVersion": {
+              "type": "string",
+              "defaultValue": "~4",
+              "allowedValues": [
+                "~4",
+                "~3",
+                "~2",
+                "~1"
+              ]
+            },
+            "kind": {
+              "type": "string",
+              "defaultValue": "functionapp,linux"
+            },
+            "allowedOrigins": {
+              "type": "array",
+              "defaultValue": []
+            },
+            "alwaysOn": {
+              "type": "bool",
+              "defaultValue": true
+            },
+            "appCommandLine": {
+              "type": "string",
+              "defaultValue": ""
+            },
+            "appSettings": {
+              "type": "object",
+              "defaultValue": {}
+            },
+            "clientAffinityEnabled": {
+              "type": "bool",
+              "defaultValue": false
+            },
+            "enableOryxBuild": {
+              "type": "bool",
+              "defaultValue": "[contains(parameters('kind'), 'linux')]"
+            },
+            "functionAppScaleLimit": {
+              "type": "int",
+              "defaultValue": -1
+            },
+            "linuxFxVersion": {
+              "type": "string",
+              "defaultValue": "[parameters('runtimeNameAndVersion')]"
+            },
+            "minimumElasticInstanceCount": {
+              "type": "int",
+              "defaultValue": -1
+            },
+            "numberOfWorkers": {
+              "type": "int",
+              "defaultValue": -1
+            },
+            "scmDoBuildDuringDeployment": {
+              "type": "bool",
+              "defaultValue": true
+            },
+            "use32BitWorkerProcess": {
+              "type": "bool",
+              "defaultValue": false
+            }
+          },
+          "resources": [
+            {
+              "type": "Microsoft.Resources/deployments",
+              "apiVersion": "2022-09-01",
+              "name": "[format('{0}-functions', parameters('name'))]",
+              "properties": {
+                "expressionEvaluationOptions": {
+                  "scope": "inner"
+                },
+                "mode": "Incremental",
+                "parameters": {
+                  "name": {
+                    "value": "[parameters('name')]"
+                  },
+                  "location": {
+                    "value": "[parameters('location')]"
+                  },
+                  "tags": {
+                    "value": "[parameters('tags')]"
+                  },
+                  "allowedOrigins": {
+                    "value": "[parameters('allowedOrigins')]"
+                  },
+                  "alwaysOn": {
+                    "value": "[parameters('alwaysOn')]"
+                  },
+                  "appCommandLine": {
+                    "value": "[parameters('appCommandLine')]"
+                  },
+                  "applicationInsightsName": {
+                    "value": "[parameters('applicationInsightsName')]"
+                  },
+                  "appServicePlanId": {
+                    "value": "[parameters('appServicePlanId')]"
+                  },
+                  "appSettings": {
+                    "value": "[union(parameters('appSettings'), createObject('AzureWebJobsStorage', format('DefaultEndpointsProtocol=https;AccountName={0};AccountKey={1};EndpointSuffix={2}', parameters('storageAccountName'), listKeys(resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName')), '2021-09-01').keys[0].value, environment().suffixes.storage), 'FUNCTIONS_EXTENSION_VERSION', parameters('extensionVersion'), 'FUNCTIONS_WORKER_RUNTIME', parameters('runtimeName')))]"
+                  },
+                  "clientAffinityEnabled": {
+                    "value": "[parameters('clientAffinityEnabled')]"
+                  },
+                  "enableOryxBuild": {
+                    "value": "[parameters('enableOryxBuild')]"
+                  },
+                  "functionAppScaleLimit": {
+                    "value": "[parameters('functionAppScaleLimit')]"
+                  },
+                  "keyVaultName": {
+                    "value": "[parameters('keyVaultName')]"
+                  },
+                  "kind": {
+                    "value": "[parameters('kind')]"
+                  },
+                  "linuxFxVersion": {
+                    "value": "[parameters('linuxFxVersion')]"
+                  },
+                  "managedIdentity": {
+                    "value": "[parameters('managedIdentity')]"
+                  },
+                  "minimumElasticInstanceCount": {
+                    "value": "[parameters('minimumElasticInstanceCount')]"
+                  },
+                  "numberOfWorkers": {
+                    "value": "[parameters('numberOfWorkers')]"
+                  },
+                  "runtimeName": {
+                    "value": "[parameters('runtimeName')]"
+                  },
+                  "runtimeVersion": {
+                    "value": "[parameters('runtimeVersion')]"
+                  },
+                  "runtimeNameAndVersion": {
+                    "value": "[parameters('runtimeNameAndVersion')]"
+                  },
+                  "scmDoBuildDuringDeployment": {
+                    "value": "[parameters('scmDoBuildDuringDeployment')]"
+                  },
+                  "use32BitWorkerProcess": {
+                    "value": "[parameters('use32BitWorkerProcess')]"
+                  }
+                },
+                "template": {
+                  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+                  "contentVersion": "1.0.0.0",
+                  "metadata": {
+                    "_generator": {
+                      "name": "bicep",
+                      "version": "0.26.170.59819",
+                      "templateHash": "16674553724797042504"
+                    }
+                  },
+                  "parameters": {
+                    "name": {
+                      "type": "string"
+                    },
+                    "location": {
+                      "type": "string",
+                      "defaultValue": "[resourceGroup().location]"
+                    },
+                    "tags": {
+                      "type": "object",
+                      "defaultValue": {}
+                    },
+                    "applicationInsightsName": {
+                      "type": "string",
+                      "defaultValue": ""
+                    },
+                    "appServicePlanId": {
+                      "type": "string"
+                    },
+                    "keyVaultName": {
+                      "type": "string",
+                      "defaultValue": ""
+                    },
+                    "managedIdentity": {
+                      "type": "bool",
+                      "defaultValue": "[not(empty(parameters('keyVaultName')))]"
+                    },
+                    "runtimeName": {
+                      "type": "string",
+                      "allowedValues": [
+                        "dotnet",
+                        "dotnetcore",
+                        "dotnet-isolated",
+                        "node",
+                        "python",
+                        "java",
+                        "powershell",
+                        "custom"
+                      ]
+                    },
+                    "runtimeNameAndVersion": {
+                      "type": "string",
+                      "defaultValue": "[format('{0}|{1}', parameters('runtimeName'), parameters('runtimeVersion'))]"
+                    },
+                    "runtimeVersion": {
+                      "type": "string"
+                    },
+                    "kind": {
+                      "type": "string",
+                      "defaultValue": "app,linux"
+                    },
+                    "allowedOrigins": {
+                      "type": "array",
+                      "defaultValue": []
+                    },
+                    "alwaysOn": {
+                      "type": "bool",
+                      "defaultValue": true
+                    },
+                    "appCommandLine": {
+                      "type": "string",
+                      "defaultValue": ""
+                    },
+                    "appSettings": {
+                      "type": "object",
+                      "defaultValue": {}
+                    },
+                    "clientAffinityEnabled": {
+                      "type": "bool",
+                      "defaultValue": false
+                    },
+                    "enableOryxBuild": {
+                      "type": "bool",
+                      "defaultValue": "[contains(parameters('kind'), 'linux')]"
+                    },
+                    "functionAppScaleLimit": {
+                      "type": "int",
+                      "defaultValue": -1
+                    },
+                    "linuxFxVersion": {
+                      "type": "string",
+                      "defaultValue": "[parameters('runtimeNameAndVersion')]"
+                    },
+                    "minimumElasticInstanceCount": {
+                      "type": "int",
+                      "defaultValue": -1
+                    },
+                    "numberOfWorkers": {
+                      "type": "int",
+                      "defaultValue": -1
+                    },
+                    "scmDoBuildDuringDeployment": {
+                      "type": "bool",
+                      "defaultValue": false
+                    },
+                    "use32BitWorkerProcess": {
+                      "type": "bool",
+                      "defaultValue": false
+                    }
+                  },
+                  "resources": [
+                    {
+                      "type": "Microsoft.Web/sites/config",
+                      "apiVersion": "2022-03-01",
+                      "name": "[format('{0}/{1}', parameters('name'), 'appsettings')]",
+                      "properties": "[union(parameters('appSettings'), createObject('SCM_DO_BUILD_DURING_DEPLOYMENT', string(parameters('scmDoBuildDuringDeployment')), 'ENABLE_ORYX_BUILD', string(parameters('enableOryxBuild'))), if(not(empty(parameters('applicationInsightsName'))), createObject('APPLICATIONINSIGHTS_CONNECTION_STRING', reference(resourceId('Microsoft.Insights/components', parameters('applicationInsightsName')), '2020-02-02').ConnectionString), createObject()), if(not(empty(parameters('keyVaultName'))), createObject('AZURE_KEY_VAULT_ENDPOINT', reference(resourceId('Microsoft.KeyVault/vaults', parameters('keyVaultName')), '2022-07-01').vaultUri), createObject()))]",
+                      "dependsOn": [
+                        "[resourceId('Microsoft.Web/sites', parameters('name'))]"
+                      ]
+                    },
+                    {
+                      "type": "Microsoft.Web/sites/config",
+                      "apiVersion": "2022-03-01",
+                      "name": "[format('{0}/{1}', parameters('name'), 'logs')]",
+                      "properties": {
+                        "applicationLogs": {
+                          "fileSystem": {
+                            "level": "Verbose"
+                          }
+                        },
+                        "detailedErrorMessages": {
+                          "enabled": true
+                        },
+                        "failedRequestsTracing": {
+                          "enabled": true
+                        },
+                        "httpLogs": {
+                          "fileSystem": {
+                            "enabled": true,
+                            "retentionInDays": 1,
+                            "retentionInMb": 35
+                          }
+                        }
+                      },
+                      "dependsOn": [
+                        "[resourceId('Microsoft.Web/sites', parameters('name'))]",
+                        "[resourceId('Microsoft.Web/sites/config', parameters('name'), 'appsettings')]"
+                      ]
+                    },
+                    {
+                      "type": "Microsoft.Web/sites",
+                      "apiVersion": "2022-03-01",
+                      "name": "[parameters('name')]",
+                      "location": "[parameters('location')]",
+                      "tags": "[parameters('tags')]",
+                      "kind": "[parameters('kind')]",
+                      "properties": {
+                        "serverFarmId": "[parameters('appServicePlanId')]",
+                        "siteConfig": {
+                          "linuxFxVersion": "[parameters('linuxFxVersion')]",
+                          "alwaysOn": "[parameters('alwaysOn')]",
+                          "ftpsState": "FtpsOnly",
+                          "appCommandLine": "[parameters('appCommandLine')]",
+                          "numberOfWorkers": "[if(not(equals(parameters('numberOfWorkers'), -1)), parameters('numberOfWorkers'), null())]",
+                          "minimumElasticInstanceCount": "[if(not(equals(parameters('minimumElasticInstanceCount'), -1)), parameters('minimumElasticInstanceCount'), null())]",
+                          "use32BitWorkerProcess": "[parameters('use32BitWorkerProcess')]",
+                          "functionAppScaleLimit": "[if(not(equals(parameters('functionAppScaleLimit'), -1)), parameters('functionAppScaleLimit'), null())]",
+                          "cors": {
+                            "allowedOrigins": "[union(createArray('https://portal.azure.com', 'https://ms.portal.azure.com'), parameters('allowedOrigins'))]"
+                          }
+                        },
+                        "clientAffinityEnabled": "[parameters('clientAffinityEnabled')]",
+                        "httpsOnly": true
+                      },
+                      "identity": {
+                        "type": "[if(parameters('managedIdentity'), 'SystemAssigned', 'None')]"
+                      }
+                    }
+                  ],
+                  "outputs": {
+                    "identityPrincipalId": {
+                      "type": "string",
+                      "value": "[if(parameters('managedIdentity'), reference(resourceId('Microsoft.Web/sites', parameters('name')), '2022-03-01', 'full').identity.principalId, '')]"
+                    },
+                    "name": {
+                      "type": "string",
+                      "value": "[parameters('name')]"
+                    },
+                    "uri": {
+                      "type": "string",
+                      "value": "[format('https://{0}', reference(resourceId('Microsoft.Web/sites', parameters('name')), '2022-03-01').defaultHostName)]"
+                    }
+                  }
+                }
+              }
+            }
+          ],
+          "outputs": {
+            "identityPrincipalId": {
+              "type": "string",
+              "value": "[if(parameters('managedIdentity'), reference(resourceId('Microsoft.Resources/deployments', format('{0}-functions', parameters('name'))), '2022-09-01').outputs.identityPrincipalId.value, '')]"
+            },
+            "name": {
+              "type": "string",
+              "value": "[reference(resourceId('Microsoft.Resources/deployments', format('{0}-functions', parameters('name'))), '2022-09-01').outputs.name.value]"
+            },
+            "uri": {
+              "type": "string",
+              "value": "[reference(resourceId('Microsoft.Resources/deployments', format('{0}-functions', parameters('name'))), '2022-09-01').outputs.uri.value]"
+            }
+          }
+        }
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.Resources/deployments', 'appserviceplan')]",
+        "[resourceId('Microsoft.Resources/deployments', 'monitoring')]",
+        "[resourceId('Microsoft.Resources/deployments', 'storage')]"
+      ]
+    },
+    {
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2022-09-01",
+      "name": "apim-deployment",
+      "properties": {
+        "expressionEvaluationOptions": {
+          "scope": "inner"
+        },
+        "mode": "Incremental",
+        "parameters": {
+          "name": {
+            "value": "[format('apim-{0}', variables('prefix'))]"
+          },
+          "location": {
+            "value": "[parameters('location')]"
+          },
+          "tags": {
+            "value": "[variables('tags')]"
+          },
+          "applicationInsightsName": {
+            "value": "[reference(resourceId('Microsoft.Resources/deployments', 'monitoring'), '2022-09-01').outputs.applicationInsightsName.value]"
+          },
+          "publisherEmail": {
+            "value": "[parameters('publisherEmail')]"
+          },
+          "publisherName": {
+            "value": "[parameters('publisherName')]"
+          }
+        },
+        "template": {
+          "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+          "contentVersion": "1.0.0.0",
+          "metadata": {
+            "_generator": {
+              "name": "bicep",
+              "version": "0.26.170.59819",
+              "templateHash": "16898575566825802440"
+            }
+          },
+          "parameters": {
+            "name": {
+              "type": "string"
+            },
+            "location": {
+              "type": "string",
+              "defaultValue": "[resourceGroup().location]"
+            },
+            "tags": {
+              "type": "object",
+              "defaultValue": {}
+            },
+            "publisherEmail": {
+              "type": "string",
+              "defaultValue": "noreply@microsoft.com",
+              "minLength": 1,
+              "metadata": {
+                "description": "The email address of the owner of the service"
+              }
+            },
+            "publisherName": {
+              "type": "string",
+              "defaultValue": "n/a",
+              "minLength": 1,
+              "metadata": {
+                "description": "The name of the owner of the service"
+              }
+            },
+            "sku": {
+              "type": "string",
+              "defaultValue": "Consumption",
+              "allowedValues": [
+                "Consumption",
+                "Developer",
+                "Standard",
+                "Premium"
+              ],
+              "metadata": {
+                "description": "The pricing tier of this API Management service"
+              }
+            },
+            "skuCount": {
+              "type": "int",
+              "defaultValue": 0,
+              "allowedValues": [
+                0,
+                1,
+                2
+              ],
+              "metadata": {
+                "description": "The instance size of this API Management service."
+              }
+            },
+            "applicationInsightsName": {
+              "type": "string",
+              "metadata": {
+                "description": "Azure Application Insights Name"
+              }
+            }
+          },
+          "resources": [
+            {
+              "type": "Microsoft.ApiManagement/service",
+              "apiVersion": "2021-08-01",
+              "name": "[parameters('name')]",
+              "location": "[parameters('location')]",
+              "tags": "[union(parameters('tags'), createObject('azd-service-name', parameters('name')))]",
+              "sku": {
+                "name": "[parameters('sku')]",
+                "capacity": "[if(equals(parameters('sku'), 'Consumption'), 0, if(equals(parameters('sku'), 'Developer'), 1, parameters('skuCount')))]"
+              },
+              "properties": {
+                "publisherEmail": "[parameters('publisherEmail')]",
+                "publisherName": "[parameters('publisherName')]"
+              }
+            },
+            {
+              "condition": "[not(empty(parameters('applicationInsightsName')))]",
+              "type": "Microsoft.ApiManagement/service/loggers",
+              "apiVersion": "2021-12-01-preview",
+              "name": "[format('{0}/{1}', parameters('name'), 'app-insights-logger')]",
+              "properties": {
+                "credentials": {
+                  "instrumentationKey": "[reference(resourceId('Microsoft.Insights/components', parameters('applicationInsightsName')), '2020-02-02').InstrumentationKey]"
+                },
+                "description": "Logger to Azure Application Insights",
+                "isBuffered": false,
+                "loggerType": "applicationInsights",
+                "resourceId": "[resourceId('Microsoft.Insights/components', parameters('applicationInsightsName'))]"
+              },
+              "dependsOn": [
+                "[resourceId('Microsoft.ApiManagement/service', parameters('name'))]"
+              ]
+            }
+          ],
+          "outputs": {
+            "apimServiceName": {
+              "type": "string",
+              "value": "[parameters('name')]"
+            }
+          }
+        }
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.Resources/deployments', 'monitoring')]"
+      ]
+    },
+    {
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2022-09-01",
+      "name": "apimanagement-resources",
+      "properties": {
+        "expressionEvaluationOptions": {
+          "scope": "inner"
+        },
+        "mode": "Incremental",
+        "parameters": {
+          "apimServiceName": {
+            "value": "[reference(resourceId('Microsoft.Resources/deployments', 'apim-deployment'), '2022-09-01').outputs.apimServiceName.value]"
+          },
+          "functionAppName": {
+            "value": "[reference(resourceId('Microsoft.Resources/deployments', 'function'), '2022-09-01').outputs.name.value]"
+          }
+        },
+        "template": {
+          "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+          "contentVersion": "1.0.0.0",
+          "metadata": {
+            "_generator": {
+              "name": "bicep",
+              "version": "0.26.170.59819",
+              "templateHash": "13872673163903146271"
+            }
+          },
+          "parameters": {
+            "apimServiceName": {
+              "type": "string"
+            },
+            "functionAppName": {
+              "type": "string"
+            }
+          },
+          "resources": [
+            {
+              "type": "Microsoft.ApiManagement/service/backends",
+              "apiVersion": "2021-12-01-preview",
+              "name": "[format('{0}/{1}', parameters('apimServiceName'), parameters('functionAppName'))]",
+              "properties": {
+                "description": "[parameters('functionAppName')]",
+                "url": "[format('https://{0}', reference(resourceId('Microsoft.Web/sites', parameters('functionAppName')), '2022-03-01').hostNames[0])]",
+                "protocol": "http",
+                "resourceId": "[format('{0}{1}', environment().resourceManager, resourceId('Microsoft.Web/sites', parameters('functionAppName')))]",
+                "credentials": {
+                  "header": {
+                    "x-functions-key": [
+                      "{{function-app-key}}"
+                    ]
+                  }
+                }
+              },
+              "dependsOn": [
+                "[resourceId('Microsoft.ApiManagement/service/namedValues', parameters('apimServiceName'), 'function-app-key')]"
+              ]
+            },
+            {
+              "type": "Microsoft.ApiManagement/service/namedValues",
+              "apiVersion": "2021-12-01-preview",
+              "name": "[format('{0}/{1}', parameters('apimServiceName'), 'function-app-key')]",
+              "properties": {
+                "displayName": "function-app-key",
+                "value": "[listKeys(format('{0}/host/default', resourceId('Microsoft.Web/sites', parameters('functionAppName'))), '2019-08-01').functionKeys.default]",
+                "tags": [
+                  "key",
+                  "function",
+                  "auto"
+                ],
+                "secret": true
+              }
+            },
+            {
+              "type": "Microsoft.ApiManagement/service/apis",
+              "apiVersion": "2021-12-01-preview",
+              "name": "[format('{0}/{1}', parameters('apimServiceName'), 'simple-fastapi-api')]",
+              "properties": {
+                "displayName": "Protected API Calls",
+                "apiRevision": "1",
+                "subscriptionRequired": true,
+                "protocols": [
+                  "https"
+                ],
+                "path": "api"
+              }
+            },
+            {
+              "type": "Microsoft.ApiManagement/service/apis/operations",
+              "apiVersion": "2021-12-01-preview",
+              "name": "[format('{0}/{1}/{2}', parameters('apimServiceName'), 'simple-fastapi-api', 'generate-name')]",
+              "properties": {
+                "displayName": "Generate Name",
+                "method": "GET",
+                "urlTemplate": "/generate_name"
+              },
+              "dependsOn": [
+                "[resourceId('Microsoft.ApiManagement/service/apis', parameters('apimServiceName'), 'simple-fastapi-api')]"
+              ]
+            },
+            {
+              "type": "Microsoft.ApiManagement/service/apis/operations/policies",
+              "apiVersion": "2021-12-01-preview",
+              "name": "[format('{0}/{1}/{2}/{3}', parameters('apimServiceName'), 'simple-fastapi-api', 'generate-name', 'policy')]",
+              "properties": {
+                "format": "xml",
+                "value": "[format('<policies>\r\n<inbound>\r\n<base />\r\n\r\n<set-backend-service id=\"apim-generated-policy\" backend-id=\"{0}\" />\r\n<rate-limit calls=\"20\" renewal-period=\"90\" remaining-calls-variable-name=\"remainingCallsPerSubscription\" />\r\n<cors allow-credentials=\"false\">\r\n<allowed-origins>\r\n<origin>*</origin>\r\n</allowed-origins>\r\n<allowed-methods>\r\n<method>GET</method>\r\n<method>POST</method>\r\n</allowed-methods>\r\n</cors>\r\n</inbound>\r\n<backend>\r\n<base />\r\n</backend>\r\n<outbound>\r\n<base />\r\n</outbound>\r\n<on-error>\r\n<base />\r\n</on-error>\r\n</policies>', reference(resourceId('Microsoft.Web/sites', parameters('functionAppName')), '2022-03-01').name)]"
+              },
+              "dependsOn": [
+                "[resourceId('Microsoft.ApiManagement/service/apis/operations', parameters('apimServiceName'), 'simple-fastapi-api', 'generate-name')]",
+                "[resourceId('Microsoft.ApiManagement/service/backends', parameters('apimServiceName'), parameters('functionAppName'))]"
+              ]
+            },
+            {
+              "type": "Microsoft.ApiManagement/service/apis",
+              "apiVersion": "2021-12-01-preview",
+              "name": "[format('{0}/{1}', parameters('apimServiceName'), 'public-docs')]",
+              "properties": {
+                "displayName": "Public Doc Paths",
+                "apiRevision": "1",
+                "subscriptionRequired": false,
+                "protocols": [
+                  "https"
+                ],
+                "path": "public"
+              }
+            },
+            {
+              "type": "Microsoft.ApiManagement/service/apis/operations",
+              "apiVersion": "2021-12-01-preview",
+              "name": "[format('{0}/{1}/{2}', parameters('apimServiceName'), 'public-docs', 'swagger-docs')]",
+              "properties": {
+                "displayName": "Documentation",
+                "method": "GET",
+                "urlTemplate": "/docs"
+              },
+              "dependsOn": [
+                "[resourceId('Microsoft.ApiManagement/service/apis', parameters('apimServiceName'), 'public-docs')]"
+              ]
+            },
+            {
+              "type": "Microsoft.ApiManagement/service/apis/operations",
+              "apiVersion": "2021-12-01-preview",
+              "name": "[format('{0}/{1}/{2}', parameters('apimServiceName'), 'public-docs', 'openapi-schema')]",
+              "properties": {
+                "displayName": "OpenAPI Schema",
+                "method": "GET",
+                "urlTemplate": "/openapi.json"
+              },
+              "dependsOn": [
+                "[resourceId('Microsoft.ApiManagement/service/apis', parameters('apimServiceName'), 'public-docs')]"
+              ]
+            },
+            {
+              "type": "Microsoft.ApiManagement/service/apis/operations/policies",
+              "apiVersion": "2021-12-01-preview",
+              "name": "[format('{0}/{1}/{2}/{3}', parameters('apimServiceName'), 'public-docs', 'swagger-docs', 'policy')]",
+              "properties": {
+                "format": "xml",
+                "value": "[format('<policies>\r\n<inbound>\r\n<base />\r\n<set-backend-service id=\"apim-generated-policy\" backend-id=\"{0}\" />\r\n<cache-lookup vary-by-developer=\"false\" vary-by-developer-groups=\"false\" allow-private-response-caching=\"false\" must-revalidate=\"false\" downstream-caching-type=\"none\" />\r\n</inbound>\r\n<backend>\r\n<base />\r\n</backend>\r\n<outbound>\r\n<base />\r\n<cache-store duration=\"3600\" />\r\n</outbound>\r\n<on-error>\r\n<base />\r\n</on-error>\r\n</policies>', reference(resourceId('Microsoft.Web/sites', parameters('functionAppName')), '2022-03-01').name)]"
+              },
+              "dependsOn": [
+                "[resourceId('Microsoft.ApiManagement/service/apis/operations', parameters('apimServiceName'), 'public-docs', 'swagger-docs')]",
+                "[resourceId('Microsoft.ApiManagement/service/backends', parameters('apimServiceName'), parameters('functionAppName'))]"
+              ]
+            },
+            {
+              "type": "Microsoft.ApiManagement/service/apis/operations/policies",
+              "apiVersion": "2021-12-01-preview",
+              "name": "[format('{0}/{1}/{2}/{3}', parameters('apimServiceName'), 'public-docs', 'openapi-schema', 'policy')]",
+              "properties": {
+                "format": "xml",
+                "value": "[format('<policies>\r\n<inbound>\r\n<base />\r\n<set-backend-service id=\"apim-generated-policy\" backend-id=\"{0}\" />\r\n<cache-lookup vary-by-developer=\"false\" vary-by-developer-groups=\"false\" allow-private-response-caching=\"false\" must-revalidate=\"false\" downstream-caching-type=\"none\" />\r\n</inbound>\r\n<backend>\r\n<base />\r\n</backend>\r\n<outbound>\r\n<base />\r\n<cache-store duration=\"3600\" />\r\n</outbound>\r\n<on-error>\r\n<base />\r\n</on-error>\r\n</policies>', reference(resourceId('Microsoft.Web/sites', parameters('functionAppName')), '2022-03-01').name)]"
+              },
+              "dependsOn": [
+                "[resourceId('Microsoft.ApiManagement/service/apis/operations', parameters('apimServiceName'), 'public-docs', 'openapi-schema')]",
+                "[resourceId('Microsoft.ApiManagement/service/backends', parameters('apimServiceName'), parameters('functionAppName'))]"
+              ]
+            },
+            {
+              "type": "Microsoft.Web/sites/config",
+              "apiVersion": "2022-03-01",
+              "name": "[format('{0}/{1}', parameters('functionAppName'), 'web')]",
+              "kind": "string",
+              "properties": {
+                "apiManagementConfig": {
+                  "id": "[format('{0}/apis/simple-fastapi-api', resourceId('Microsoft.ApiManagement/service', parameters('apimServiceName')))]"
+                }
+              }
+            }
+          ],
+          "outputs": {
+            "apimServiceUrl": {
+              "type": "string",
+              "value": "[reference(resourceId('Microsoft.ApiManagement/service', parameters('apimServiceName')), '2021-08-01').gatewayUrl]"
+            }
+          }
+        }
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.Resources/deployments', 'apim-deployment')]",
+        "[resourceId('Microsoft.Resources/deployments', 'function')]"
+      ]
+    }
+  ],
+  "outputs": {
+    "SERVICE_API_ENDPOINTS": {
+      "type": "array",
+      "value": [
+        "[format('{0}/public/docs', reference(resourceId('Microsoft.Resources/deployments', 'apimanagement-resources'), '2022-09-01').outputs.apimServiceUrl.value)]"
+      ]
+    }
+  }
+}

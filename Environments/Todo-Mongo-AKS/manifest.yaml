@@ -1,0 +1,31 @@
+name: Todo-Mongo-AKS
+version: 1.0.0
+summary: Todo Nodejs Mongo AKS
+description: Deploys a todo app with Nodejs and Mongo
+runner: ARM
+templatePath: azuredeploy.json
+
+parameters:
+- id: "environmentName"
+  name: "Environment Name (e.g. testenv)"
+  description: "Name of the Environment"
+  type: string
+  required: true
+
+- id: "location"
+  name: "Region (e.g. eastus)"
+  description: "Location of the resources"
+  type: string
+  required: true
+
+- id: "sharedAKSProjectName"
+  name: "sharedAKSProjectName"
+  description: "ADE Project name for the shared AKS cluster"
+  type: string
+  required: true
+
+- id: "sharedAKSEnvironmentName"
+  name: "sharedAKSEnvironmentName"
+  description: "ADE environment name for the shared AKS cluster"
+  type: string
+  required: true

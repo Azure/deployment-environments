@@ -1,0 +1,21 @@
+name: ContainerApp
+version: 1.0.0
+summary: simple flask app with Container Apps
+description: Deploy flask app to Container Apps
+runner: ARM
+templatePath: azuredeploy.json
+
+parameters:
+- id: "environmentName"
+  name: "Environment Name (e.g. test)"
+  description: "Name of the Environment"
+  type: "string"
+  required: false
+  default: "test"
+
+- id: "principalId"
+  name: "Principal Id (e.g. <user id>)"
+  description: "Id of the user or app to assign application roles"
+  type: "string"
+  required: false
+  default: ""

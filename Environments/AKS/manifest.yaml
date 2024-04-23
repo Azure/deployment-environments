@@ -1,0 +1,14 @@
+name: AKS
+version: 1.0.0
+summary: ToDo application on AKS
+description: ToDo Application with a Node.js API and Azure Cosmos DB API for MongoDB on Azure Kubernetes Service (AKS)
+runner: ARM
+templatePath: azuredeploy.json
+
+parameters:
+- id: "environmentName"
+  name: "Environment Name (e.g. test)"
+  description: "Name of the Environment"
+  type: "string"
+  required: false
+  default: "test"
