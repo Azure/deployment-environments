@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.26.170.59819",
-      "templateHash": "8189193153050722730"
+      "templateHash": "926438374472775395"
     }
   },
   "parameters": {
@@ -41,12 +41,15 @@
       "type": "string",
       "defaultValue": ""
     },
-    "aksClusterIdentityObjectId": {
-      "type": "string"
-    },
     "configStoreName": {
       "type": "string",
       "defaultValue": ""
+    },
+    "sharedAKSProjectName": {
+      "type": "string"
+    },
+    "sharedAKSEnvironmentName": {
+      "type": "string"
     },
     "contentType": {
       "type": "string",
@@ -193,6 +196,7 @@
       "webSitesFunctions": "func-",
       "webStaticSites": "stapp-"
     },
+    "sharedAKSResourceGroup": "[format('{0}-{1}', parameters('sharedAKSProjectName'), parameters('sharedAKSEnvironmentName'))]",
     "abbrs": "[variables('$fxv#0')]",
     "resourceToken": "[toLower(uniqueString(subscription().id, parameters('environmentName'), parameters('location')))]",
     "tags": {
@@ -254,6 +258,503 @@
     {
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2022-09-01",
+      "name": "keyvault",
+      "properties": {
+        "expressionEvaluationOptions": {
+          "scope": "inner"
+        },
+        "mode": "Incremental",
+        "parameters": {
+          "name": "[if(not(empty(parameters('keyVaultName'))), createObject('value', parameters('keyVaultName')), createObject('value', format('{0}{1}', variables('abbrs').keyVaultVaults, variables('resourceToken'))))]",
+          "location": {
+            "value": "[parameters('location')]"
+          },
+          "tags": {
+            "value": "[variables('tags')]"
+          },
+          "principalId": {
+            "value": "[parameters('principalId')]"
+          }
+        },
+        "template": {
+          "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+          "contentVersion": "1.0.0.0",
+          "metadata": {
+            "_generator": {
+              "name": "bicep",
+              "version": "0.26.170.59819",
+              "templateHash": "18407114162280426775"
+            },
+            "description": "Creates an Azure Key Vault."
+          },
+          "parameters": {
+            "name": {
+              "type": "string"
+            },
+            "location": {
+              "type": "string",
+              "defaultValue": "[resourceGroup().location]"
+            },
+            "tags": {
+              "type": "object",
+              "defaultValue": {}
+            },
+            "principalId": {
+              "type": "string",
+              "defaultValue": ""
+            }
+          },
+          "resources": [
+            {
+              "type": "Microsoft.KeyVault/vaults",
+              "apiVersion": "2022-07-01",
+              "name": "[parameters('name')]",
+              "location": "[parameters('location')]",
+              "tags": "[parameters('tags')]",
+              "properties": {
+                "tenantId": "[subscription().tenantId]",
+                "sku": {
+                  "family": "A",
+                  "name": "standard"
+                },
+                "accessPolicies": "[if(not(empty(parameters('principalId'))), createArray(createObject('objectId', parameters('principalId'), 'permissions', createObject('secrets', createArray('get', 'list')), 'tenantId', subscription().tenantId)), createArray())]"
+              }
+            }
+          ],
+          "outputs": {
+            "endpoint": {
+              "type": "string",
+              "value": "[reference(resourceId('Microsoft.KeyVault/vaults', parameters('name')), '2022-07-01').vaultUri]"
+            },
+            "name": {
+              "type": "string",
+              "value": "[parameters('name')]"
+            }
+          }
+        }
+      }
+    },
+    {
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2022-09-01",
+      "name": "get-aks-name",
+      "properties": {
+        "expressionEvaluationOptions": {
+          "scope": "inner"
+        },
+        "mode": "Incremental",
+        "parameters": {
+          "appDeployName": {
+            "value": "todo-deploy"
+          },
+          "aksResourceGroupName": {
+            "value": "[variables('sharedAKSResourceGroup')]"
+          },
+          "identityName": {
+            "value": "[format('{0}dp-{1}', variables('abbrs').managedIdentityUserAssignedIdentities, variables('resourceToken'))]"
+          },
+          "location": {
+            "value": "[parameters('location')]"
+          }
+        },
+        "template": {
+          "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+          "contentVersion": "1.0.0.0",
+          "metadata": {
+            "_generator": {
+              "name": "bicep",
+              "version": "0.26.170.59819",
+              "templateHash": "15711762243647057476"
+            }
+          },
+          "parameters": {
+            "appDeployName": {
+              "type": "string",
+              "metadata": {
+                "description": "app deployment name"
+              }
+            },
+            "aksResourceGroupName": {
+              "type": "string",
+              "metadata": {
+                "description": "Shared AKS resource group"
+              }
+            },
+            "timestamp": {
+              "type": "string",
+              "defaultValue": "[utcNow()]",
+              "metadata": {
+                "description": "Timestamp - utcNow can only be called as a default value of a parameter."
+              }
+            },
+            "location": {
+              "type": "string",
+              "defaultValue": "[resourceGroup().location]",
+              "metadata": {
+                "description": "The location to run the deployment script in"
+              }
+            },
+            "identityName": {
+              "type": "string"
+            }
+          },
+          "variables": {
+            "scriptToExecute": "$output = Get-AzResource -ResourceGroupName $Env:RESOURCEGROUP -ResourceType Microsoft.ContainerService/ManagedClusters\n\nWrite-Output $output\n$DeploymentScriptOutputs = @{}\n$DeploymentScriptOutputs['text'] = $output.Name\n"
+          },
+          "resources": [
+            {
+              "type": "Microsoft.ManagedIdentity/userAssignedIdentities",
+              "apiVersion": "2023-01-31",
+              "name": "[parameters('identityName')]",
+              "location": "[parameters('location')]"
+            },
+            {
+              "type": "Microsoft.Resources/deploymentScripts",
+              "apiVersion": "2020-10-01",
+              "name": "[format('{0}-get-aks-script', parameters('appDeployName'))]",
+              "kind": "AzurePowerShell",
+              "location": "[parameters('location')]",
+              "identity": {
+                "type": "UserAssigned",
+                "userAssignedIdentities": {
+                  "[format('{0}', resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', parameters('identityName')))]": {}
+                }
+              },
+              "properties": {
+                "forceUpdateTag": "[parameters('timestamp')]",
+                "azPowerShellVersion": "7.2.0",
+                "retentionInterval": "PT1H",
+                "scriptContent": "[variables('scriptToExecute')]",
+                "cleanupPreference": "Always",
+                "environmentVariables": [
+                  {
+                    "name": "RESOURCEGROUP",
+                    "value": "[parameters('aksResourceGroupName')]"
+                  }
+                ]
+              },
+              "dependsOn": [
+                "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', parameters('identityName'))]"
+              ]
+            },
+            {
+              "type": "Microsoft.Resources/deployments",
+              "apiVersion": "2022-09-01",
+              "name": "read-role-assignment-to-aks",
+              "resourceGroup": "[parameters('aksResourceGroupName')]",
+              "properties": {
+                "expressionEvaluationOptions": {
+                  "scope": "inner"
+                },
+                "mode": "Incremental",
+                "parameters": {
+                  "principalId": {
+                    "value": "[reference(resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', parameters('identityName')), '2023-01-31').principalId]"
+                  },
+                  "roleDefinitionId": {
+                    "value": "acdd72a7-3385-48ef-bd42-f606fba81ae7"
+                  }
+                },
+                "template": {
+                  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+                  "contentVersion": "1.0.0.0",
+                  "metadata": {
+                    "_generator": {
+                      "name": "bicep",
+                      "version": "0.26.170.59819",
+                      "templateHash": "2390256577307700589"
+                    },
+                    "description": "Creates a role assignment for a service principal."
+                  },
+                  "parameters": {
+                    "principalId": {
+                      "type": "string"
+                    },
+                    "principalType": {
+                      "type": "string",
+                      "defaultValue": "ServicePrincipal",
+                      "allowedValues": [
+                        "Device",
+                        "ForeignGroup",
+                        "Group",
+                        "ServicePrincipal",
+                        "User"
+                      ]
+                    },
+                    "roleDefinitionId": {
+                      "type": "string"
+                    }
+                  },
+                  "resources": [
+                    {
+                      "type": "Microsoft.Authorization/roleAssignments",
+                      "apiVersion": "2022-04-01",
+                      "name": "[guid(subscription().id, resourceGroup().id, parameters('principalId'), parameters('roleDefinitionId'))]",
+                      "properties": {
+                        "principalId": "[parameters('principalId')]",
+                        "principalType": "[parameters('principalType')]",
+                        "roleDefinitionId": "[resourceId('Microsoft.Authorization/roleDefinitions', parameters('roleDefinitionId'))]"
+                      }
+                    }
+                  ]
+                }
+              },
+              "dependsOn": [
+                "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', parameters('identityName'))]"
+              ]
+            }
+          ],
+          "outputs": {
+            "clusterName": {
+              "type": "string",
+              "value": "[if(empty(reference(resourceId('Microsoft.Resources/deploymentScripts', format('{0}-get-aks-script', parameters('appDeployName'))), '2020-10-01').outputs.text), '', reference(resourceId('Microsoft.Resources/deploymentScripts', format('{0}-get-aks-script', parameters('appDeployName'))), '2020-10-01').outputs.text)]"
+            }
+          }
+        }
+      }
+    },
+    {
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2022-09-01",
+      "name": "aks",
+      "resourceGroup": "[variables('sharedAKSResourceGroup')]",
+      "properties": {
+        "expressionEvaluationOptions": {
+          "scope": "inner"
+        },
+        "mode": "Incremental",
+        "parameters": {
+          "aksName": {
+            "value": "[reference(resourceId('Microsoft.Resources/deployments', 'get-aks-name'), '2022-09-01').outputs.clusterName.value]"
+          }
+        },
+        "template": {
+          "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+          "contentVersion": "1.0.0.0",
+          "metadata": {
+            "_generator": {
+              "name": "bicep",
+              "version": "0.26.170.59819",
+              "templateHash": "889274472255022532"
+            }
+          },
+          "parameters": {
+            "aksName": {
+              "type": "string"
+            }
+          },
+          "resources": [],
+          "outputs": {
+            "aksIdentityObjectId": {
+              "type": "string",
+              "value": "[reference(resourceId('Microsoft.ContainerService/managedClusters', parameters('aksName')), '2023-10-02-preview').identityProfile.kubeletidentity.objectId]"
+            }
+          }
+        }
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.Resources/deployments', 'get-aks-name')]"
+      ]
+    },
+    {
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2022-09-01",
+      "name": "cluster-keyvault-access",
+      "properties": {
+        "expressionEvaluationOptions": {
+          "scope": "inner"
+        },
+        "mode": "Incremental",
+        "parameters": {
+          "keyVaultName": {
+            "value": "[reference(resourceId('Microsoft.Resources/deployments', 'keyvault'), '2022-09-01').outputs.name.value]"
+          },
+          "principalId": {
+            "value": "[reference(extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', subscription().subscriptionId, variables('sharedAKSResourceGroup')), 'Microsoft.Resources/deployments', 'aks'), '2022-09-01').outputs.aksIdentityObjectId.value]"
+          }
+        },
+        "template": {
+          "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+          "contentVersion": "1.0.0.0",
+          "metadata": {
+            "_generator": {
+              "name": "bicep",
+              "version": "0.26.170.59819",
+              "templateHash": "7922086847377910894"
+            },
+            "description": "Assigns an Azure Key Vault access policy."
+          },
+          "parameters": {
+            "name": {
+              "type": "string",
+              "defaultValue": "add"
+            },
+            "keyVaultName": {
+              "type": "string"
+            },
+            "permissions": {
+              "type": "object",
+              "defaultValue": {
+                "secrets": [
+                  "get",
+                  "list"
+                ]
+              }
+            },
+            "principalId": {
+              "type": "string"
+            }
+          },
+          "resources": [
+            {
+              "type": "Microsoft.KeyVault/vaults/accessPolicies",
+              "apiVersion": "2022-07-01",
+              "name": "[format('{0}/{1}', parameters('keyVaultName'), parameters('name'))]",
+              "properties": {
+                "accessPolicies": [
+                  {
+                    "objectId": "[parameters('principalId')]",
+                    "tenantId": "[subscription().tenantId]",
+                    "permissions": "[parameters('permissions')]"
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      },
+      "dependsOn": [
+        "[extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', subscription().subscriptionId, variables('sharedAKSResourceGroup')), 'Microsoft.Resources/deployments', 'aks')]",
+        "[resourceId('Microsoft.Resources/deployments', 'keyvault')]"
+      ]
+    },
+    {
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2022-09-01",
+      "name": "api-cosmos-access",
+      "properties": {
+        "expressionEvaluationOptions": {
+          "scope": "inner"
+        },
+        "mode": "Incremental",
+        "parameters": {
+          "accountName": {
+            "value": "[reference(resourceId('Microsoft.Resources/deployments', 'cosmos'), '2022-09-01').outputs.accountName.value]"
+          },
+          "roleDefinitionId": {
+            "value": "[reference(resourceId('Microsoft.Resources/deployments', 'cosmos'), '2022-09-01').outputs.roleDefinitionId.value]"
+          },
+          "principalId": {
+            "value": "[reference(extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', subscription().subscriptionId, variables('sharedAKSResourceGroup')), 'Microsoft.Resources/deployments', 'aks'), '2022-09-01').outputs.aksIdentityObjectId.value]"
+          }
+        },
+        "template": {
+          "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+          "contentVersion": "1.0.0.0",
+          "metadata": {
+            "_generator": {
+              "name": "bicep",
+              "version": "0.26.170.59819",
+              "templateHash": "5580476706925703677"
+            },
+            "description": "Creates a SQL role assignment under an Azure Cosmos DB account."
+          },
+          "parameters": {
+            "accountName": {
+              "type": "string"
+            },
+            "roleDefinitionId": {
+              "type": "string"
+            },
+            "principalId": {
+              "type": "string",
+              "defaultValue": ""
+            }
+          },
+          "resources": [
+            {
+              "type": "Microsoft.DocumentDB/databaseAccounts/sqlRoleAssignments",
+              "apiVersion": "2022-05-15",
+              "name": "[format('{0}/{1}', parameters('accountName'), guid(parameters('roleDefinitionId'), parameters('principalId'), resourceId('Microsoft.DocumentDB/databaseAccounts', parameters('accountName'))))]",
+              "properties": {
+                "principalId": "[parameters('principalId')]",
+                "roleDefinitionId": "[parameters('roleDefinitionId')]",
+                "scope": "[resourceId('Microsoft.DocumentDB/databaseAccounts', parameters('accountName'))]"
+              }
+            }
+          ]
+        }
+      },
+      "dependsOn": [
+        "[extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', subscription().subscriptionId, variables('sharedAKSResourceGroup')), 'Microsoft.Resources/deployments', 'aks')]",
+        "[resourceId('Microsoft.Resources/deployments', 'cosmos')]"
+      ]
+    },
+    {
+      "condition": "[not(equals(parameters('principalId'), ''))]",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2022-09-01",
+      "name": "user-cosmos-access",
+      "properties": {
+        "expressionEvaluationOptions": {
+          "scope": "inner"
+        },
+        "mode": "Incremental",
+        "parameters": {
+          "accountName": {
+            "value": "[reference(resourceId('Microsoft.Resources/deployments', 'cosmos'), '2022-09-01').outputs.accountName.value]"
+          },
+          "roleDefinitionId": {
+            "value": "[reference(resourceId('Microsoft.Resources/deployments', 'cosmos'), '2022-09-01').outputs.roleDefinitionId.value]"
+          },
+          "principalId": {
+            "value": "[parameters('principalId')]"
+          }
+        },
+        "template": {
+          "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+          "contentVersion": "1.0.0.0",
+          "metadata": {
+            "_generator": {
+              "name": "bicep",
+              "version": "0.26.170.59819",
+              "templateHash": "5580476706925703677"
+            },
+            "description": "Creates a SQL role assignment under an Azure Cosmos DB account."
+          },
+          "parameters": {
+            "accountName": {
+              "type": "string"
+            },
+            "roleDefinitionId": {
+              "type": "string"
+            },
+            "principalId": {
+              "type": "string",
+              "defaultValue": ""
+            }
+          },
+          "resources": [
+            {
+              "type": "Microsoft.DocumentDB/databaseAccounts/sqlRoleAssignments",
+              "apiVersion": "2022-05-15",
+              "name": "[format('{0}/{1}', parameters('accountName'), guid(parameters('roleDefinitionId'), parameters('principalId'), resourceId('Microsoft.DocumentDB/databaseAccounts', parameters('accountName'))))]",
+              "properties": {
+                "principalId": "[parameters('principalId')]",
+                "roleDefinitionId": "[parameters('roleDefinitionId')]",
+                "scope": "[resourceId('Microsoft.DocumentDB/databaseAccounts', parameters('accountName'))]"
+              }
+            }
+          ]
+        }
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.Resources/deployments', 'cosmos')]"
+      ]
+    },
+    {
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2022-09-01",
       "name": "cosmos",
       "properties": {
         "expressionEvaluationOptions": {
@@ -282,7 +783,7 @@
             "_generator": {
               "name": "bicep",
               "version": "0.26.170.59819",
-              "templateHash": "11074299330608515845"
+              "templateHash": "4256008595520895847"
             }
           },
           "parameters": {
@@ -297,20 +798,18 @@
               "type": "object",
               "defaultValue": {}
             },
-            "collections": {
+            "containers": {
               "type": "array",
               "defaultValue": [
                 {
                   "name": "TodoList",
                   "id": "TodoList",
-                  "shardKey": "Hash",
-                  "indexKey": "_id"
+                  "partitionKey": "/id"
                 },
                 {
                   "name": "TodoItem",
                   "id": "TodoItem",
-                  "shardKey": "Hash",
-                  "indexKey": "_id"
+                  "partitionKey": "/id"
                 }
               ]
             },
@@ -320,6 +819,10 @@
             },
             "keyVaultName": {
               "type": "string"
+            },
+            "principalIds": {
+              "type": "array",
+              "defaultValue": []
             }
           },
           "variables": {
@@ -330,7 +833,7 @@
             {
               "type": "Microsoft.Resources/deployments",
               "apiVersion": "2022-09-01",
-              "name": "cosmos-mongo",
+              "name": "cosmos-sql",
               "properties": {
                 "expressionEvaluationOptions": {
                   "scope": "inner"
@@ -340,20 +843,23 @@
                   "accountName": {
                     "value": "[parameters('accountName')]"
                   },
-                  "databaseName": {
-                    "value": "[variables('actualDatabaseName')]"
-                  },
                   "location": {
                     "value": "[parameters('location')]"
                   },
-                  "collections": {
-                    "value": "[parameters('collections')]"
+                  "tags": {
+                    "value": "[parameters('tags')]"
+                  },
+                  "containers": {
+                    "value": "[parameters('containers')]"
+                  },
+                  "databaseName": {
+                    "value": "[variables('actualDatabaseName')]"
                   },
                   "keyVaultName": {
                     "value": "[parameters('keyVaultName')]"
                   },
-                  "tags": {
-                    "value": "[parameters('tags')]"
+                  "principalIds": {
+                    "value": "[parameters('principalIds')]"
                   }
                 },
                 "template": {
@@ -363,9 +869,9 @@
                     "_generator": {
                       "name": "bicep",
                       "version": "0.26.170.59819",
-                      "templateHash": "3051764932488625981"
+                      "templateHash": "16116103805544296619"
                     },
-                    "description": "Creates an Azure Cosmos DB for MongoDB account with a database."
+                    "description": "Creates an Azure Cosmos DB for NoSQL account with a database."
                   },
                   "parameters": {
                     "accountName": {
@@ -382,66 +888,59 @@
                       "type": "object",
                       "defaultValue": {}
                     },
-                    "collections": {
+                    "containers": {
                       "type": "array",
                       "defaultValue": []
                     },
-                    "connectionStringKey": {
-                      "type": "string",
-                      "defaultValue": "AZURE-COSMOS-CONNECTION-STRING"
-                    },
                     "keyVaultName": {
                       "type": "string"
+                    },
+                    "principalIds": {
+                      "type": "array",
+                      "defaultValue": []
                     }
                   },
                   "resources": [
                     {
                       "copy": {
                         "name": "list",
-                        "count": "[length(parameters('collections'))]"
+                        "count": "[length(parameters('containers'))]"
                       },
-                      "type": "Microsoft.DocumentDB/databaseAccounts/mongodbDatabases/collections",
-                      "apiVersion": "2022-08-15",
-                      "name": "[format('{0}/{1}/{2}', split(format('{0}/{1}', parameters('accountName'), parameters('databaseName')), '/')[0], split(format('{0}/{1}', parameters('accountName'), parameters('databaseName')), '/')[1], parameters('collections')[copyIndex()].name)]",
+                      "type": "Microsoft.DocumentDB/databaseAccounts/sqlDatabases/containers",
+                      "apiVersion": "2022-05-15",
+                      "name": "[format('{0}/{1}/{2}', split(format('{0}/{1}', parameters('accountName'), parameters('databaseName')), '/')[0], split(format('{0}/{1}', parameters('accountName'), parameters('databaseName')), '/')[1], parameters('containers')[copyIndex()].name)]",
                       "properties": {
                         "resource": {
-                          "id": "[parameters('collections')[copyIndex()].id]",
-                          "shardKey": {
-                            "_id": "[parameters('collections')[copyIndex()].shardKey]"
-                          },
-                          "indexes": [
-                            {
-                              "key": {
-                                "keys": [
-                                  "[parameters('collections')[copyIndex()].indexKey]"
-                                ]
-                              }
-                            }
-                          ]
-                        }
+                          "id": "[parameters('containers')[copyIndex()].id]",
+                          "partitionKey": {
+                            "paths": [
+                              "[parameters('containers')[copyIndex()].partitionKey]"
+                            ]
+                          }
+                        },
+                        "options": {}
                       },
                       "dependsOn": [
-                        "[resourceId('Microsoft.DocumentDB/databaseAccounts/mongodbDatabases', split(format('{0}/{1}', parameters('accountName'), parameters('databaseName')), '/')[0], split(format('{0}/{1}', parameters('accountName'), parameters('databaseName')), '/')[1])]"
+                        "[resourceId('Microsoft.DocumentDB/databaseAccounts/sqlDatabases', split(format('{0}/{1}', parameters('accountName'), parameters('databaseName')), '/')[0], split(format('{0}/{1}', parameters('accountName'), parameters('databaseName')), '/')[1])]"
                       ]
                     },
                     {
-                      "type": "Microsoft.DocumentDB/databaseAccounts/mongodbDatabases",
-                      "apiVersion": "2022-08-15",
+                      "type": "Microsoft.DocumentDB/databaseAccounts/sqlDatabases",
+                      "apiVersion": "2022-05-15",
                       "name": "[format('{0}/{1}', parameters('accountName'), parameters('databaseName'))]",
-                      "tags": "[parameters('tags')]",
                       "properties": {
                         "resource": {
                           "id": "[parameters('databaseName')]"
                         }
                       },
                       "dependsOn": [
-                        "[resourceId('Microsoft.Resources/deployments', 'cosmos-mongo-account')]"
+                        "[resourceId('Microsoft.Resources/deployments', 'cosmos-sql-account')]"
                       ]
                     },
                     {
                       "type": "Microsoft.Resources/deployments",
                       "apiVersion": "2022-09-01",
-                      "name": "cosmos-mongo-account",
+                      "name": "cosmos-sql-account",
                       "properties": {
                         "expressionEvaluationOptions": {
                           "scope": "inner"
@@ -454,14 +953,11 @@
                           "location": {
                             "value": "[parameters('location')]"
                           },
-                          "keyVaultName": {
-                            "value": "[parameters('keyVaultName')]"
-                          },
                           "tags": {
                             "value": "[parameters('tags')]"
                           },
-                          "connectionStringKey": {
-                            "value": "[parameters('connectionStringKey')]"
+                          "keyVaultName": {
+                            "value": "[parameters('keyVaultName')]"
                           }
                         },
                         "template": {
@@ -471,9 +967,9 @@
                             "_generator": {
                               "name": "bicep",
                               "version": "0.26.170.59819",
-                              "templateHash": "4693794629197446458"
+                              "templateHash": "18220013070549790672"
                             },
-                            "description": "Creates an Azure Cosmos DB for MongoDB account."
+                            "description": "Creates an Azure Cosmos DB for NoSQL account."
                           },
                           "parameters": {
                             "name": {
@@ -489,10 +985,6 @@
                             },
                             "keyVaultName": {
                               "type": "string"
-                            },
-                            "connectionStringKey": {
-                              "type": "string",
-                              "defaultValue": "AZURE-COSMOS-CONNECTION-STRING"
                             }
                           },
                           "resources": [
@@ -512,17 +1004,14 @@
                                   "location": {
                                     "value": "[parameters('location')]"
                                   },
-                                  "connectionStringKey": {
-                                    "value": "[parameters('connectionStringKey')]"
+                                  "tags": {
+                                    "value": "[parameters('tags')]"
                                   },
                                   "keyVaultName": {
                                     "value": "[parameters('keyVaultName')]"
                                   },
                                   "kind": {
-                                    "value": "MongoDB"
-                                  },
-                                  "tags": {
-                                    "value": "[parameters('tags')]"
+                                    "value": "GlobalDocumentDB"
                                   }
                                 },
                                 "template": {
@@ -641,16 +1130,165 @@
                             "id": {
                               "type": "string",
                               "value": "[reference(resourceId('Microsoft.Resources/deployments', 'cosmos-account'), '2022-09-01').outputs.id.value]"
+                            },
+                            "name": {
+                              "type": "string",
+                              "value": "[reference(resourceId('Microsoft.Resources/deployments', 'cosmos-account'), '2022-09-01').outputs.name.value]"
                             }
                           }
                         }
                       }
+                    },
+                    {
+                      "type": "Microsoft.Resources/deployments",
+                      "apiVersion": "2022-09-01",
+                      "name": "cosmos-sql-role-definition",
+                      "properties": {
+                        "expressionEvaluationOptions": {
+                          "scope": "inner"
+                        },
+                        "mode": "Incremental",
+                        "parameters": {
+                          "accountName": {
+                            "value": "[parameters('accountName')]"
+                          }
+                        },
+                        "template": {
+                          "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+                          "contentVersion": "1.0.0.0",
+                          "metadata": {
+                            "_generator": {
+                              "name": "bicep",
+                              "version": "0.26.170.59819",
+                              "templateHash": "16206905209322787989"
+                            },
+                            "description": "Creates a SQL role definition under an Azure Cosmos DB account."
+                          },
+                          "parameters": {
+                            "accountName": {
+                              "type": "string"
+                            }
+                          },
+                          "resources": [
+                            {
+                              "type": "Microsoft.DocumentDB/databaseAccounts/sqlRoleDefinitions",
+                              "apiVersion": "2022-08-15",
+                              "name": "[format('{0}/{1}', parameters('accountName'), guid(resourceId('Microsoft.DocumentDB/databaseAccounts', parameters('accountName')), parameters('accountName'), 'sql-role'))]",
+                              "properties": {
+                                "assignableScopes": [
+                                  "[resourceId('Microsoft.DocumentDB/databaseAccounts', parameters('accountName'))]"
+                                ],
+                                "permissions": [
+                                  {
+                                    "dataActions": [
+                                      "Microsoft.DocumentDB/databaseAccounts/readMetadata",
+                                      "Microsoft.DocumentDB/databaseAccounts/sqlDatabases/containers/items/*",
+                                      "Microsoft.DocumentDB/databaseAccounts/sqlDatabases/containers/*"
+                                    ],
+                                    "notDataActions": []
+                                  }
+                                ],
+                                "roleName": "Reader Writer",
+                                "type": "CustomRole"
+                              }
+                            }
+                          ],
+                          "outputs": {
+                            "id": {
+                              "type": "string",
+                              "value": "[resourceId('Microsoft.DocumentDB/databaseAccounts/sqlRoleDefinitions', parameters('accountName'), guid(resourceId('Microsoft.DocumentDB/databaseAccounts', parameters('accountName')), parameters('accountName'), 'sql-role'))]"
+                            }
+                          }
+                        }
+                      },
+                      "dependsOn": [
+                        "[resourceId('Microsoft.Resources/deployments', 'cosmos-sql-account')]",
+                        "[resourceId('Microsoft.DocumentDB/databaseAccounts/sqlDatabases', split(format('{0}/{1}', parameters('accountName'), parameters('databaseName')), '/')[0], split(format('{0}/{1}', parameters('accountName'), parameters('databaseName')), '/')[1])]"
+                      ]
+                    },
+                    {
+                      "copy": {
+                        "name": "userRole",
+                        "count": "[length(parameters('principalIds'))]",
+                        "mode": "serial",
+                        "batchSize": 1
+                      },
+                      "condition": "[not(empty(parameters('principalIds')[copyIndex()]))]",
+                      "type": "Microsoft.Resources/deployments",
+                      "apiVersion": "2022-09-01",
+                      "name": "[format('cosmos-sql-user-role-{0}', uniqueString(parameters('principalIds')[copyIndex()]))]",
+                      "properties": {
+                        "expressionEvaluationOptions": {
+                          "scope": "inner"
+                        },
+                        "mode": "Incremental",
+                        "parameters": {
+                          "accountName": {
+                            "value": "[parameters('accountName')]"
+                          },
+                          "roleDefinitionId": {
+                            "value": "[reference(resourceId('Microsoft.Resources/deployments', 'cosmos-sql-role-definition'), '2022-09-01').outputs.id.value]"
+                          },
+                          "principalId": {
+                            "value": "[parameters('principalIds')[copyIndex()]]"
+                          }
+                        },
+                        "template": {
+                          "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+                          "contentVersion": "1.0.0.0",
+                          "metadata": {
+                            "_generator": {
+                              "name": "bicep",
+                              "version": "0.26.170.59819",
+                              "templateHash": "5580476706925703677"
+                            },
+                            "description": "Creates a SQL role assignment under an Azure Cosmos DB account."
+                          },
+                          "parameters": {
+                            "accountName": {
+                              "type": "string"
+                            },
+                            "roleDefinitionId": {
+                              "type": "string"
+                            },
+                            "principalId": {
+                              "type": "string",
+                              "defaultValue": ""
+                            }
+                          },
+                          "resources": [
+                            {
+                              "type": "Microsoft.DocumentDB/databaseAccounts/sqlRoleAssignments",
+                              "apiVersion": "2022-05-15",
+                              "name": "[format('{0}/{1}', parameters('accountName'), guid(parameters('roleDefinitionId'), parameters('principalId'), resourceId('Microsoft.DocumentDB/databaseAccounts', parameters('accountName'))))]",
+                              "properties": {
+                                "principalId": "[parameters('principalId')]",
+                                "roleDefinitionId": "[parameters('roleDefinitionId')]",
+                                "scope": "[resourceId('Microsoft.DocumentDB/databaseAccounts', parameters('accountName'))]"
+                              }
+                            }
+                          ]
+                        }
+                      },
+                      "dependsOn": [
+                        "[resourceId('Microsoft.Resources/deployments', 'cosmos-sql-account')]",
+                        "[resourceId('Microsoft.DocumentDB/databaseAccounts/sqlDatabases', split(format('{0}/{1}', parameters('accountName'), parameters('databaseName')), '/')[0], split(format('{0}/{1}', parameters('accountName'), parameters('databaseName')), '/')[1])]",
+                        "[resourceId('Microsoft.Resources/deployments', 'cosmos-sql-role-definition')]"
+                      ]
                     }
                   ],
                   "outputs": {
+                    "accountId": {
+                      "type": "string",
+                      "value": "[reference(resourceId('Microsoft.Resources/deployments', 'cosmos-sql-account'), '2022-09-01').outputs.id.value]"
+                    },
+                    "accountName": {
+                      "type": "string",
+                      "value": "[reference(resourceId('Microsoft.Resources/deployments', 'cosmos-sql-account'), '2022-09-01').outputs.name.value]"
+                    },
                     "connectionStringKey": {
                       "type": "string",
-                      "value": "[parameters('connectionStringKey')]"
+                      "value": "[reference(resourceId('Microsoft.Resources/deployments', 'cosmos-sql-account'), '2022-09-01').outputs.connectionStringKey.value]"
                     },
                     "databaseName": {
                       "type": "string",
@@ -658,7 +1296,11 @@
                     },
                     "endpoint": {
                       "type": "string",
-                      "value": "[reference(resourceId('Microsoft.Resources/deployments', 'cosmos-mongo-account'), '2022-09-01').outputs.endpoint.value]"
+                      "value": "[reference(resourceId('Microsoft.Resources/deployments', 'cosmos-sql-account'), '2022-09-01').outputs.endpoint.value]"
+                    },
+                    "roleDefinitionId": {
+                      "type": "string",
+                      "value": "[reference(resourceId('Microsoft.Resources/deployments', 'cosmos-sql-role-definition'), '2022-09-01').outputs.id.value]"
                     }
                   }
                 }
@@ -666,169 +1308,27 @@
             }
           ],
           "outputs": {
+            "accountName": {
+              "type": "string",
+              "value": "[reference(resourceId('Microsoft.Resources/deployments', 'cosmos-sql'), '2022-09-01').outputs.accountName.value]"
+            },
             "connectionStringKey": {
               "type": "string",
-              "value": "[reference(resourceId('Microsoft.Resources/deployments', 'cosmos-mongo'), '2022-09-01').outputs.connectionStringKey.value]"
+              "value": "[reference(resourceId('Microsoft.Resources/deployments', 'cosmos-sql'), '2022-09-01').outputs.connectionStringKey.value]"
             },
             "databaseName": {
               "type": "string",
-              "value": "[reference(resourceId('Microsoft.Resources/deployments', 'cosmos-mongo'), '2022-09-01').outputs.databaseName.value]"
+              "value": "[reference(resourceId('Microsoft.Resources/deployments', 'cosmos-sql'), '2022-09-01').outputs.databaseName.value]"
             },
             "endpoint": {
               "type": "string",
-              "value": "[reference(resourceId('Microsoft.Resources/deployments', 'cosmos-mongo'), '2022-09-01').outputs.endpoint.value]"
+              "value": "[reference(resourceId('Microsoft.Resources/deployments', 'cosmos-sql'), '2022-09-01').outputs.endpoint.value]"
+            },
+            "roleDefinitionId": {
+              "type": "string",
+              "value": "[reference(resourceId('Microsoft.Resources/deployments', 'cosmos-sql'), '2022-09-01').outputs.roleDefinitionId.value]"
             }
           }
-        }
-      },
-      "dependsOn": [
-        "[resourceId('Microsoft.Resources/deployments', 'keyvault')]"
-      ]
-    },
-    {
-      "type": "Microsoft.Resources/deployments",
-      "apiVersion": "2022-09-01",
-      "name": "keyvault",
-      "properties": {
-        "expressionEvaluationOptions": {
-          "scope": "inner"
-        },
-        "mode": "Incremental",
-        "parameters": {
-          "name": "[if(not(empty(parameters('keyVaultName'))), createObject('value', parameters('keyVaultName')), createObject('value', format('{0}{1}', variables('abbrs').keyVaultVaults, variables('resourceToken'))))]",
-          "location": {
-            "value": "[parameters('location')]"
-          },
-          "tags": {
-            "value": "[variables('tags')]"
-          },
-          "principalId": {
-            "value": "[parameters('principalId')]"
-          }
-        },
-        "template": {
-          "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
-          "contentVersion": "1.0.0.0",
-          "metadata": {
-            "_generator": {
-              "name": "bicep",
-              "version": "0.26.170.59819",
-              "templateHash": "18407114162280426775"
-            },
-            "description": "Creates an Azure Key Vault."
-          },
-          "parameters": {
-            "name": {
-              "type": "string"
-            },
-            "location": {
-              "type": "string",
-              "defaultValue": "[resourceGroup().location]"
-            },
-            "tags": {
-              "type": "object",
-              "defaultValue": {}
-            },
-            "principalId": {
-              "type": "string",
-              "defaultValue": ""
-            }
-          },
-          "resources": [
-            {
-              "type": "Microsoft.KeyVault/vaults",
-              "apiVersion": "2022-07-01",
-              "name": "[parameters('name')]",
-              "location": "[parameters('location')]",
-              "tags": "[parameters('tags')]",
-              "properties": {
-                "tenantId": "[subscription().tenantId]",
-                "sku": {
-                  "family": "A",
-                  "name": "standard"
-                },
-                "accessPolicies": "[if(not(empty(parameters('principalId'))), createArray(createObject('objectId', parameters('principalId'), 'permissions', createObject('secrets', createArray('get', 'list')), 'tenantId', subscription().tenantId)), createArray())]"
-              }
-            }
-          ],
-          "outputs": {
-            "endpoint": {
-              "type": "string",
-              "value": "[reference(resourceId('Microsoft.KeyVault/vaults', parameters('name')), '2022-07-01').vaultUri]"
-            },
-            "name": {
-              "type": "string",
-              "value": "[parameters('name')]"
-            }
-          }
-        }
-      }
-    },
-    {
-      "type": "Microsoft.Resources/deployments",
-      "apiVersion": "2022-09-01",
-      "name": "cluster-keyvault-access",
-      "properties": {
-        "expressionEvaluationOptions": {
-          "scope": "inner"
-        },
-        "mode": "Incremental",
-        "parameters": {
-          "keyVaultName": {
-            "value": "[reference(resourceId('Microsoft.Resources/deployments', 'keyvault'), '2022-09-01').outputs.name.value]"
-          },
-          "principalId": {
-            "value": "[parameters('aksClusterIdentityObjectId')]"
-          }
-        },
-        "template": {
-          "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
-          "contentVersion": "1.0.0.0",
-          "metadata": {
-            "_generator": {
-              "name": "bicep",
-              "version": "0.26.170.59819",
-              "templateHash": "7922086847377910894"
-            },
-            "description": "Assigns an Azure Key Vault access policy."
-          },
-          "parameters": {
-            "name": {
-              "type": "string",
-              "defaultValue": "add"
-            },
-            "keyVaultName": {
-              "type": "string"
-            },
-            "permissions": {
-              "type": "object",
-              "defaultValue": {
-                "secrets": [
-                  "get",
-                  "list"
-                ]
-              }
-            },
-            "principalId": {
-              "type": "string"
-            }
-          },
-          "resources": [
-            {
-              "type": "Microsoft.KeyVault/vaults/accessPolicies",
-              "apiVersion": "2022-07-01",
-              "name": "[format('{0}/{1}', parameters('keyVaultName'), parameters('name'))]",
-              "properties": {
-                "accessPolicies": [
-                  {
-                    "objectId": "[parameters('principalId')]",
-                    "tenantId": "[subscription().tenantId]",
-                    "permissions": "[parameters('permissions')]"
-                  }
-                ]
-              }
-            }
-          ]
         }
       },
       "dependsOn": [
