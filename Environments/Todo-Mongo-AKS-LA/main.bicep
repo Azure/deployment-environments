@@ -1,9 +1,4 @@
 @minLength(1)
-@maxLength(64)
-@description('Name of the the environment which is used to generate a short unique hash used in all resources.')
-param environmentName string
-
-@minLength(1)
 @description('Primary location for all resources')
 param location string = resourceGroup().location
 
@@ -17,8 +12,7 @@ param sharedAKSEnvironmentName string
 var sharedAKSResourceGroup = '${sharedAKSProjectName}-${sharedAKSEnvironmentName}'
 
 var abbrs = loadJsonContent('./abbreviations.json')
-var resourceToken = toLower(uniqueString(subscription().id, environmentName, location))
-var tags = { 'azd-env-name': environmentName }
+var resourceToken = toLower(uniqueString(subscription().id, resourceGroup().id, location))
 
 // Store secrets in a keyvault
 module keyVault './core/security/keyvault.bicep' = {
@@ -26,7 +20,6 @@ module keyVault './core/security/keyvault.bicep' = {
   params: {
     name: !empty(keyVaultName) ? keyVaultName : '${abbrs.keyVaultVaults}${resourceToken}'
     location: location
-    tags: tags
     principalId: principalId
   }
 }
@@ -64,7 +57,6 @@ module cosmos './app/db.bicep' = {
     accountName: !empty(cosmosAccountName) ? cosmosAccountName : '${abbrs.documentDBDatabaseAccounts}${resourceToken}'
     databaseName: cosmosDatabaseName
     location: location
-    tags: tags
     keyVaultName: keyVault.outputs.name
   }
 }
@@ -87,7 +79,6 @@ resource configStoreKeyValue 'Microsoft.AppConfiguration/configurationStores/key
   properties: {
     value: cosmos.outputs.connectionStringKey
     contentType: contentType
-    tags: tags
   }
 }
 
@@ -97,7 +88,6 @@ resource configStoreKeyValue2 'Microsoft.AppConfiguration/configurationStores/ke
   properties: {
     value: cosmos.outputs.databaseName
     contentType: contentType
-    tags: tags
   }
 }
 
@@ -107,7 +97,6 @@ resource configStoreKeyValue3 'Microsoft.AppConfiguration/configurationStores/ke
   properties: {
     value: keyVault.outputs.endpoint
     contentType: contentType
-    tags: tags
   }
 }
 
