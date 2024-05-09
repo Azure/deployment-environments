@@ -18,7 +18,6 @@ var sharedAKSResourceGroup = '${sharedAKSProjectName}-${sharedAKSEnvironmentName
 
 var abbrs = loadJsonContent('./abbreviations.json')
 var resourceToken = toLower(uniqueString(subscription().id, environmentName, location))
-var tags = { 'azd-env-name': environmentName }
 
 // Store secrets in a keyvault
 module keyVault './core/security/keyvault.bicep' = {
@@ -85,7 +84,6 @@ module cosmos './app/db.bicep' = {
     accountName: !empty(cosmosAccountName) ? cosmosAccountName : '${abbrs.documentDBDatabaseAccounts}${resourceToken}'
     databaseName: cosmosDatabaseName
     location: location
-    tags: tags
     keyVaultName: keyVault.outputs.name
   }
 }
@@ -109,7 +107,6 @@ resource configStoreKeyValue 'Microsoft.AppConfiguration/configurationStores/key
   properties: {
     value: cosmos.outputs.connectionStringKey
     contentType: contentType
-    tags: tags
   }
 }
 
