@@ -5,18 +5,10 @@
     "_generator": {
       "name": "bicep",
       "version": "0.26.170.59819",
-      "templateHash": "926438374472775395"
+      "templateHash": "9330098512073283902"
     }
   },
   "parameters": {
-    "environmentName": {
-      "type": "string",
-      "minLength": 1,
-      "maxLength": 64,
-      "metadata": {
-        "description": "Name of the the environment which is used to generate a short unique hash used in all resources."
-      }
-    },
     "location": {
       "type": "string",
       "defaultValue": "[resourceGroup().location]",
@@ -198,10 +190,7 @@
     },
     "sharedAKSResourceGroup": "[format('{0}-{1}', parameters('sharedAKSProjectName'), parameters('sharedAKSEnvironmentName'))]",
     "abbrs": "[variables('$fxv#0')]",
-    "resourceToken": "[toLower(uniqueString(subscription().id, parameters('environmentName'), parameters('location')))]",
-    "tags": {
-      "azd-env-name": "[parameters('environmentName')]"
-    }
+    "resourceToken": "[toLower(uniqueString(subscription().id, resourceGroup().id, parameters('location')))]"
   },
   "resources": [
     {
@@ -219,8 +208,7 @@
       "name": "[format('{0}/{1}', if(not(empty(parameters('configStoreName'))), parameters('configStoreName'), format('{0}{1}', variables('abbrs').appConfigurationConfigurationStores, variables('resourceToken'))), 'AZURE_COSMOS_CONNECTION_STRING_KEY')]",
       "properties": {
         "value": "[reference(resourceId('Microsoft.Resources/deployments', 'cosmos'), '2022-09-01').outputs.connectionStringKey.value]",
-        "contentType": "[parameters('contentType')]",
-        "tags": "[variables('tags')]"
+        "contentType": "[parameters('contentType')]"
       },
       "dependsOn": [
         "[resourceId('Microsoft.AppConfiguration/configurationStores', if(not(empty(parameters('configStoreName'))), parameters('configStoreName'), format('{0}{1}', variables('abbrs').appConfigurationConfigurationStores, variables('resourceToken'))))]",
@@ -233,8 +221,7 @@
       "name": "[format('{0}/{1}', if(not(empty(parameters('configStoreName'))), parameters('configStoreName'), format('{0}{1}', variables('abbrs').appConfigurationConfigurationStores, variables('resourceToken'))), 'AZURE_COSMOS_DATABASE_NAME')]",
       "properties": {
         "value": "[reference(resourceId('Microsoft.Resources/deployments', 'cosmos'), '2022-09-01').outputs.databaseName.value]",
-        "contentType": "[parameters('contentType')]",
-        "tags": "[variables('tags')]"
+        "contentType": "[parameters('contentType')]"
       },
       "dependsOn": [
         "[resourceId('Microsoft.AppConfiguration/configurationStores', if(not(empty(parameters('configStoreName'))), parameters('configStoreName'), format('{0}{1}', variables('abbrs').appConfigurationConfigurationStores, variables('resourceToken'))))]",
@@ -247,8 +234,7 @@
       "name": "[format('{0}/{1}', if(not(empty(parameters('configStoreName'))), parameters('configStoreName'), format('{0}{1}', variables('abbrs').appConfigurationConfigurationStores, variables('resourceToken'))), 'AZURE_KEY_VAULT_ENDPOINT')]",
       "properties": {
         "value": "[reference(resourceId('Microsoft.Resources/deployments', 'keyvault'), '2022-09-01').outputs.endpoint.value]",
-        "contentType": "[parameters('contentType')]",
-        "tags": "[variables('tags')]"
+        "contentType": "[parameters('contentType')]"
       },
       "dependsOn": [
         "[resourceId('Microsoft.AppConfiguration/configurationStores', if(not(empty(parameters('configStoreName'))), parameters('configStoreName'), format('{0}{1}', variables('abbrs').appConfigurationConfigurationStores, variables('resourceToken'))))]",
@@ -268,9 +254,6 @@
           "name": "[if(not(empty(parameters('keyVaultName'))), createObject('value', parameters('keyVaultName')), createObject('value', format('{0}{1}', variables('abbrs').keyVaultVaults, variables('resourceToken'))))]",
           "location": {
             "value": "[parameters('location')]"
-          },
-          "tags": {
-            "value": "[variables('tags')]"
           },
           "principalId": {
             "value": "[parameters('principalId')]"
@@ -768,9 +751,6 @@
           },
           "location": {
             "value": "[parameters('location')]"
-          },
-          "tags": {
-            "value": "[variables('tags')]"
           },
           "keyVaultName": {
             "value": "[reference(resourceId('Microsoft.Resources/deployments', 'keyvault'), '2022-09-01').outputs.name.value]"
