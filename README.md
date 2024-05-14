@@ -10,7 +10,7 @@ An Environment is a collection of Azure resources on which your application is d
 
 [Documentation](https://github.com/Azure/deployment-environments/tree/main/documentation) folder details out capabilities that are currently in private preview and instructions on how to try them out.
 
-> Note - ADE currently supports [ARM templates](https://learn.microsoft.com/en-us/azure/azure-resource-manager/templates/overview) publicly and Terraform support is in private preview. In the near future, will support other IaC tools such as Bicep, Pulumi, etc.
+> Note - ADE provides support for any IaC framework through its extensibility model, that allows customers to define and bring in their own container image. [Learn more](https://learn.microsoft.com/en-us/azure/deployment-environments/how-to-configure-extensibility-generic-container-image) on how to leverage ADE's extensibility model and deploy using your favorite IaC templates.
 
 ## Contributing
 
