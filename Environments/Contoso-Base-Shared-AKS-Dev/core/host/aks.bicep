@@ -49,7 +49,7 @@ param sku string = 'Free'
 
 @description('The load balancer SKU to use for ingress into the AKS cluster')
 @allowed([ 'basic', 'standard' ])
-param loadBalancerSku string = 'standard'
+param loadBalancerSku string = 'basic'
 
 @description('Network plugin used for building the Kubernetes network.')
 @allowed([ 'azure', 'kubenet', 'none' ])
