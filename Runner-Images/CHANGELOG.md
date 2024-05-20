@@ -1,5 +1,4 @@
 # Change Log
 
-## Version 2.7.0-preview
-Adds support for linked templates in the Bicep image, does minor bug fixes, and stages changes for release.
-Initial Public Preview Release.
+## Version 2.9.0-preview
+Fixed a number of bugs around output type serialization, and added the 'ade upgrade' functionality to ensure up-to-date CLI actions regardless of the base image.

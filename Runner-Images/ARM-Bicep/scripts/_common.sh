@@ -46,3 +46,15 @@ outputDeploymentErrors() {
         fi
     done
 }
+
+setOutputs() {
+    outputs=$1
+    outputs=$(jq 'walk(if type == "object" then
+                    if .type == "Bool" then .type = "boolean"
+                    elif .type == "Int" then .type = "number"
+                    else . 
+                    end 
+                 else . 
+                 end)' <<< "$outputs")
+    echo "{\"outputs\": $outputs}" > $ADE_OUTPUTS
+}

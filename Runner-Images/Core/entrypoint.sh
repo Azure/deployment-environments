@@ -9,6 +9,13 @@ trap 'catch $? $LINENO' EXIT
 source "/shared/commands.sh"
 declare -g -x -A exitCodeMap=( ["1"]="DeploymentError" ["7"]="InvalidEndpoint" ["8"]="InvalidDevCenterId" ["9"]="CliSetupError" ["10"]="InvalidOperationId" ["11"]="RequestFailed" ["12"]="InvalidCliInput" ["13"]="FileOperationError" ["14"]="EnvironmentStorageExceeded" ["15"]="SecurityError" ["16"]="DeploymentIdentitySignInError" ["17"]="CliUpgradeError" ["99"]="UnknownError")
 
+ADE_STORAGE=/ade/storage
+ADE_OUTPUTS=/ade/temp/output.json
+ADE_ERROR_LOG=/ade/temp/error.log
+
+mkdir -p "$ADE_STORAGE"
+mkdir -p "$(dirname $ADE_OUTPUTS)" && touch "$ADE_OUTPUTS" && touch "$ADE_ERROR_LOG"
+
 # Called on exit.
 # Handles failures, updating storage, logs, etc.
 # TODO: When calling trap on EXIT signal, bash resets $LINENO to 0 before executing catch() function. Will either need to create a work-around or not utilize line number.
@@ -28,8 +35,12 @@ catch() {
     if [ "$1" != "0" ]; then
         # we trapped an error - set up reporting output to environment object, log it as an error, and clear the error log
         exitCode=$( echo "${exitCodeMap[$1]}")
-        additionalErrorDetails=$(cat $ADE_ERROR_LOG)
-        > $ADE_ERROR_LOG
+
+        if [ -s $ADE_ERROR_LOG ]; then
+            additionalErrorDetails=$(cat $ADE_ERROR_LOG)
+            > $ADE_ERROR_LOG
+        fi
+
         if [ -z "$exitCode" ]; then
             exitCode="UnknownError"
             error "Operation failed with exit code $exitCode, code value $1 !!!"
@@ -43,8 +54,8 @@ catch() {
 
 }
 
-# verbose "Checking for ADE CLI updates"
-# upgradeCli
+verbose "Checking for ADE CLI updates"
+upgradeCli
 
 verbose "Initializing runner"
 eval "$(ade init)"

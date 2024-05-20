@@ -20,8 +20,8 @@ In addtion, by using the provided runner images, you can invoke the ADE CLI with
 You can find more information about Custom Image Support [here](../documentation/custom-image-support/README.md).
 
 ## Available Image Repositories and Versions
-- Core: 2.7.0-preview(latest), latest
-- ARM/Bicep: 2.7.0-preview(latest), latest
+- Core: 2.9.0-preview(latest), latest
+- ARM/Bicep: 2.9.0-preview(latest), latest
 
 ## Image Building Quickstart Script
 If you have a Dockerfile and scripts folder configured for ADE's extensibility model, you can run the script [here](../../Runner-Images/quickstart-image-build.ps1) to build and push to a specified Azure Container Registry (ACR) under the repository 'ade' and the tag 'latest'. This script requires your registry name and directory for your custom image, have the Azure CLI and Docker Desktop installed and in your PATH variables, and requires that you have permissions to push to the specified registry. You can call the script using the following command in Powershell:
@@ -33,6 +33,14 @@ Additionally, if you would like to push to a specific repository and tag name, y
 ```powershell
 .\quickstart-image.build.ps1 -Registry '{YOUR_REGISTRY}' -Directory '{DIRECTORY_TO_YOUR_IMAGE}' -Repository '{YOUR_REPOSITORY}' -Tag '{YOUR_TAG}'
 ```
+
+## Terraform + ADE Extensibility Model Repository
+If you have set up an Azure Container Registry to contain images for your extensibility model workflow and are looking to use Terraform Infrastructure-as-Code (IaC) templates, we have setup a sample repository [here](https://github.com/Azure/ade-extensibility-model-terraform) containing an ADE-compatible image and a GitHub Action that builds and pushes the image to your Azure Container Registry. In order to use this method, you will need to do the following:
+ - Fork the repository into your personal account
+ - Allow GitHub Actions to connect to Azure via an Microsoft Entra ID application's federated credentials through OIDC. You will need to save the application's client ID as a secret within your forked repository, along with your subscription and Tenant ID. You can find more documentation about the process [here](https://learn.microsoft.com/en-us/azure/developer/github/connect-from-azure?tabs=azure-cli%2Clinux).
+ - Set up variables for your forked repository containing your personal Azure Container Registry name, your preferred repository name, and your preferred tag for the created image. You can modify your variables between workflow runs to push the generated image to different registries, repositories, and tags.
+
+This repository is meant as a sample to give customers a starting point to deploy their environments with Terraform, allow customers to add additional customizations while using ADE's extensibility model, and easily upload their changes to their connected Azure Container Registry.
 
 ## Support
 
