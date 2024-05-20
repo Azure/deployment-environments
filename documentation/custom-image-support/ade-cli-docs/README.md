@@ -12,6 +12,7 @@ The ADE CLI currently supports the following commands:
 - ['ade outputs'](outputs.md)
 - ['ade init'](init.md)
 - ['ade execute'](execute.md)
+- ['ade upgrade'](upgrade.md)
 
 Additional information on how to invoke the ADE CLI commands can be found in the linked documentation. 
 

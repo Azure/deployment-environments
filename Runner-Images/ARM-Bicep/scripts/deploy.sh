@@ -43,6 +43,7 @@ if [[ $ADE_TEMPLATE_FILE == *.json ]]; then
     fi
 fi
 
+
 echo "Signing into Azure using MSI"
 while true; do
     # managed identity isn't available immediately
@@ -63,6 +64,7 @@ az deployment group create --subscription $ADE_SUBSCRIPTION_ID \
     --only-show-errors
 
 if [ $? -eq 0 ]; then # deployment successfully created
+    sleep 20 # wait a bit to ensure deployment is created and found by tracking commands
     while true; do
 
         sleep 1
@@ -90,10 +92,11 @@ if [ $? -eq 0 ]; then # deployment successfully created
 
     deploymentOutput=$(az deployment group show -g "$ADE_RESOURCE_GROUP_NAME" -n "$deploymentName" --query properties.outputs)
     if [ -z "$deploymentOutput" ]; then
-        deploymentOutput="{}"
+        echo "No outputs found for deployment"
+    else
+        setOutputs "$deploymentOutput"
+        echo "Outputs successfully generated for ADE"
     fi
-    echo "{\"outputs\": $deploymentOutput}" > $ADE_OUTPUTS
-    echo "Outputs successfully generated for ADE"
 else
     echo "Deployment failed to create."
 fi

@@ -162,6 +162,12 @@ Additionally, if you would like to push to a specific repository and tag name, y
 .\quickstart-image.build.ps1 -Registry '{YOUR_REGISTRY}' -Directory '{DIRECTORY_TO_YOUR_IMAGE}' -Repository '{YOUR_REPOSITORY}' -Tag '{YOUR_TAG}'
 ```
 
+## Terraform + ADE Extensibility Model Repository
+If you have set up an Azure Container Registry to contain images for your extensibility model workflow and are looking to use Terraform Infrastructure-as-Code (IaC) templates, we have set up a repository [here](https://github.com/Azure/ade-extensibility-model-terraform) containing an ADE-compatible image and a GitHub Action that builds and pushes the image to your Azure Container Registry. In order to use this method, you will need to do the following:
+ - Fork the repository into your personal account
+ - Allow GitHub Actions to connect to Azure via an Microsoft Entra ID application's federated credentials through OIDC. You will need to save the application's client ID as a secret within your forked repository, along with your subscription and Tenant ID. You can find more documentation about the process [here](https://learn.microsoft.com/en-us/azure/developer/github/connect-from-azure?tabs=azure-cli%2Clinux).
+ - Set up variables for your forked repository containing your personal Azure Container Registry name, your preferred repository name, and your preferred tag for the created image. You can modify your variables between workflow runs to push the generated image to different registries, repositories, and tags.
+
 ## Accessing Operation Logs And Error Details
 To view error details with deployments and deletions, you can use the [Developer Portal](https://devportal.microsoft.com/) to view the error details stored in the file $ADE_ERROR_LOG at the end of the deployment by clicking on the 'See Details' button of a failed deployment, shown below:
 ![A Screenshot of a failed deployment of an environment with the 'See Details' button displayed](failedDeploymentCard.png)
