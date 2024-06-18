@@ -4,8 +4,8 @@
   "metadata": {
     "_generator": {
       "name": "bicep",
-      "version": "0.26.170.59819",
-      "templateHash": "1541560146893703868"
+      "version": "0.27.1.19265",
+      "templateHash": "16819065780594781984"
     }
   },
   "parameters": {
@@ -220,8 +220,8 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.26.170.59819",
-              "templateHash": "3938742814317506649"
+              "version": "0.27.1.19265",
+              "templateHash": "8780944729374864326"
             },
             "description": "Creates an Azure Container Registry and an Azure Container Apps environment."
           },
@@ -281,8 +281,8 @@
                   "metadata": {
                     "_generator": {
                       "name": "bicep",
-                      "version": "0.26.170.59819",
-                      "templateHash": "18400100082982052090"
+                      "version": "0.27.1.19265",
+                      "templateHash": "10702261280072308677"
                     },
                     "description": "Creates an Azure Container Apps environment."
                   },
@@ -402,8 +402,8 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.26.170.59819",
-              "templateHash": "10048108379044846923"
+              "version": "0.27.1.19265",
+              "templateHash": "746484920101780722"
             },
             "description": "Creates an Application Insights instance and a Log Analytics workspace."
           },
@@ -454,8 +454,8 @@
                   "metadata": {
                     "_generator": {
                       "name": "bicep",
-                      "version": "0.26.170.59819",
-                      "templateHash": "17101038721523251751"
+                      "version": "0.27.1.19265",
+                      "templateHash": "2707024492396982954"
                     },
                     "description": "Creates a Log Analytics workspace."
                   },
@@ -535,8 +535,8 @@
                   "metadata": {
                     "_generator": {
                       "name": "bicep",
-                      "version": "0.26.170.59819",
-                      "templateHash": "5016503703443937813"
+                      "version": "0.27.1.19265",
+                      "templateHash": "6641653850884689274"
                     },
                     "description": "Creates an Application Insights instance based on an existing Log Analytics workspace."
                   },
@@ -600,8 +600,8 @@
                           "metadata": {
                             "_generator": {
                               "name": "bicep",
-                              "version": "0.26.170.59819",
-                              "templateHash": "4596399009213720452"
+                              "version": "0.27.1.19265",
+                              "templateHash": "1759216242890853910"
                             },
                             "description": "Creates a dashboard for an Application Insights instance."
                           },
