@@ -95,6 +95,9 @@ resource configStore 'Microsoft.AppConfiguration/configurationStores@2021-10-01-
   sku: {
     name: 'standard'
   }
+  properties: {
+    disableLocalAuth: true
+  }
 }
 
 resource configStoreKeyValue 'Microsoft.AppConfiguration/configurationStores/keyValues@2021-10-01-preview' = {
