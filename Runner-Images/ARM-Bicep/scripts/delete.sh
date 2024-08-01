@@ -21,7 +21,14 @@ while true; do
 done
 
 echo -e "\n>>> Beginning Deletion...\n"
-az deployment group create --resource-group "$ADE_RESOURCE_GROUP_NAME" \
+
+if [[ $(az group exists --subscription $ADE_SUBSCRIPTION_ID --name "$ADE_RESOURCE_GROUP_NAME") == 'false' ]]; then
+    echo "Resource group $ADE_RESOURCE_GROUP_NAME does not exist, resources successfully cleaned up"
+    exit 0
+fi
+
+az deployment group create --subscription $ADE_SUBSCRIPTION_ID \
+    --resource-group "$ADE_RESOURCE_GROUP_NAME" \
     --name "$deploymentName" \
     --no-prompt true --no-wait --mode Complete \
     --only-show-errors \
