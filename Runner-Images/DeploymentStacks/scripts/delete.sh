@@ -24,9 +24,7 @@ echo -e "\n>>> Beginning Deletion ...\n"
 
 az stack group delete --resource-group "$ADE_RESOURCE_GROUP_NAME" \
     --name "$ADE_ENVIRONMENT_NAME" \
-    --delete-resources --yes \
     --action-on-unmanage deleteResources
-
 
 if [ $? -eq 0 ]; then # deployment successfully created
     echo "Successfully Deleted Resources"
