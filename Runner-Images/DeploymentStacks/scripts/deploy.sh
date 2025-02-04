@@ -62,7 +62,8 @@ az stack group create --subscription $ADE_SUBSCRIPTION_ID \
     --deny-settings-mode "none" \
     --no-wait --yes \
     --template-file "$ADE_TEMPLATE_FILE" \
-    --parameters "$deploymentParameters"
+    --parameters "$deploymentParameters" \
+    --action-on-unmanage deleteResources
 
 if [ $? -eq 0 ]; then # deployment successfully created
     sleep 30 # sleep for 30 seconds to ensure deployment ID is set correctly
