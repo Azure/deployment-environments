@@ -3,6 +3,7 @@
 ## Featured Repos
 + Core: Core ADE Image
 + ARM-Bicep: ADE Image for ARM/Bicep Deployments/Deletions
++ DeploymentStacks: ADE Image for Azure [Deployment stacks](https://github.com/Azure/deployment-stacks)
 
 ## About Azure Deployment Environments
 Azure Deployment Environments empowers development teams to quickly and easily spin up app infrastructure with project-based templates that establish consistency and best practices while maximizing security. This on-demand access to secure environments accelerates the stages of the software development lifecycle in a compliant and cost-efficient way.
