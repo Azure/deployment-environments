@@ -1,6 +1,6 @@
 # Change Log
 
-## Version 1.1.0
+## Version 4.0.0-preview
 Updated Azure CLI base image moving from [Alpine to Mariner Linux](https://techcommunity.microsoft.com/blog/azuretoolsblog/azure-cli-docker-container-base-linux-image-is-now-azure-linux/4236248). Has the potential to break new builds. Namely, commands such as `apk add` will likely fail. To fix the issue, use `tdnf install` to install all packages. For example:
 
 Before:
