@@ -1,7 +1,7 @@
 # Copyright (c) Microsoft Corporation.
 # Licensed under the MIT License.
 
-FROM mcr.microsoft.com/azure-cli:latest
+FROM mcr.microsoft.com/azure-cli:2.67.0
 WORKDIR /
 
 ARG IMAGE_VERSION
@@ -9,8 +9,12 @@ ARG IMAGE_VERSION
 # Metadata as defined at http://label-schema.org
 ARG BUILD_DATE
 
-# Add jq for parsing JSON
-RUN apk add jq
+# Install jq, dos2unix, libicu, wget & unzip
+RUN tdnf install -y jq
+RUN tdnf install -y dos2unix
+RUN tdnf install -y libicu
+RUN tdnf install -y wget
+RUN tdnf install -y unzip
 
 COPY entrypoint.sh /entrypoint.sh
 COPY shared/* /shared/
