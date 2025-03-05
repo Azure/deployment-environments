@@ -4,8 +4,8 @@
   "metadata": {
     "_generator": {
       "name": "bicep",
-      "version": "0.27.1.19265",
-      "templateHash": "7304744400116994811"
+      "version": "0.28.1.47646",
+      "templateHash": "14572900008526220543"
     }
   },
   "parameters": {
@@ -200,6 +200,9 @@
       "location": "[parameters('location')]",
       "sku": {
         "name": "standard"
+      },
+      "properties": {
+        "disableLocalAuth": true
       }
     },
     {
@@ -265,8 +268,8 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.27.1.19265",
-              "templateHash": "2948321361335204987"
+              "version": "0.28.1.47646",
+              "templateHash": "4250008929992735853"
             },
             "description": "Creates an Azure Key Vault."
           },
@@ -346,8 +349,8 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.27.1.19265",
-              "templateHash": "391084325711905215"
+              "version": "0.28.1.47646",
+              "templateHash": "2413639696239709724"
             }
           },
           "parameters": {
@@ -444,8 +447,8 @@
                   "metadata": {
                     "_generator": {
                       "name": "bicep",
-                      "version": "0.27.1.19265",
-                      "templateHash": "16440196655390446916"
+                      "version": "0.28.1.47646",
+                      "templateHash": "4781574865545118092"
                     },
                     "description": "Creates a role assignment for a service principal."
                   },
@@ -517,8 +520,8 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.27.1.19265",
-              "templateHash": "15775847162203128109"
+              "version": "0.28.1.47646",
+              "templateHash": "2328751784300366789"
             }
           },
           "parameters": {
@@ -562,8 +565,8 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.27.1.19265",
-              "templateHash": "6278079210023281106"
+              "version": "0.28.1.47646",
+              "templateHash": "17016224891593731674"
             },
             "description": "Assigns an Azure Key Vault access policy."
           },
@@ -638,8 +641,8 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.27.1.19265",
-              "templateHash": "922358179802906048"
+              "version": "0.28.1.47646",
+              "templateHash": "6240451752366025456"
             }
           },
           "parameters": {
@@ -719,8 +722,8 @@
                   "metadata": {
                     "_generator": {
                       "name": "bicep",
-                      "version": "0.27.1.19265",
-                      "templateHash": "11256531440558691624"
+                      "version": "0.28.1.47646",
+                      "templateHash": "815009670783988728"
                     },
                     "description": "Creates an Azure Cosmos DB for MongoDB account with a database."
                   },
@@ -827,8 +830,8 @@
                           "metadata": {
                             "_generator": {
                               "name": "bicep",
-                              "version": "0.27.1.19265",
-                              "templateHash": "3597031261101386438"
+                              "version": "0.28.1.47646",
+                              "templateHash": "17789569437380831903"
                             },
                             "description": "Creates an Azure Cosmos DB for MongoDB account."
                           },
@@ -888,8 +891,8 @@
                                   "metadata": {
                                     "_generator": {
                                       "name": "bicep",
-                                      "version": "0.27.1.19265",
-                                      "templateHash": "5084371553872687363"
+                                      "version": "0.28.1.47646",
+                                      "templateHash": "7232916224454914373"
                                     },
                                     "description": "Creates an Azure Cosmos DB account."
                                   },

@@ -4,8 +4,8 @@
   "metadata": {
     "_generator": {
       "name": "bicep",
-      "version": "0.27.1.19265",
-      "templateHash": "4468923594415513011"
+      "version": "0.28.1.47646",
+      "templateHash": "13814500763932905477"
     }
   },
   "parameters": {
@@ -295,8 +295,8 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.27.1.19265",
-              "templateHash": "11873870875999514341"
+              "version": "0.28.1.47646",
+              "templateHash": "2873297444817767281"
             }
           },
           "parameters": {
@@ -410,8 +410,8 @@
                   "metadata": {
                     "_generator": {
                       "name": "bicep",
-                      "version": "0.27.1.19265",
-                      "templateHash": "839245327381763200"
+                      "version": "0.28.1.47646",
+                      "templateHash": "9570147518939101777"
                     },
                     "description": "Creates or updates an existing Azure Container App."
                   },
@@ -669,8 +669,8 @@
                           "metadata": {
                             "_generator": {
                               "name": "bicep",
-                              "version": "0.27.1.19265",
-                              "templateHash": "17873363700595432182"
+                              "version": "0.28.1.47646",
+                              "templateHash": "9559947971567510656"
                             },
                             "description": "Creates a container app in an Azure Container App environment."
                           },
@@ -923,8 +923,8 @@
                                   "metadata": {
                                     "_generator": {
                                       "name": "bicep",
-                                      "version": "0.27.1.19265",
-                                      "templateHash": "14118721380530723147"
+                                      "version": "0.28.1.47646",
+                                      "templateHash": "1386551193288161196"
                                     },
                                     "description": "Assigns ACR Pull permissions to access an Azure Container Registry."
                                   },
@@ -1084,8 +1084,8 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.27.1.19265",
-              "templateHash": "6104191718527679114"
+              "version": "0.28.1.47646",
+              "templateHash": "5239517472094193506"
             }
           },
           "parameters": {
@@ -1162,8 +1162,8 @@
                   "metadata": {
                     "_generator": {
                       "name": "bicep",
-                      "version": "0.27.1.19265",
-                      "templateHash": "6278079210023281106"
+                      "version": "0.28.1.47646",
+                      "templateHash": "17016224891593731674"
                     },
                     "description": "Assigns an Azure Key Vault access policy."
                   },
@@ -1283,8 +1283,8 @@
                   "metadata": {
                     "_generator": {
                       "name": "bicep",
-                      "version": "0.27.1.19265",
-                      "templateHash": "839245327381763200"
+                      "version": "0.28.1.47646",
+                      "templateHash": "9570147518939101777"
                     },
                     "description": "Creates or updates an existing Azure Container App."
                   },
@@ -1542,8 +1542,8 @@
                           "metadata": {
                             "_generator": {
                               "name": "bicep",
-                              "version": "0.27.1.19265",
-                              "templateHash": "17873363700595432182"
+                              "version": "0.28.1.47646",
+                              "templateHash": "9559947971567510656"
                             },
                             "description": "Creates a container app in an Azure Container App environment."
                           },
@@ -1796,8 +1796,8 @@
                                   "metadata": {
                                     "_generator": {
                                       "name": "bicep",
-                                      "version": "0.27.1.19265",
-                                      "templateHash": "14118721380530723147"
+                                      "version": "0.28.1.47646",
+                                      "templateHash": "1386551193288161196"
                                     },
                                     "description": "Assigns ACR Pull permissions to access an Azure Container Registry."
                                   },
@@ -1937,8 +1937,8 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.27.1.19265",
-              "templateHash": "13288322578480091129"
+              "version": "0.28.1.47646",
+              "templateHash": "8075470313870608850"
             },
             "description": "Creates an Azure Container Registry."
           },
@@ -2114,8 +2114,8 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.27.1.19265",
-              "templateHash": "10899806140713240148"
+              "version": "0.28.1.47646",
+              "templateHash": "8858194042814084678"
             }
           },
           "parameters": {
@@ -2195,8 +2195,8 @@
                   "metadata": {
                     "_generator": {
                       "name": "bicep",
-                      "version": "0.27.1.19265",
-                      "templateHash": "17766102100339878897"
+                      "version": "0.28.1.47646",
+                      "templateHash": "14863520980520874403"
                     },
                     "description": "Creates an Azure Cosmos DB for MongoDB account with a database."
                   },
@@ -2303,8 +2303,8 @@
                           "metadata": {
                             "_generator": {
                               "name": "bicep",
-                              "version": "0.27.1.19265",
-                              "templateHash": "10288501472663096612"
+                              "version": "0.28.1.47646",
+                              "templateHash": "3099268077942840517"
                             },
                             "description": "Creates an Azure Cosmos DB for MongoDB account."
                           },
@@ -2364,8 +2364,8 @@
                                   "metadata": {
                                     "_generator": {
                                       "name": "bicep",
-                                      "version": "0.27.1.19265",
-                                      "templateHash": "11403413224043183481"
+                                      "version": "0.28.1.47646",
+                                      "templateHash": "5295350533403586059"
                                     },
                                     "description": "Creates an Azure Cosmos DB account."
                                   },
@@ -2545,8 +2545,8 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.27.1.19265",
-              "templateHash": "2948321361335204987"
+              "version": "0.28.1.47646",
+              "templateHash": "4250008929992735853"
             },
             "description": "Creates an Azure Key Vault."
           },
@@ -2625,8 +2625,8 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.27.1.19265",
-              "templateHash": "16692274638994423150"
+              "version": "0.28.1.47646",
+              "templateHash": "13208236383464324805"
             },
             "description": "Creates an Azure API Management instance."
           },
@@ -2772,8 +2772,8 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.27.1.19265",
-              "templateHash": "10242874607688237506"
+              "version": "0.28.1.47646",
+              "templateHash": "1585643982326260567"
             }
           },
           "parameters": {
