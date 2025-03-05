@@ -10,7 +10,7 @@ param sku object = {
   name: 'S0'
 }
 
-resource account 'Microsoft.CognitiveServices/accounts@2022-10-01' = {
+resource account 'Microsoft.CognitiveServices/accounts@2024-10-01' = {
   name: name
   location: location
   tags: tags
@@ -24,13 +24,13 @@ resource account 'Microsoft.CognitiveServices/accounts@2022-10-01' = {
 }
 
 @batchSize(1)
-resource deployment 'Microsoft.CognitiveServices/accounts/deployments@2022-10-01' = [for deployment in deployments: {
+resource deployment 'Microsoft.CognitiveServices/accounts/deployments@2024-10-01' = [for deployment in deployments: {
   parent: account
   name: deployment.name
   properties: {
     model: deployment.model
     raiPolicyName: contains(deployment, 'raiPolicyName') ? deployment.raiPolicyName : null
-    scaleSettings: deployment.scaleSettings
+
   }
 }]
 

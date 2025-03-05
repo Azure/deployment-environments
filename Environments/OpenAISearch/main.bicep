@@ -29,10 +29,10 @@ param formRecognizerResourceGroupLocation string = location
 
 param formRecognizerSkuName string = 'S0'
 
-param gptDeploymentName string = 'davinci'
-param gptModelName string = 'text-davinci-003'
+param gptDeploymentName string = 'gpt-4o-0513'
+param gptModelName string = 'gpt-4o'
+param modelVersion string = '2024-05-13'
 param chatGptDeploymentName string = 'chat'
-param chatGptModelName string = 'gpt-35-turbo'
 
 @description('Id of the user or app to assign application roles')
 param principalId string
@@ -95,21 +95,10 @@ module openAi 'core/ai/cognitiveservices.bicep' = {
         model: {
           format: 'OpenAI'
           name: gptModelName
-          version: '1'
+          version: modelVersion
         }
-        scaleSettings: {
-          scaleType: 'Standard'
-        }
-      }
-      {
-        name: chatGptDeploymentName
-        model: {
-          format: 'OpenAI'
-          name: chatGptModelName
-          version: '0301'
-        }
-        scaleSettings: {
-          scaleType: 'Standard'
+        sku: {
+          name: 'Standard'
         }
       }
     ]
