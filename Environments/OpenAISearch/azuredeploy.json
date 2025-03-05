@@ -4,8 +4,8 @@
   "metadata": {
     "_generator": {
       "name": "bicep",
-      "version": "0.28.1.47646",
-      "templateHash": "10268709855619543733"
+      "version": "0.33.93.31351",
+      "templateHash": "7424594458485872868"
     }
   },
   "parameters": {
@@ -87,19 +87,19 @@
     },
     "gptDeploymentName": {
       "type": "string",
-      "defaultValue": "davinci"
+      "defaultValue": "gpt-4o-0513"
     },
     "gptModelName": {
       "type": "string",
-      "defaultValue": "text-davinci-003"
+      "defaultValue": "gpt-4o"
+    },
+    "modelVersion": {
+      "type": "string",
+      "defaultValue": "2024-05-13"
     },
     "chatGptDeploymentName": {
       "type": "string",
       "defaultValue": "chat"
-    },
-    "chatGptModelName": {
-      "type": "string",
-      "defaultValue": "gpt-35-turbo"
     },
     "principalId": {
       "type": "string",
@@ -284,8 +284,8 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.28.1.47646",
-              "templateHash": "16934583072820463488"
+              "version": "0.33.93.31351",
+              "templateHash": "10643458792052922105"
             }
           },
           "parameters": {
@@ -389,8 +389,8 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.28.1.47646",
-              "templateHash": "1454693974758865459"
+              "version": "0.33.93.31351",
+              "templateHash": "377501608988756920"
             }
           },
           "parameters": {
@@ -623,21 +623,10 @@
                 "model": {
                   "format": "OpenAI",
                   "name": "[parameters('gptModelName')]",
-                  "version": "1"
+                  "version": "[parameters('modelVersion')]"
                 },
-                "scaleSettings": {
-                  "scaleType": "Standard"
-                }
-              },
-              {
-                "name": "[parameters('chatGptDeploymentName')]",
-                "model": {
-                  "format": "OpenAI",
-                  "name": "[parameters('chatGptModelName')]",
-                  "version": "0301"
-                },
-                "scaleSettings": {
-                  "scaleType": "Standard"
+                "sku": {
+                  "name": "Standard"
                 }
               }
             ]
@@ -649,8 +638,8 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.28.1.47646",
-              "templateHash": "3406865708911674251"
+              "version": "0.33.93.31351",
+              "templateHash": "252417070114373195"
             }
           },
           "parameters": {
@@ -691,7 +680,7 @@
           "resources": [
             {
               "type": "Microsoft.CognitiveServices/accounts",
-              "apiVersion": "2022-10-01",
+              "apiVersion": "2024-10-01",
               "name": "[parameters('name')]",
               "location": "[parameters('location')]",
               "tags": "[parameters('tags')]",
@@ -711,12 +700,11 @@
                 "batchSize": 1
               },
               "type": "Microsoft.CognitiveServices/accounts/deployments",
-              "apiVersion": "2022-10-01",
+              "apiVersion": "2024-10-01",
               "name": "[format('{0}/{1}', parameters('name'), parameters('deployments')[copyIndex()].name)]",
               "properties": {
                 "model": "[parameters('deployments')[copyIndex()].model]",
-                "raiPolicyName": "[if(contains(parameters('deployments')[copyIndex()], 'raiPolicyName'), parameters('deployments')[copyIndex()].raiPolicyName, null())]",
-                "scaleSettings": "[parameters('deployments')[copyIndex()].scaleSettings]"
+                "raiPolicyName": "[if(contains(parameters('deployments')[copyIndex()], 'raiPolicyName'), parameters('deployments')[copyIndex()].raiPolicyName, null())]"
               },
               "dependsOn": [
                 "[resourceId('Microsoft.CognitiveServices/accounts', parameters('name'))]"
@@ -726,7 +714,7 @@
           "outputs": {
             "endpoint": {
               "type": "string",
-              "value": "[reference(resourceId('Microsoft.CognitiveServices/accounts', parameters('name')), '2022-10-01').endpoint]"
+              "value": "[reference(resourceId('Microsoft.CognitiveServices/accounts', parameters('name')), '2024-10-01').endpoint]"
             },
             "id": {
               "type": "string",
@@ -772,8 +760,8 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.28.1.47646",
-              "templateHash": "3406865708911674251"
+              "version": "0.33.93.31351",
+              "templateHash": "252417070114373195"
             }
           },
           "parameters": {
@@ -814,7 +802,7 @@
           "resources": [
             {
               "type": "Microsoft.CognitiveServices/accounts",
-              "apiVersion": "2022-10-01",
+              "apiVersion": "2024-10-01",
               "name": "[parameters('name')]",
               "location": "[parameters('location')]",
               "tags": "[parameters('tags')]",
@@ -834,12 +822,11 @@
                 "batchSize": 1
               },
               "type": "Microsoft.CognitiveServices/accounts/deployments",
-              "apiVersion": "2022-10-01",
+              "apiVersion": "2024-10-01",
               "name": "[format('{0}/{1}', parameters('name'), parameters('deployments')[copyIndex()].name)]",
               "properties": {
                 "model": "[parameters('deployments')[copyIndex()].model]",
-                "raiPolicyName": "[if(contains(parameters('deployments')[copyIndex()], 'raiPolicyName'), parameters('deployments')[copyIndex()].raiPolicyName, null())]",
-                "scaleSettings": "[parameters('deployments')[copyIndex()].scaleSettings]"
+                "raiPolicyName": "[if(contains(parameters('deployments')[copyIndex()], 'raiPolicyName'), parameters('deployments')[copyIndex()].raiPolicyName, null())]"
               },
               "dependsOn": [
                 "[resourceId('Microsoft.CognitiveServices/accounts', parameters('name'))]"
@@ -849,7 +836,7 @@
           "outputs": {
             "endpoint": {
               "type": "string",
-              "value": "[reference(resourceId('Microsoft.CognitiveServices/accounts', parameters('name')), '2022-10-01').endpoint]"
+              "value": "[reference(resourceId('Microsoft.CognitiveServices/accounts', parameters('name')), '2024-10-01').endpoint]"
             },
             "id": {
               "type": "string",
@@ -902,8 +889,8 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.28.1.47646",
-              "templateHash": "7596708093771990692"
+              "version": "0.33.93.31351",
+              "templateHash": "3771478521284452856"
             }
           },
           "parameters": {
@@ -1029,8 +1016,8 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.28.1.47646",
-              "templateHash": "8279939846364871047"
+              "version": "0.33.93.31351",
+              "templateHash": "11206818764871276945"
             }
           },
           "parameters": {
@@ -1112,7 +1099,7 @@
           "resources": [
             {
               "copy": {
-                "name": "container",
+                "name": "storage::blobServices::container",
                 "count": "[length(parameters('containers'))]"
               },
               "condition": "[not(empty(parameters('containers')))]",
@@ -1201,8 +1188,8 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.28.1.47646",
-              "templateHash": "10727688037975652837"
+              "version": "0.33.93.31351",
+              "templateHash": "13051451403495570550"
             }
           },
           "parameters": {
@@ -1265,8 +1252,8 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.28.1.47646",
-              "templateHash": "10727688037975652837"
+              "version": "0.33.93.31351",
+              "templateHash": "13051451403495570550"
             }
           },
           "parameters": {
@@ -1329,8 +1316,8 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.28.1.47646",
-              "templateHash": "10727688037975652837"
+              "version": "0.33.93.31351",
+              "templateHash": "13051451403495570550"
             }
           },
           "parameters": {
@@ -1393,8 +1380,8 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.28.1.47646",
-              "templateHash": "10727688037975652837"
+              "version": "0.33.93.31351",
+              "templateHash": "13051451403495570550"
             }
           },
           "parameters": {
@@ -1457,8 +1444,8 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.28.1.47646",
-              "templateHash": "10727688037975652837"
+              "version": "0.33.93.31351",
+              "templateHash": "13051451403495570550"
             }
           },
           "parameters": {
@@ -1521,8 +1508,8 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.28.1.47646",
-              "templateHash": "10727688037975652837"
+              "version": "0.33.93.31351",
+              "templateHash": "13051451403495570550"
             }
           },
           "parameters": {
@@ -1585,8 +1572,8 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.28.1.47646",
-              "templateHash": "10727688037975652837"
+              "version": "0.33.93.31351",
+              "templateHash": "13051451403495570550"
             }
           },
           "parameters": {
@@ -1652,8 +1639,8 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.28.1.47646",
-              "templateHash": "10727688037975652837"
+              "version": "0.33.93.31351",
+              "templateHash": "13051451403495570550"
             }
           },
           "parameters": {
@@ -1719,8 +1706,8 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.28.1.47646",
-              "templateHash": "10727688037975652837"
+              "version": "0.33.93.31351",
+              "templateHash": "13051451403495570550"
             }
           },
           "parameters": {
