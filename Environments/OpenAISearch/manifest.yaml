@@ -68,9 +68,9 @@ parameters:
   required: false
   default: "eastus"
 
-- id: "openaiLocation"
-  name: "Region (e.g. eastus)"
-  description: "Region"
+- id: "openAiResourceGroupLocation"
+  name: "OpenAI Region (e.g. eastus)"
+  description: "OpenAI Region (e.g. eastus)"
   type: "string"
   required: false
   default: "eastus"
