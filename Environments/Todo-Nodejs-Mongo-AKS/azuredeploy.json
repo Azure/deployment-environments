@@ -4,8 +4,8 @@
   "metadata": {
     "_generator": {
       "name": "bicep",
-      "version": "0.28.1.47646",
-      "templateHash": "17166396968645210258"
+      "version": "0.33.93.31351",
+      "templateHash": "11455208835963135169"
     }
   },
   "parameters": {
@@ -242,8 +242,8 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.28.1.47646",
-              "templateHash": "2587101185242437995"
+              "version": "0.33.93.31351",
+              "templateHash": "9332925989989495767"
             },
             "description": "Creates an Azure Kubernetes Service (AKS) cluster with a system agent pool as well as an additional user agent pool."
           },
@@ -593,8 +593,8 @@
                   "metadata": {
                     "_generator": {
                       "name": "bicep",
-                      "version": "0.28.1.47646",
-                      "templateHash": "18277892820278517058"
+                      "version": "0.33.93.31351",
+                      "templateHash": "10410905278989344027"
                     },
                     "description": "Creates an Azure Kubernetes Service (AKS) cluster with a system agent pool."
                   },
@@ -874,8 +874,8 @@
                   "metadata": {
                     "_generator": {
                       "name": "bicep",
-                      "version": "0.28.1.47646",
-                      "templateHash": "8942625910471136519"
+                      "version": "0.33.93.31351",
+                      "templateHash": "12676601876476438690"
                     },
                     "description": "Adds an agent pool to an Azure Kubernetes Service (AKS) cluster."
                   },
@@ -937,8 +937,8 @@
                   "metadata": {
                     "_generator": {
                       "name": "bicep",
-                      "version": "0.28.1.47646",
-                      "templateHash": "8075470313870608850"
+                      "version": "0.33.93.31351",
+                      "templateHash": "5601479367076195530"
                     },
                     "description": "Creates an Azure Container Registry."
                   },
@@ -1107,8 +1107,8 @@
                   "metadata": {
                     "_generator": {
                       "name": "bicep",
-                      "version": "0.28.1.47646",
-                      "templateHash": "1386551193288161196"
+                      "version": "0.33.93.31351",
+                      "templateHash": "18228807762088856507"
                     },
                     "description": "Assigns ACR Pull permissions to access an Azure Container Registry."
                   },
@@ -1167,8 +1167,8 @@
                   "metadata": {
                     "_generator": {
                       "name": "bicep",
-                      "version": "0.28.1.47646",
-                      "templateHash": "15583442179894633871"
+                      "version": "0.33.93.31351",
+                      "templateHash": "17340621863331831612"
                     },
                     "description": "Assigns RBAC role to the specified AKS cluster and principal."
                   },
@@ -1225,8 +1225,8 @@
                   "metadata": {
                     "_generator": {
                       "name": "bicep",
-                      "version": "0.28.1.47646",
-                      "templateHash": "17016224891593731674"
+                      "version": "0.33.93.31351",
+                      "templateHash": "1623829276601313671"
                     },
                     "description": "Assigns an Azure Key Vault access policy."
                   },
@@ -1341,8 +1341,8 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.28.1.47646",
-              "templateHash": "8858194042814084678"
+              "version": "0.33.93.31351",
+              "templateHash": "9291339074123332314"
             }
           },
           "parameters": {
@@ -1422,8 +1422,8 @@
                   "metadata": {
                     "_generator": {
                       "name": "bicep",
-                      "version": "0.28.1.47646",
-                      "templateHash": "14863520980520874403"
+                      "version": "0.33.93.31351",
+                      "templateHash": "13409304173345641366"
                     },
                     "description": "Creates an Azure Cosmos DB for MongoDB account with a database."
                   },
@@ -1457,7 +1457,7 @@
                   "resources": [
                     {
                       "copy": {
-                        "name": "list",
+                        "name": "database::list",
                         "count": "[length(parameters('collections'))]"
                       },
                       "type": "Microsoft.DocumentDB/databaseAccounts/mongodbDatabases/collections",
@@ -1530,8 +1530,8 @@
                           "metadata": {
                             "_generator": {
                               "name": "bicep",
-                              "version": "0.28.1.47646",
-                              "templateHash": "3099268077942840517"
+                              "version": "0.33.93.31351",
+                              "templateHash": "10077950452960822085"
                             },
                             "description": "Creates an Azure Cosmos DB for MongoDB account."
                           },
@@ -1591,8 +1591,8 @@
                                   "metadata": {
                                     "_generator": {
                                       "name": "bicep",
-                                      "version": "0.28.1.47646",
-                                      "templateHash": "5295350533403586059"
+                                      "version": "0.33.93.31351",
+                                      "templateHash": "7546451053952178944"
                                     },
                                     "description": "Creates an Azure Cosmos DB account."
                                   },
@@ -1772,8 +1772,8 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.28.1.47646",
-              "templateHash": "4250008929992735853"
+              "version": "0.33.93.31351",
+              "templateHash": "14225036677466865562"
             },
             "description": "Creates an Azure Key Vault."
           },
@@ -1850,8 +1850,8 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.28.1.47646",
-              "templateHash": "1577011052565158954"
+              "version": "0.33.93.31351",
+              "templateHash": "13646034712402643830"
             },
             "description": "Creates an Application Insights instance and a Log Analytics workspace."
           },
@@ -1902,8 +1902,8 @@
                   "metadata": {
                     "_generator": {
                       "name": "bicep",
-                      "version": "0.28.1.47646",
-                      "templateHash": "4411803171372203725"
+                      "version": "0.33.93.31351",
+                      "templateHash": "10891050604045084701"
                     },
                     "description": "Creates a Log Analytics workspace."
                   },
@@ -1983,8 +1983,8 @@
                   "metadata": {
                     "_generator": {
                       "name": "bicep",
-                      "version": "0.28.1.47646",
-                      "templateHash": "3510278625614104568"
+                      "version": "0.33.93.31351",
+                      "templateHash": "16963697269409392454"
                     },
                     "description": "Creates an Application Insights instance based on an existing Log Analytics workspace."
                   },
@@ -2048,8 +2048,8 @@
                           "metadata": {
                             "_generator": {
                               "name": "bicep",
-                              "version": "0.28.1.47646",
-                              "templateHash": "14575977876683967619"
+                              "version": "0.33.93.31351",
+                              "templateHash": "7959658909084813949"
                             },
                             "description": "Creates a dashboard for an Application Insights instance."
                           },
