@@ -67,3 +67,10 @@ parameters:
   type: "string"
   required: false
   default: "eastus"
+
+- id: "openaiLocation"
+  name: "Region (e.g. eastus)"
+  description: "Region"
+  type: "string"
+  required: false
+  default: "eastus"

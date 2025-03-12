@@ -20,7 +20,7 @@ param storageResourceGroupLocation string = location
 param storageContainerName string = 'content'
 
 param openAiServiceName string = ''
-param openAiResourceGroupLocation string = location
+param openAiResourceGroupLocation string = ''
 
 param openAiSkuName string = 'S0'
 
@@ -84,7 +84,7 @@ module openAi 'core/ai/cognitiveservices.bicep' = {
   name: 'openai'
   params: {
     name: !empty(openAiServiceName) ? openAiServiceName : '${abbrs.cognitiveServicesAccounts}${resourceToken}'
-    location: openAiResourceGroupLocation
+    location: !empty(openAiResourceGroupLocation) ? openAiResourceGroupLocation : location
     tags: tags
     sku: {
       name: openAiSkuName
