@@ -11,6 +11,11 @@ upgradeCli() {
   verbose "ADE CLI is up to date"
 }
 
+executeCommand() {
+    ade execute --operation $ADE_OPERATION_NAME --command $* 2> >(tee -a $ADE_ERROR_LOG)
+    source /tmp/diff.sh
+}
+
 verbose() {
   echo -e "$*"
   ade log --type verbose --operation $ADE_OPERATION_NAME --content "$*"

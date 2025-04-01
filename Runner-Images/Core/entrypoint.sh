@@ -9,9 +9,9 @@ trap 'catch $? $LINENO' EXIT
 source "/shared/commands.sh"
 declare -g -x -A exitCodeMap=( ["1"]="DeploymentError" ["7"]="InvalidEndpoint" ["8"]="InvalidDevCenterId" ["9"]="CliSetupError" ["10"]="InvalidOperationId" ["11"]="RequestFailed" ["12"]="InvalidCliInput" ["13"]="FileOperationError" ["14"]="EnvironmentStorageExceeded" ["15"]="SecurityError" ["16"]="DeploymentIdentitySignInError" ["17"]="CliUpgradeError" ["99"]="UnknownError")
 
-ADE_STORAGE=/ade/storage
-ADE_OUTPUTS=/ade/temp/output.json
-ADE_ERROR_LOG=/ade/temp/error.log
+export ADE_STORAGE=/ade/storage
+export ADE_OUTPUTS=/ade/temp/output.json
+export ADE_ERROR_LOG=/ade/temp/error.log
 
 mkdir -p "$ADE_STORAGE"
 mkdir -p "$(dirname $ADE_OUTPUTS)" && touch "$ADE_OUTPUTS" && touch "$ADE_ERROR_LOG"
@@ -53,6 +53,8 @@ catch() {
     fi
 
 }
+# Delay a bit of time to ensure identity token is retrievable from IMDS
+sleep 10
 
 verbose "Checking for ADE CLI updates"
 upgradeCli
@@ -91,6 +93,7 @@ if [[ -f "$script" && -x "$script" ]]; then
 
     # Execute the script, but ensure we still save stderr to an error log file.
     ade execute --operation $ADE_OPERATION_NAME --command "$script" 2> >(tee -a $ADE_ERROR_LOG)
+    # for process to share env vars, use executeCommand "$script"
 elif [[ -f "$script" ]]; then
     error "Script '$script' is not marked as executable" && exit 1
 else
