@@ -15,6 +15,9 @@ ARG BUILD_DATE
 # install bicep
 RUN az bicep install
 
+# suppress warnings (temporary solution until we can snap to Azure Linux)
+RUN az config set core.only_show_errors=true
+
 # Grab all .sh files from scripts, copy to
 # root scripts, replace line-endings and make them all executable
 COPY scripts/* /scripts/

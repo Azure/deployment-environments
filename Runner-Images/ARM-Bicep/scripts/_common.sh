@@ -39,7 +39,8 @@ outputDeploymentErrors() {
     for item in "${errors[@]}"; do
         echo -e "Target Resource ID: $( echo $item | jq '. | .targetResource.id' )\nError Code: $( echo $item | jq '.statusMessage.error.code' )\nError Message: $( echo $item | jq '.statusMessage.error.message' )\n" 1>&2
         readarray errorDetails -t <<< $(echo $item | jq -c '.statusMessage.error.details')
-        if [ "${errorDetails[0]}" != null ]; then
+
+        if [[ -z $errorDetails ]]; then
             for detail in "${errorDetails[@]}"; do
                 echo -e "Error Detail Code: $( echo $detail | jq '.[] | .code')\nError Detail Message: $(echo $detail | jq '.[] | .message')\n" 1>&2
             done
