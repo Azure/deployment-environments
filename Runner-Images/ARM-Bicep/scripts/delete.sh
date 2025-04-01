@@ -14,15 +14,16 @@ echo "Signing into Azure using MSI"
 while true; do
     # managed identity isn't available immediately
     # we need to do retry after a short nap
-    az login --identity --allow-no-subscriptions --only-show-errors --output none && {
+    az login --identity --only-show-errors --output none && {
         echo "Successfully signed into Azure"
+        az account set --subscription $ADE_SUBSCRIPTION_ID
         break
     } || sleep 5
 done
 
 echo -e "\n>>> Beginning Deletion...\n"
 
-if [[ $(az group exists --subscription $ADE_SUBSCRIPTION_ID --name "$ADE_RESOURCE_GROUP_NAME") == 'false' ]]; then
+if [[ $(az group exists --subscription $ADE_SUBSCRIPTION_ID --name "$ADE_RESOURCE_GROUP_NAME") == false ]]; then
     echo "Resource group $ADE_RESOURCE_GROUP_NAME does not exist, resources successfully cleaned up"
     exit 0
 fi
@@ -50,7 +51,7 @@ if [ $? -eq 0 ]; then # deployment successfully created
 
             if [[ "CANCELED|FAILED" == *"${ProvisioningState^^}"* ]]; then
                 outputDeploymentErrors "$ProvisioningDetails"
-                exit 11
+                exit 1
             else
                 break
             fi
