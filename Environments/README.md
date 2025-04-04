@@ -15,7 +15,7 @@ The sample Catalog consists of a few catalog items (ARM Template + associated ma
 
 ## ARM and Bicep
 
-Each catalog item has _main.bicep_ file in addition to the ARM template (_azuredeploy.json_). This is because the ARM templates in this repository are written in [bicep](https://github.com/Azure/bicep) and transpiled to ARM using the [build-arm.py](/tools/build-arm.py) script in the [tools](/tools/) folder. The script simply walks the Environments folder and runs the [`az bicep build`](https://learn.microsoft.com/en-us/cli/azure/bicep?view=azure-cli-latest#az-bicep-build) command on each folder's main.bicep file, and is automatically run via the [build_arm.yml](/.github/workflows/build_arm.yml) workflow any time a bicep file changes.
+Each catalog item has _main.bicep_ file in addition to the ARM template (_azuredeploy.json_). This is because the ARM templates in this repository are written in [bicep](https://github.com/Azure/bicep) and transpiled to ARM using the [build-arm.py](/tools/build-arm.py) or [build-arm.sh][/tools/build-arm.sh] script in the [tools](/tools/) folder. The script simply walks the Environments folder and runs the [`az bicep build`](https://learn.microsoft.com/en-us/cli/azure/bicep?view=azure-cli-latest#az-bicep-build) command on each folder's main.bicep file, and is automatically run via the [build_arm.yml](/.github/workflows/build_arm.yml) workflow any time a bicep file changes.
 
 **Please note: This is not a requirement for creating catalog item templates. It is done in this repo to make it easier to understand what is being deployed in each template.**
 
