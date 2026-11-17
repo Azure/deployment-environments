@@ -27,7 +27,7 @@ if (!$?) {
 }
 
 Write-Host "Building Docker Image"
-docker build -t "${Registry}.azurecr.io/${Repository}:${Tag}" $Directory
+docker build --pull -t "${Registry}.azurecr.io/${Repository}:${Tag}" $Directory
 
 if (!$?) {
     Write-Error "Failed to build specified Docker Image. Please check the logs for more details."
