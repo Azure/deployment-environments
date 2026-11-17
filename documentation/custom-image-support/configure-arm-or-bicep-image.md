@@ -16,7 +16,7 @@ Here's an example of that FROM statement, pointing to the ADE-authored core imag
 FROM mcr.microsoft.com/deployment-environments/runners/core:latest
 ```
 
-This statement pulls the most recently-published core image, and makes it a basis for your custom image. Ideally, when building custom images, it's best practice to build off of the ADE-authored core image.
+This statement selects the `latest` core image as the base for your custom image. Use `docker build --pull` to check for base-image updates. Ideally, when building custom images, it's best practice to build off the latest version of the ADE-authored core image. Already-published custom images must be rebuilt and republished; see [Keeping custom images up to date](README.md#keeping-custom-images-up-to-date).
 
 ### Installing Bicep Within Your Dockerfile
 
@@ -148,13 +148,13 @@ echo "{\"outputs\": $deploymentOutput}" > $ADE_OUTPUTS
 
 To build the image to be pushed to your registry, please ensure the Docker Engine is installed on your computer, navigate to the directory of your Dockerfile, and run the following command:
 ```docker
-docker build . -t {YOUR_REGISTRY}.azurecr.io/{YOUR_REPOSITORY}:{YOUR_TAG}
+docker build --pull . -t {YOUR_REGISTRY}.azurecr.io/{YOUR_REPOSITORY}:{YOUR_TAG}
 ```
 
 For example, if you wanted to save your image under a repository within your registry named 'customImage', and you wanted to upload with the tag version of '1.0.0', you would run:
 
 ```docker
-docker build . -t {YOUR_REGISTRY}.azurecr.io/customImage:1.0.0
+docker build --pull . -t {YOUR_REGISTRY}.azurecr.io/customImage:1.0.0
 ```
 ## Pushing the Docker Image to a Registry
 In order to use custom images, you will need to set up a publicly-accessible image registry with anonymous image pull enabled. This way, Azure Deployment Environments can access your custom image to execute in our container. We are working on providing capaiblities for private registry access, and will provide an update when this is available. 

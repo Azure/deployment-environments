@@ -21,8 +21,14 @@ In addtion, by using the provided runner images, you can invoke the ADE CLI with
 You can find more information about Custom Image Support [here](../documentation/custom-image-support/README.md).
 
 ## Available Image Repositories and Versions
-- Core: 2.9.0-preview(latest), latest
-- ARM/Bicep: 2.9.0-preview(latest), latest
+| Repository | Recommended version tag |
+| --- | --- |
+| `mcr.microsoft.com/deployment-environments/runners/core` | `4.5.0-preview` |
+| `mcr.microsoft.com/deployment-environments/runners/arm` | `4.6.0-preview` |
+
+Each repository also publishes `latest`, a mutable alias that can move to a newer image. A version tag is not another name for `latest`.
+
+Updating a base image does not update custom images that were already built from it. Rebuild and republish your custom images to incorporate base-image updates, then update their environment definition references. See [Keeping custom images up to date](../documentation/custom-image-support/README.md#keeping-custom-images-up-to-date).
 
 ## Image Building Quickstart Script
 If you have a Dockerfile and scripts folder configured for ADE's extensibility model, you can run the script [here](../../Runner-Images/quickstart-image-build.ps1) to build and push to a specified Azure Container Registry (ACR) under the repository 'ade' and the tag 'latest'. This script requires your registry name and directory for your custom image, have the Azure CLI and Docker Desktop installed and in your PATH variables, and requires that you have permissions to push to the specified registry. You can call the script using the following command in Powershell:
@@ -32,7 +38,7 @@ If you have a Dockerfile and scripts folder configured for ADE's extensibility m
 
 Additionally, if you would like to push to a specific repository and tag name, you can run:
 ```powershell
-.\quickstart-image.build.ps1 -Registry '{YOUR_REGISTRY}' -Directory '{DIRECTORY_TO_YOUR_IMAGE}' -Repository '{YOUR_REPOSITORY}' -Tag '{YOUR_TAG}'
+.\quickstart-image-build.ps1 -Registry '{YOUR_REGISTRY}' -Directory '{DIRECTORY_TO_YOUR_IMAGE}' -Repository '{YOUR_REPOSITORY}' -Tag '{YOUR_TAG}'
 ```
 
 ## Terraform + ADE Extensibility Model Repository

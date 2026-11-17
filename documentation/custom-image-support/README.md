@@ -23,7 +23,18 @@ Here's an example of that FROM statement, pointing to the ADE-authored core imag
 FROM mcr.microsoft.com/deployment-environments/runners/core:latest
 ```
 
-This statement pulls the most recently-published core image, and makes it a basis for your custom image.
+This statement selects the `latest` core image as the base for your custom image. Use `docker build --pull` to check the registry for an updated base image rather than relying on a locally cached copy.
+
+### Keeping custom images up to date
+
+Base-image updates do not automatically update images you have already built and published, including images built from `latest`.
+
+1. Review the [recommended runner image versions](../../Runner-Images/README.md#available-image-repositories-and-versions). If your Dockerfile or build arguments specify an older version tag or digest, update that reference first. `--pull` does not change a pinned reference.
+2. Rebuild with `docker build --pull` and publish your custom image under a new version tag.
+3. Update the environment definition's `runner` reference to the new custom-image tag or digest and synchronize the catalog.
+4. Validate deployment and deletion with the updated image, including existing environment state.
+
+Existing forks of the sample repositories also need to be updated and rebuilt. Changing a Microsoft base-image tag does not replace images in your registry.
 
 ### RUN Statement
 
@@ -50,13 +61,13 @@ RUN find /scripts/ -type f -iname "*.sh" -exec chmod +x {} \;
 
 To build the image to be pushed to your registry, please ensure the Docker Engine is installed on your computer, navigate to the directory of your Dockerfile, and run the following command:
 ```
-docker build . -t {YOUR_REGISTRY}.azurecr.io/{YOUR_REPOSITORY}:{YOUR_TAG}
+docker build --pull . -t {YOUR_REGISTRY}.azurecr.io/{YOUR_REPOSITORY}:{YOUR_TAG}
 ```
 
 For example, if you wanted to save your image under a repository within your registry named 'customImage', and you wanted to upload with the tag version of '1.0.0', you would run:
 
 ```
-docker build . -t {YOUR_REGISTRY}.azurecr.io/customImage:1.0.0
+docker build --pull . -t {YOUR_REGISTRY}.azurecr.io/customImage:1.0.0
 ```
 ## Pushing the Docker Image to a Registry
 In order to use custom images, you will need to set up a publicly-accessible image registry with anonymous image pull enabled. This way, Azure Deployment Environments can access your custom image to execute in our container.
@@ -92,7 +103,7 @@ If you have a Dockerfile and scripts folder configured for ADE's extensibility m
 
 Additionally, if you would like to push to a specific repository and tag name, you can run:
 ```powershell
-.\quickstart-image.build.ps1 -Registry '{YOUR_REGISTRY}' -Directory '{DIRECTORY_TO_YOUR_IMAGE}' -Repository '{YOUR_REPOSITORY}' -Tag '{YOUR_TAG}'
+.\quickstart-image-build.ps1 -Registry '{YOUR_REGISTRY}' -Directory '{DIRECTORY_TO_YOUR_IMAGE}' -Repository '{YOUR_REPOSITORY}' -Tag '{YOUR_TAG}'
 ```
 
 ## Terraform + ADE Extensibility Model Repository
